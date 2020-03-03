@@ -3,8 +3,11 @@ package com.yizisu.music.and.video.module.local_music.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.yizisu.basemvvm.utils.getResString
+import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.module.fragment.LocalMusicFragment
 import com.yizisu.music.and.video.module.fragment.LocalRecentFragment
+import com.yizisu.music.and.video.module.fragment.LocalVideoFragment
 
 class LocalPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(
     fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
@@ -15,8 +18,9 @@ class LocalPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(
     )
 
     private val pagers = mutableListOf<PagerData>(
-        PagerData(LocalMusicFragment.create(), "本地音乐"),
-        PagerData(LocalRecentFragment.create(), "最近播放")
+        PagerData(LocalMusicFragment.create(), getResString(R.string.local_music)),
+        PagerData(LocalVideoFragment.create(), getResString(R.string.local_video)),
+        PagerData(LocalRecentFragment.create(), getResString(R.string.local_recent))
     )
 
     override fun getItem(position: Int): Fragment {

@@ -16,7 +16,7 @@ class LocalMusicHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val songDes = itemView.findViewById<TextView>(R.id.songDesTv)
 
     fun setData(bean: LocalMusicBean) {
-        songName.textFrom(bean.song)
+        songName.textFrom(bean.title)
         songDes.textFrom((bean.singer + "-" + bean.album).trimEnd('-'))
     }
 }

@@ -1,5 +1,6 @@
 package com.yizisu.music.and.video.viewmodel
 
+import android.content.Context
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.start
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
@@ -16,6 +17,12 @@ class LocalMusicViewModel : BaseViewModel() {
         AppData.localMusicData.start()
         launchThread {
             AppData.localMusicData.success(LocalMusicUtil.getMusicInfo(app))
+        }
+    }
+    fun queryLocalVideo() {
+        AppData.localMusicData.start()
+        launchThread {
+            AppData.localVideoData.success(LocalMusicUtil.getVideoInfo(app))
         }
     }
 }

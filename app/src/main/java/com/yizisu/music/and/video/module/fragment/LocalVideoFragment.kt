@@ -24,10 +24,10 @@ import com.yizisu.music.and.video.viewmodel.LocalMusicViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.fragment_local_music.*
 
-class LocalMusicFragment : BaseFragment() {
+class LocalVideoFragment : BaseFragment() {
     companion object {
-        fun create(): LocalMusicFragment {
-            return LocalMusicFragment()
+        fun create(): LocalVideoFragment {
+            return LocalVideoFragment()
         }
     }
 
@@ -38,7 +38,7 @@ class LocalMusicFragment : BaseFragment() {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.localMusicData.register(::onQueryLocalMusic)
+        AppData.localVideoData.register(::onQueryLocalMusic)
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class LocalMusicFragment : BaseFragment() {
         adapter.setOnItemClickListener { itemView, position, itemData ->
             MusicService.startPlay(adapter.datas.map {
                 SongModel(it)
-            }.toMutableList(), position, true, this@LocalMusicFragment::class.java.simpleName)
+            }.toMutableList(), position, true, this@LocalVideoFragment::class.java.simpleName)
         }
         localMusicRcv.adapter = adapter
     }
@@ -60,7 +60,7 @@ class LocalMusicFragment : BaseFragment() {
             )
         ) {
             if (it) {
-                getActivityViewModel<LocalMusicViewModel>()?.queryLocalMusic()
+                getActivityViewModel<LocalMusicViewModel>()?.queryLocalVideo()
             }
         }
     }

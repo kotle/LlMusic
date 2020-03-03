@@ -6,33 +6,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
-import android.media.MediaSession2Service
-import android.media.browse.MediaBrowser
-import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
-import android.os.ResultReceiver
-import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
-import android.view.KeyEvent
-import androidx.media.MediaBrowserServiceCompat
-import com.google.android.exoplayer2.ControlDispatcher
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
-import com.yizisu.basemvvm.printBundle
 import com.yizisu.basemvvm.utils.isThis
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.basemvvm.utils.toast
+import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.cons.BusCode.SERVICE_PLAY_LIST
 import com.yizisu.music.and.video.module.fragment.LocalMusicFragment
-import com.yizisu.music.and.video.module.local_music.LocalMusicActivity
 import com.yizisu.music.and.video.utils.registerSession
 import com.yizisu.music.and.video.utils.sendNotify
 import com.yizisu.music.and.video.utils.unregisterSession
@@ -111,7 +99,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
     override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
         super.onError(throwable, playerModel)
-        "播放出错:${playerModel.safeGet<LocalMusicFragment.SongModel>()?.song?.song}".toast()
+        "播放出错:${playerModel.safeGet<SongModel>()?.song?.title}".toast()
         player.next()
     }
 
@@ -144,8 +132,8 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
      * 发送通知栏
      */
     private fun notifyByReceiver(playerModel: PlayerModel?) {
-        playerModel.safeGet<LocalMusicFragment.SongModel>()?.song?.apply {
-            sendNotify(path, song, singer, 19, player.isPlaying(), session)
+        playerModel.safeGet<SongModel>()?.song?.apply {
+            sendNotify(path, title, singer, 19, player.isPlaying(), session)
         }
     }
 
@@ -154,12 +142,14 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         session.registerSession()
         player.setMediaSession(session) {
             //返回息屏状态下的文字
-            return@setMediaSession Bundle().apply {
-                it.safeGet<LocalMusicFragment.SongModel>()?.song?.apply {
-                    putString(MediaMetadataCompat.METADATA_KEY_TITLE, song)
-                    putString(MediaMetadataCompat.METADATA_KEY_ARTIST, singer)
-                }
-            }
+            return@setMediaSession MediaDescriptionCompat.Builder()
+                .setExtras(Bundle().apply {
+                    it.safeGet<SongModel>()?.song?.apply {
+                        putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                        putString(MediaMetadataCompat.METADATA_KEY_ARTIST, singer)
+                    }
+                })
+                .build()
         }
         player.addPlayerListener(this)
         MessageBus.register(this)

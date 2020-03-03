@@ -6,19 +6,10 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.media.session.MediaController
 import android.os.Build
-import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
-import androidx.core.graphics.drawable.IconCompat
-import androidx.media.session.MediaButtonReceiver
-import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.printBundle
 import com.yizisu.basemvvm.utils.getLastActivityIntent
 import com.yizisu.basemvvm.utils.getResString
@@ -72,7 +63,7 @@ fun Service.sendNotify(
         //使用默认的声音、振动、闪光
 //      .setDefaults(Notification.DEFAULT_ALL)
         .setContentText(message)
-        .setLargeIcon(LocalMusicUtil.loadingCover(mp3Url))
+        .setLargeIcon(LocalMusicUtil.loadingMusicCover(mp3Url))
         .setAutoCancel(false)
         .setVibrate(null)
         .setShowWhen(false)

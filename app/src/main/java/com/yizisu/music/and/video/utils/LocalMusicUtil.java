@@ -5,16 +5,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 
-import androidx.appcompat.widget.ViewUtils;
-
-import com.yizisu.basemvvm.utils.ActivityUtilsKt;
 import com.yizisu.basemvvm.utils.ViewExtFunKt;
 import com.yizisu.music.and.video.R;
 import com.yizisu.music.and.video.bean.LocalMusicBean;
+import com.yizisu.music.and.video.bean.LocalVideoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +27,24 @@ public class LocalMusicUtil {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 LocalMusicBean song = new LocalMusicBean();
-                song.song = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                if (song.title == null) {
+                    song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
+                }
                 song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                 song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
                 song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
                 song.duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                 song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
+                song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.HEIGHT));
+                song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.WIDTH));
 //                把歌曲名字和歌手切割开
                 if (song.size > 1000 * 800) {
-                    if (song.song.contains("-")) {
-                        String[] str = song.song.split("-");
-                        song.singer = str[0];
-                        song.song = str[1];
-                    }
+//                    if (song.title.contains("-")) {
+//                        String[] str = song.title.split("-");
+//                        song.singer = str[0];
+//                        song.title = str[1];
+//                    }
                     list.add(song);
                 }
             }
@@ -57,7 +59,47 @@ public class LocalMusicUtil {
         return newList;
     }
 
-    public static Bitmap loadingCover(String mediaUri) {
+    public static List<LocalMusicBean> getVideoInfo(Context context) {
+        List<LocalMusicBean> list = new ArrayList<>();
+        Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                , null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                LocalVideoBean song = new LocalVideoBean();
+                song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME));
+                if (song.title == null) {
+                    song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                }
+                song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST));
+                song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM));
+                song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                song.duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
+                song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT));
+                song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH));
+//                把歌曲名字和歌手切割开
+                if (song.size > 1000 * 800) {
+                    list.add(song);
+                }
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        List<LocalMusicBean> newList = new ArrayList<>();
+        for (int index = list.size() - 1; index >= 0; index--) {
+            newList.add(list.get(index));
+        }
+        return newList;
+    }
+
+    /**
+     * 获取图片
+     *
+     * @param mediaUri
+     * @return
+     */
+    public static Bitmap loadingMusicCover(String mediaUri) {
         try {
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(mediaUri);
@@ -77,22 +119,32 @@ public class LocalMusicUtil {
         }
     }
 
+    /**
+     * 获取视频封面
+     *
+     * @param mediaUri
+     * @return
+     */
+    public static Bitmap loadingVideoCover(String mediaUri) {
+        try {
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(mediaUri);
+            Bitmap picture = mediaMetadataRetriever.getFrameAtTime();
+            if (picture == null) {
+                return defaultBitmap();
+            }
+            return picture;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return defaultBitmap();
+        }
+    }
+
     private static Bitmap defaultBitmap() {
         BitmapDrawable drawable = ((BitmapDrawable) ViewExtFunKt.getResDrawable(app, R.mipmap.logo));
         if (drawable != null) {
             return drawable.getBitmap();
         }
         return null;
-    }
-
-    //    转换歌曲时间的格式
-    public static String formatTime(int time) {
-        if (time / 1000 % 60 < 10) {
-            String tt = time / 1000 / 60 + ":0" + time / 1000 % 60;
-            return tt;
-        } else {
-            String tt = time / 1000 / 60 + ":" + time / 1000 % 60;
-            return tt;
-        }
     }
 }

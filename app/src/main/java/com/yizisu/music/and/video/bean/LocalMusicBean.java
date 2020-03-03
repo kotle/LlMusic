@@ -1,15 +1,33 @@
 package com.yizisu.music.and.video.bean;
 
 public class LocalMusicBean {
-    public String song;//歌曲名
+    public String title;//歌曲名
     public String singer;//歌手
     public String album;//歌手
     public long size;//歌曲所占空间大小
     public int duration;//歌曲时间长度
+    public int height;//歌曲时间长度
+    public int width;//歌曲时间长度
     public String path;//歌曲地址
 
-    public String getSong() {
-        return song;
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getAlbum() {
@@ -20,8 +38,8 @@ public class LocalMusicBean {
         this.album = album;
     }
 
-    public void setSong(String song) {
-        this.song = song;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSinger() {
