@@ -13,4 +13,9 @@
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="FullVideoTheme" parent="AppTheme">
+        <item name="android:screenOrientation">landscape</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

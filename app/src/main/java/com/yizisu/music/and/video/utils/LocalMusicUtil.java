@@ -26,26 +26,30 @@ public class LocalMusicUtil {
                 , null, null, null, MediaStore.Audio.AudioColumns.IS_MUSIC);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                LocalMusicBean song = new LocalMusicBean();
-                song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-                if (song.title == null) {
-                    song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-                }
-                song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-                song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
-                song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                song.duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
-                song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.HEIGHT));
-                song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.WIDTH));
+                try {
+                    LocalMusicBean song = new LocalMusicBean();
+                    song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                    if (song.title == null) {
+                        song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
+                    }
+                    song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+                    song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+                    song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                    song.duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                    song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
+//                    song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.HEIGHT));
+//                    song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.WIDTH));
 //                把歌曲名字和歌手切割开
-                if (song.size > 1000 * 800) {
+                    if (song.size > 1000 * 800) {
 //                    if (song.title.contains("-")) {
 //                        String[] str = song.title.split("-");
 //                        song.singer = str[0];
 //                        song.title = str[1];
 //                    }
-                    list.add(song);
+                        list.add(song);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -65,21 +69,25 @@ public class LocalMusicUtil {
                 , null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                LocalVideoBean song = new LocalVideoBean();
-                song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME));
-                if (song.title == null) {
-                    song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
-                }
-                song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST));
-                song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM));
-                song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-                song.duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-                song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
-                song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT));
-                song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH));
+                try {
+                    LocalVideoBean song = new LocalVideoBean();
+                    song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME));
+                    if (song.title == null) {
+                        song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                    }
+                    song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST));
+                    song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM));
+                    song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                    song.duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                    song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
+                    song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT));
+                    song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH));
 //                把歌曲名字和歌手切割开
-                if (song.size > 1000 * 800) {
-                    list.add(song);
+                    if (song.size > 1000 * 800) {
+                        list.add(song);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

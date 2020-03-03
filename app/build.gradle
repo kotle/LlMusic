@@ -15,11 +15,45 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    //    MD5: 23:81:9E:D7:43:15:16:01:EA:C0:60:78:77:C9:C5:74
+//    SHA1: 76:99:BD:A2:D5:36:32:28:C0:09:EC:26:E4:C1:32:0B:37:8F:EE:AE
+//    SHA256: BF:0A:4C:64:1F:D2:BB:18:23:9D:96:6D:F2:C6:5C:B6:4B:C4:F0:C8:15:72:DE:52:AC:F0:9D:3F:A0:8F:3F:CB
+//    签名算法名称: SHA256withRSA
+//    版本: 3
+    signingConfigs {
+        release {
+            keyAlias 'talk'
+            keyPassword 'talktotalk'
+            storeFile file('./talktotalk.jks')
+            storePassword 'talktotalk'
+//            v2SigningEnabled false
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    //解决rxjava冲突
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

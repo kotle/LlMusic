@@ -18,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".module.full_video.FullVideoActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullVideoTheme" />
         <activity android:name=".module.local_music.LocalMusicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,9 +48,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".module.main.MainActivity">
-
-        </activity>
+        <activity android:name=".module.main.MainActivity"></activity>
     </application>
 
 </manifest>
