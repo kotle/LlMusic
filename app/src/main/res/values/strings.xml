@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">共生</string>
+    <string name="app_des">执子之魂，与子共生</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
