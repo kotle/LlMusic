@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.media.session.MediaController
 import android.os.Build
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -30,7 +31,14 @@ import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_PR
 /**
  * 开启一个前台通知，进程保活
  */
-fun Service.sendNotify(mp3Url: String, title: String, message: String, id: Int, isPlay: Boolean) {
+fun Service.sendNotify(
+    mp3Url: String,
+    title: String,
+    message: String,
+    id: Int,
+    isPlay: Boolean,
+    session: MediaSessionCompat
+) {
     val notificationBuilder = NotificationCompat.Builder(this, id.toString())
         .setSmallIcon(R.drawable.music_small_icon)
         .setContentTitle(title)
@@ -96,22 +104,20 @@ fun Service.createReceiverIntent(action: String): PendingIntent {
     return PendingIntent.getBroadcast(this, 0, Intent(action), PendingIntent.FLAG_UPDATE_CURRENT)
 }
 
-private val session by lazy { MediaSessionCompat(app, "MediaSessionCompat") }
 
 /**
  * 注册监听蓝牙耳机按键
  */
-fun registerSession(): MediaSessionCompat {
+fun MediaSessionCompat.registerSession() {
     //exoPlayer 会覆盖这个方法,所以这里设置无效
-    session.setFlags(
+    setFlags(
         MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
     )
     //exoPlayer 会覆盖这个方法,所以这里设置无效
-    session.setCallback(mediaCall)
+    setCallback(mediaCall)
     //exoPlayer 会调用以上两个方法
-    session.isActive = true
-    return session
+    isActive = true
 }
 
 /**
@@ -147,8 +153,8 @@ private val mediaCall = object : MediaSessionCompat.Callback() {
 /**
  * 取消注册监听蓝牙耳机按键
  */
-fun unregisterSession() {
-    session.setCallback(null)
-    session.isActive = false
-    session.release()
+fun MediaSessionCompat.unregisterSession() {
+    setCallback(null)
+    isActive = false
+    release()
 }

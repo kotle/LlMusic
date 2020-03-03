@@ -8,14 +8,20 @@ import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaSession2Service
 import android.media.browse.MediaBrowser
+import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
+import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.KeyEvent
 import androidx.media.MediaBrowserServiceCompat
+import com.google.android.exoplayer2.ControlDispatcher
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
@@ -35,6 +41,16 @@ import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
 
 class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
+    /**
+     * messageBus数据类型
+     */
+    private data class PlayModelBean(
+        val models: MutableList<PlayerModel>,
+        val index: Int = 0,
+        val isPlayWhenReady: Boolean = true,
+        var tag: Any? = null
+    )
+
     companion object {
         private var isStartMusicService = false
         const val ACTION_PLAY = "ACTION_PLAY"
@@ -48,7 +64,8 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         fun startPlay(
             models: MutableList<PlayerModel>,
             index: Int = 0,
-            isPlayWhenReady: Boolean = true
+            isPlayWhenReady: Boolean = true,
+            tag: Any? = null
         ) {
             //判断服务是否启动
             if (!isStartMusicService) {
@@ -56,9 +73,23 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             }
             MessageBus.post(
                 SERVICE_PLAY_LIST, PlayModelBean(
-                    models, index, isPlayWhenReady
+                    models, index, isPlayWhenReady, tag
                 ), true, MusicService::class.java
             )
+        }
+    }
+
+    //MediaSessionCompat
+    private val session by lazy { MediaSessionCompat(app, "MediaSessionCompat") }
+
+    //通知栏按钮接收广播
+    private val musicReceiver by lazy { MusicReceiver() }
+
+    //播放器对象
+    private val player by lazy {
+        SimplePlayer(this).apply {
+            setAudioForceEnable(true)
+            setRepeatMode(SimplePlayer.LOOP_MODO_LIST)
         }
     }
 
@@ -66,16 +97,16 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         return START_STICKY
     }
 
-    private val musicReceiver = MusicReceiver()
-
     override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
         super.onPlay(playStatus, playerModel)
         notifyByReceiver(player.getCurrentModel())
+        player.setHandleWakeLock(true)
     }
 
     override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
         super.onPause(playStatus, playerModel)
         notifyByReceiver(player.getCurrentModel())
+        player.setHandleWakeLock(false)
     }
 
     override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
@@ -114,31 +145,22 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
      */
     private fun notifyByReceiver(playerModel: PlayerModel?) {
         playerModel.safeGet<LocalMusicFragment.SongModel>()?.song?.apply {
-            sendNotify(path, song, singer, 19, player.isPlaying())
-        }
-    }
-
-    /**
-     * messageBus数据类型
-     */
-    private data class PlayModelBean(
-        val models: MutableList<PlayerModel>,
-        val index: Int = 0,
-        val isPlayWhenReady: Boolean = true
-    )
-
-    /**
-     * 播放器对象
-     */
-    private val player by lazy {
-        SimplePlayer(this).apply {
-            setRepeatMode(SimplePlayer.LOOP_MODO_LIST)
+            sendNotify(path, song, singer, 19, player.isPlaying(), session)
         }
     }
 
     override fun onCreate() {
         super.onCreate()
-        player.setMediaSession(registerSession())
+        session.registerSession()
+        player.setMediaSession(session) {
+            //返回息屏状态下的文字
+            return@setMediaSession Bundle().apply {
+                it.safeGet<LocalMusicFragment.SongModel>()?.song?.apply {
+                    putString(MediaMetadataCompat.METADATA_KEY_TITLE, song)
+                    putString(MediaMetadataCompat.METADATA_KEY_ARTIST, singer)
+                }
+            }
+        }
         player.addPlayerListener(this)
         MessageBus.register(this)
         registerReceiver(musicReceiver, IntentFilter().apply {
@@ -158,7 +180,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         player.removePlayerListener(this)
         MessageBus.unRegister(this)
         isStartMusicService = false
-        unregisterSession()
+        session.unregisterSession()
         super.onDestroy()
     }
 
@@ -166,15 +188,22 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         return Binder()
     }
 
+    private var lastPlayModelBean: PlayModelBean? = null
     override fun onMessageBus(event: Any?, code: Int) {
         super.onMessageBus(event, code)
         if (SERVICE_PLAY_LIST == code) {
             event.isThis<PlayModelBean> {
-                if (isPlayWhenReady) {
-                    player.prepareAndPlay(models, index)
+                if (tag != null && tag == lastPlayModelBean?.tag) {
+                    player.seekTo(0, index)
+                    player.play()
                 } else {
-                    player.prepare(models, index)
+                    if (isPlayWhenReady) {
+                        player.prepareAndPlay(models, index)
+                    } else {
+                        player.prepare(models, index)
+                    }
                 }
+                lastPlayModelBean = this
             }
         }
     }

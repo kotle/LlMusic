@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.widget.Toolbar
+import com.yizisu.basemvvm.utils.goHome
 import com.yizisu.basemvvm.utils.navigateTo
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
@@ -46,5 +47,10 @@ class LocalMusicActivity : BaseUiActivity() {
 
     override fun isCanSwipeBack(): Boolean {
         return false
+    }
+
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        goHome()
     }
 }

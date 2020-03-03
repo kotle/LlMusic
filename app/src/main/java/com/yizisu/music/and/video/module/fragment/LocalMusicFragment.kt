@@ -45,7 +45,7 @@ class LocalMusicFragment : BaseFragment() {
         adapter.setOnItemClickListener { itemView, position, itemData ->
             MusicService.startPlay(adapter.datas.map {
                 SongModel(it)
-            }.toMutableList(), position)
+            }.toMutableList(), position, true, "tag相同，播放列表不发生变化")
         }
         localMusicRcv.adapter = adapter
     }
