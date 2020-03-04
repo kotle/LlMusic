@@ -18,9 +18,30 @@ const val API_BASE_URL_NETEASE = ""
 /**
  * 发送网络请求
  */
-fun String.sendNeteaseHttp(params: MutableMap<String, String>, isGet: Boolean = false): okhttp3.Call {
+fun String.sendNeteaseHttp(
+    params: MutableMap<String, String>,
+    isGet: Boolean = false
+): okhttp3.Call {
     val request = Request.Builder()
     var url = API_BASE_URL_NETEASE.trimEnd('/') + "/" + this.trimStart('/')
+    if (isGet) {
+        url += "?"
+        for ((key, value) in params) {
+            url += "${key}=${value}&"
+        }
+    } else {
+        request.post(params.createFormBody())
+    }
+    request.url(url.trimEnd('&'))
+    return okHttpClient.newCall(request.build())
+}
+
+/**
+ * 发送网络请求
+ */
+fun String.sendHttp(params: MutableMap<String, String>, isGet: Boolean = false): okhttp3.Call {
+    val request = Request.Builder()
+    var url = this
     if (isGet) {
         url += "?"
         for ((key, value) in params) {
@@ -68,12 +89,18 @@ abstract class Retrofit2Call<T>(private val data: LiveBean<T>) : retrofit2.Callb
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if (response.code() != 200) {
-            onError(NoSuccessException("httpError:code-${response.code()},message:${response.message()}"), response.code())
+            onError(
+                NoSuccessException("httpError:code-${response.code()},message:${response.message()}"),
+                response.code()
+            )
             return
         }
         val result = response.body()
         if (result == null) {
-            onError(NullPointerException("HTTP Body Is Null:${response.errorBody()?.string()}"), null)
+            onError(
+                NullPointerException("HTTP Body Is Null:${response.errorBody()?.string()}"),
+                null
+            )
             return
         }
         onSuccess(result)
@@ -108,7 +135,7 @@ inline fun <reified P> LiveBean<P>.createOkHttpCall(isToastError: Boolean = true
  * OkHttp请求回调
  */
 abstract class OkHttpCall<T>(private val cls: Class<T>, private val data: LiveBean<T>) :
-        okhttp3.Callback {
+    okhttp3.Callback {
     init {
         data.start()
     }
@@ -119,14 +146,17 @@ abstract class OkHttpCall<T>(private val cls: Class<T>, private val data: LiveBe
 
     override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
         if (response.code() != 200) {
-            onError(NoSuccessException("httpError:code:${response.code()},message:${response.message()}"), response.code())
+            onError(
+                NoSuccessException("httpError:code:${response.code()},message:${response.message()}"),
+                response.code()
+            )
             return
         }
         val result = response.body()
         try {
             val bodyStr = result?.string()
             if (bodyStr.isNullOrBlank()) {
-                onError(IOException("HTTP Body Is Null:${response.message()}"),null)
+                onError(IOException("HTTP Body Is Null:${response.message()}"), null)
             } else {
                 //简单判断是否是json字符串
                 if (bodyStr.startsWith('{') || bodyStr.startsWith('[')) {
@@ -138,7 +168,7 @@ abstract class OkHttpCall<T>(private val cls: Class<T>, private val data: LiveBe
             }
         } catch (e: Throwable) {
             e.printStackTrace()
-            onError(IOException(e.message),null)
+            onError(IOException(e.message), null)
         }
     }
 

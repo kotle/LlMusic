@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.appcompat.app.AlertDialog
 import com.yizisu.basemvvm.utils.navigateTo
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
+import com.yizisu.music.and.video.service.music.MusicService.Companion.startPlay
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
@@ -29,7 +33,7 @@ class FullVideoActivity : BaseUiActivity() {
 
     data class FullVideoData(
         val path: String,
-        val title: String? = null
+        val title: String?
     ) : Serializable
 
     private var player: SimplePlayer? = null
@@ -38,6 +42,7 @@ class FullVideoActivity : BaseUiActivity() {
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.activity_full_video
     }
+
 
     override fun isNeedSwitchView(): Boolean {
         return true
@@ -50,16 +55,30 @@ class FullVideoActivity : BaseUiActivity() {
             "没有找到视频".toast()
             return
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         showLoadingState()
         player = createLifecycleSimplePlayer(this)
-        player?.attachView(playerView)
+        player?.attachView(playerView.textureView)
         player?.setAudioForceEnable(true)
         player?.addPlayerListener(listener)
-        player?.prepareAndPlay(
-            mutableListOf(
-                VideoMode(videoData!!)
-            )
-        )
+        playerView.setVideoInfo(videoData?.title)
+        playerView.setOnDoubleClickListener(View.OnClickListener {
+            updatePlayerViewUi()
+        })
+        startPlayVideo()
+    }
+
+    private fun updatePlayerViewUi() {
+        player?.apply {
+            val isPlay = !isPlaying()
+            if (isPlay) {
+                play()
+            } else {
+                pause()
+            }
+        }
     }
 
     override fun isFullScreen(): Boolean {
@@ -69,7 +88,14 @@ class FullVideoActivity : BaseUiActivity() {
     private var isChangePlayerSize = false
     private val listener = object : SimplePlayerListener {
         override fun onTick(playerModel: PlayerModel) {
-
+            playerModel.apply {
+                playerView.setProgress(
+                    currentDurationText,
+                    totalDurationText,
+                    (currentDuration * 100 / totalDuration).toInt(),
+                    (currentBufferDuration * 100 / totalDuration).toInt()
+                )
+            }
         }
 
         override fun onBufferStateChange(
@@ -89,6 +115,15 @@ class FullVideoActivity : BaseUiActivity() {
             }
         }
 
+        override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
+            super.onError(throwable, playerModel)
+            startPlayVideo()
+            AlertDialog.Builder(this@FullVideoActivity)
+                .setMessage(throwable.message)
+//                 .setCancelable(false)
+                .show()
+        }
+
         override fun onVideoSizeChange(
             width: Int,
             height: Int,
@@ -98,11 +133,7 @@ class FullVideoActivity : BaseUiActivity() {
         ) {
             if (!isChangePlayerSize) {
                 isChangePlayerSize = true
-                playerView.layoutParams = changePlayerSize(
-                    playerView.width,
-                    playerView.height,
-                    width, height
-                )
+                playerView.setVideoSize(width, height)
 
             }
         }
@@ -118,6 +149,17 @@ class FullVideoActivity : BaseUiActivity() {
         }
     }
 
+    private fun startPlayVideo() {
+        player?.apply {
+            prepareAndPlay(
+                mutableListOf(
+                    VideoMode(videoData!!)
+                )
+            )
+            playerView.setPlay(isPlaying())
+        }
+    }
+
 
     override fun isNeedToolbar(): Boolean {
         return false
@@ -128,6 +170,7 @@ class FullVideoActivity : BaseUiActivity() {
      */
     private fun showPlayingState() {
         showContentView()
+        playerView.setPlay(true)
     }
 
     /**
@@ -141,41 +184,17 @@ class FullVideoActivity : BaseUiActivity() {
      * 暂停播放状态
      */
     private fun showPauseState() {
-
+        playerView.setPlay(false)
     }
 
     override fun onResume() {
         super.onResume()
-        player?.play()
     }
 
     override fun onDestroy() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         player?.removePlayerListener(listener)
         super.onDestroy()
-    }
-
-    /**
-     * 设置视频尺寸
-     */
-    private fun changePlayerSize(
-        viewWidth: Int, viewHeight: Int,
-        videoWidth: Int, videoHeight: Int
-    ): FrameLayout.LayoutParams {
-        val viewR = viewWidth.toFloat() / viewHeight
-        val videoR = videoWidth.toFloat() / videoHeight
-        val lp = if (viewR <= videoR) {
-            //view的宽度不变设置高度
-            FrameLayout.LayoutParams(
-                viewWidth, viewWidth * videoHeight / videoWidth
-            )
-        } else {
-            //view高度不变,动态设置宽度
-            FrameLayout.LayoutParams(
-                viewHeight * videoWidth / videoHeight, viewHeight
-            )
-        }
-        lp.gravity = Gravity.CENTER
-        return lp
     }
 
     private class VideoMode(private val data: FullVideoData) : PlayerModel() {

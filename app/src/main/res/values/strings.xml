@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">共生</string>
     <string name="app_des">执子之魂，与子共生</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">这里是刚刚创建的fragment</string>
     <string name="local_music">本地音乐</string>
     <string name="local_video">本地视频</string>
-    <string name="local_recent">最近播放</string>
+    <string name="local_recent">测试视频</string>
 </resources>

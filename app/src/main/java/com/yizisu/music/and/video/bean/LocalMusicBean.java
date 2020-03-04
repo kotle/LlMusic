@@ -3,7 +3,7 @@ package com.yizisu.music.and.video.bean;
 public class LocalMusicBean {
     public String title;//歌曲名
     public String singer;//歌手
-    public String album;//专辑
+    public String album = "";//专辑
     public long size;//歌曲所占空间大小
     public int duration;//歌曲时间长度
     public int height;//歌曲时间长度
