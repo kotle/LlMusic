@@ -1,5 +1,6 @@
 package com.yizisu.music.and.video.module.full_video
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Point
@@ -42,7 +43,7 @@ class FullVideoActivity : BaseUiActivity() {
 
     private var player: SimplePlayer? = null
 
-    private val videoData by lazy { intent.getSerializableExtra(KEY_VIDEO_DATA) as? FullVideoData }
+    private var videoData: FullVideoData? = null
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.activity_full_video
     }
@@ -54,10 +55,25 @@ class FullVideoActivity : BaseUiActivity() {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
+        videoData = intent.getSerializableExtra(KEY_VIDEO_DATA) as? FullVideoData
         if (videoData == null) {
-            finish()
-            "没有找到视频".toast()
-            return
+            when (intent.action) {
+                Intent.ACTION_VIEW -> {
+                    val data = intent.dataString
+                    if (data.isNullOrBlank()) {
+                        finish()
+                        "视频无法播放".toast()
+                        return
+                    } else {
+                        videoData = FullVideoData(data, "")
+                    }
+                }
+                else -> {
+                    finish()
+                    "没有找到视频".toast()
+                    return
+                }
+            }
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
@@ -156,10 +172,10 @@ class FullVideoActivity : BaseUiActivity() {
             if (!isChangePlayerSize) {
                 isChangePlayerSize = true
                 requestedOrientation = if (width < height) {
-                    playerView.setVideoSize(width, height,true)
+                    playerView.setVideoSize(width, height, true)
                     ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
                 } else {
-                    playerView.setVideoSize(width, height,false)
+                    playerView.setVideoSize(width, height, false)
                     ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
                 }

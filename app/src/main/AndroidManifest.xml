@@ -22,11 +22,29 @@
             android:name=".module.full_video.FullVideoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/FullVideoTheme" />
+            android:theme="@style/FullVideoTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="rtmp" />
+                <data android:scheme="content" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/mp4" />
+                <data android:mimeType="*/rmvb" />
+                <data android:mimeType="*/avi" />
+                <data android:mimeType="*/mkv" />
+                <data android:mimeType="audio/x-pn-realaudio" />
+            </intent-filter>
+        </activity>
         <activity android:name=".module.local_music.LocalMusicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

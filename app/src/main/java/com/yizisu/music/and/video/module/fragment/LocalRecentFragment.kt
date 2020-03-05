@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.utils.getCountTimeByLong
+import com.yizisu.basemvvm.utils.onSearch
+import com.yizisu.basemvvm.utils.visible
 import com.yizisu.basemvvm.view.simpleTextRcvAdater
 import com.yizisu.music.and.video.AppData
 
@@ -70,6 +72,12 @@ class LocalRecentFragment : BaseFragment() {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
+        testEdit.visible()
+        testEdit.onSearch {
+            FullVideoActivity.start(
+                appCompatActivity, FullVideoActivity.FullVideoData(it,"")
+            )
+        }
         adapter.setOnItemClickListener { itemView, position, itemData ->
             FullVideoActivity.start(
                 appCompatActivity, FullVideoActivity.FullVideoData(
