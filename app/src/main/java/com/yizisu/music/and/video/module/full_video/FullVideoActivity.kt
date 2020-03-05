@@ -1,5 +1,8 @@
 package com.yizisu.music.and.video.module.full_video
 
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.graphics.Point
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +12,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
+import com.yizisu.basemvvm.logI
 import com.yizisu.basemvvm.utils.navigateTo
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.video.R
@@ -67,7 +71,23 @@ class FullVideoActivity : BaseUiActivity() {
         playerView.setOnDoubleClickListener(View.OnClickListener {
             updatePlayerViewUi()
         })
+        playerView.setOnSeekBarListener { isFinish, slidingRatio ->
+            logI("$isFinish,$slidingRatio")
+            if (isFinish) {
+                //向右滑动slidingRatio小于0，所以需要取相反的
+                seekVideo(player?.getCurrentModel(), -slidingRatio)
+            }
+        }
         startPlayVideo()
+    }
+
+    /**
+     * seek视频
+     */
+    private fun seekVideo(model: PlayerModel?, slidingRatio: Float) {
+        model?.apply {
+            player?.seekTo((totalDuration * slidingRatio).toLong() + currentDuration)
+        }
     }
 
     private fun updatePlayerViewUi() {
@@ -86,14 +106,14 @@ class FullVideoActivity : BaseUiActivity() {
     }
 
     private var isChangePlayerSize = false
+    private var videoSize = Point()
     private val listener = object : SimplePlayerListener {
         override fun onTick(playerModel: PlayerModel) {
             playerModel.apply {
                 playerView.setProgress(
-                    currentDurationText,
-                    totalDurationText,
-                    (currentDuration * 100 / totalDuration).toInt(),
-                    (currentBufferDuration * 100 / totalDuration).toInt()
+                    currentDuration,
+                    currentBufferDuration,
+                    totalDuration
                 )
             }
         }
@@ -131,10 +151,18 @@ class FullVideoActivity : BaseUiActivity() {
             pixelWidthHeightRatio: Float,
             playerModel: PlayerModel?
         ) {
+            videoSize.x = width
+            videoSize.y = height
             if (!isChangePlayerSize) {
                 isChangePlayerSize = true
-                playerView.setVideoSize(width, height)
+                requestedOrientation = if (width < height) {
+                    playerView.setVideoSize(width, height,true)
+                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                } else {
+                    playerView.setVideoSize(width, height,false)
+                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
+                }
             }
         }
 
@@ -145,7 +173,9 @@ class FullVideoActivity : BaseUiActivity() {
 
         override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
             super.onPause(playStatus, playerModel)
-            showPauseState()
+            if (!playStatus) {
+                showPauseState()
+            }
         }
     }
 

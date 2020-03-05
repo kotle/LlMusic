@@ -21,7 +21,7 @@
         <activity
             android:name=".module.full_video.FullVideoActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:theme="@style/FullVideoTheme" />
         <activity android:name=".module.local_music.LocalMusicActivity">
             <intent-filter>
