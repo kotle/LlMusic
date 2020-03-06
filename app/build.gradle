@@ -8,6 +8,8 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
         applicationId "com.yizisu.music.and.video"
         minSdkVersion 21
         targetSdkVersion 29
@@ -73,4 +75,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(':mvvmlib')
     implementation project(':playerlib')
+    //高斯模糊（https://github.com/mmin18/RealtimeBlurView）
+    implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 }

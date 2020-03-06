@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
@@ -19,14 +20,16 @@ import com.yizisu.basemvvm.utils.isThis
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
+import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.SERVICE_PLAY_LIST
-import com.yizisu.music.and.video.module.fragment.LocalMusicFragment
 import com.yizisu.music.and.video.utils.registerSession
 import com.yizisu.music.and.video.utils.sendNotify
 import com.yizisu.music.and.video.utils.unregisterSession
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
+import kotlin.system.exitProcess
 
 class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
     /**
@@ -35,8 +38,8 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
     private data class PlayModelBean(
         val models: MutableList<PlayerModel>,
         val index: Int = 0,
-        val isPlayWhenReady: Boolean = true,
-        var tag: Any? = null
+        var isNewList: Boolean,
+        val isPlayWhenReady: Boolean = true
     )
 
     companion object {
@@ -45,6 +48,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         const val ACTION_PAUSE = "ACTION_PAUSE"
         const val ACTION_NEXT = "ACTION_NEXT"
         const val ACTION_PRE = "ACTION_PRE"
+        const val ACTION_CLOSE = "ACTION_CLOSE"
         fun start(context: Context) {
             context.startService(Intent(context, MusicService::class.java))
         }
@@ -52,18 +56,35 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         fun startPlay(
             models: MutableList<PlayerModel>,
             index: Int = 0,
-            isPlayWhenReady: Boolean = true,
-            tag: Any? = null
+            isNewList: Boolean,
+            isPlayWhenReady: Boolean = true
         ) {
             //判断服务是否启动
-            if (!isStartMusicService) {
-                start(app)
-            }
             MessageBus.post(
                 SERVICE_PLAY_LIST, PlayModelBean(
-                    models, index, isPlayWhenReady, tag
+                    models, index, isNewList, isPlayWhenReady
                 ), true, MusicService::class.java
             )
+        }
+
+        fun addMusicEventListener(listener: MusicEventListener) {
+            //判断服务是否启动
+            MessageBus.post(
+                ADD_MUSIC_EVENT_LISTENER, listener, true, MusicService::class.java
+            )
+        }
+
+        fun removeMusicEventListener(listener: MusicEventListener) {
+            MessageBus.post(
+                REMOVE_MUSIC_EVENT_LISTENER, listener, true, MusicService::class.java
+            )
+        }
+
+        /**
+         * 发送广播
+         */
+        fun sendBroadcastReceiver(context: Context?, action: String) {
+            context?.sendBroadcast(Intent(action))
         }
     }
 
@@ -80,6 +101,8 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             setRepeatMode(SimplePlayer.LOOP_MODO_LIST)
         }
     }
+
+    private val musicEventListener = mutableListOf<MusicEventListener>()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
@@ -123,6 +146,11 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
                     player.play()
                     player.previous()
                 }
+                ACTION_CLOSE -> {
+                    stopForeground(true)
+                    stopSelf()
+                    exitProcess(0)
+                }
 
             }
         }
@@ -158,6 +186,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             addAction(ACTION_PAUSE)
             addAction(ACTION_PRE)
             addAction(ACTION_NEXT)
+            addAction(ACTION_CLOSE)
             //耳机断开
             addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
         })
@@ -166,6 +195,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
 
     override fun onDestroy() {
+        musicEventListener.clear()
         unregisterReceiver(musicReceiver)
         player.removePlayerListener(this)
         MessageBus.unRegister(this)
@@ -178,22 +208,50 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         return Binder()
     }
 
-    private var lastPlayModelBean: PlayModelBean? = null
     override fun onMessageBus(event: Any?, code: Int) {
         super.onMessageBus(event, code)
-        if (SERVICE_PLAY_LIST == code) {
-            event.isThis<PlayModelBean> {
-                if (tag != null && tag == lastPlayModelBean?.tag) {
-                    player.seekTo(0, index)
-                    player.play()
-                } else {
-                    if (isPlayWhenReady) {
-                        player.prepareAndPlay(models, index)
+        MessageBus.clearStickyValue(event)
+        when (code) {
+            //播放列表改变
+            SERVICE_PLAY_LIST -> {
+                event.isThis<PlayModelBean> {
+                    if (!isNewList) {
+                        player.seekTo(0, index)
+                        player.play()
                     } else {
-                        player.prepare(models, index)
+                        if (isPlayWhenReady) {
+                            player.prepareAndPlay(models, index)
+                        } else {
+                            player.prepare(models, index)
+                        }
                     }
                 }
-                lastPlayModelBean = this
+            }
+            //添加监听
+            ADD_MUSIC_EVENT_LISTENER -> {
+                if (event is MusicEventListener) {
+                    if (!musicEventListener.contains(event)) {
+                        musicEventListener.add(event)
+                        player.addPlayerListener(event)
+                        player.getCurrentModel()?.apply {
+                            event.onTick(this)
+                            event.onPlayerModelChange(this)
+                            event.onPlayerListChange(player.getAllPlayModel())
+                            if (player.isPlaying()) {
+                                event.onPlay(true, this)
+                            } else {
+                                event.onPause(false, this)
+                            }
+                        }
+                    }
+                }
+            }
+            //移除监听
+            REMOVE_MUSIC_EVENT_LISTENER -> {
+                if (event is MusicEventListener) {
+                    musicEventListener.remove(event)
+                    player.removePlayerListener(event)
+                }
             }
         }
     }

@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.yizisu.basemvvm.widget.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="#ff0"
     tools:context=".module.main.MainActivity">
 
-    <Button
-        android:id="@+id/toLocalMusic"
-        android:text="toLocalMusic"
+    <com.yizisu.basemvvm.widget.BaseViewPager
+        android:id="@+id/homeVp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</com.yizisu.basemvvm.widget.BaseLinearLayout>
+        android:layout_height="match_parent" />
+
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_home_edit"
+            android:gravity="center"
+            android:text="@string/search"
+            android:textColor="@color/colorText"
+            android:textSize="12sp" />
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
+</com.yizisu.basemvvm.widget.BaseFrameLayout>

@@ -5,9 +5,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.music.and.video.R
-import com.yizisu.music.and.video.module.fragment.LocalMusicFragment
-import com.yizisu.music.and.video.module.fragment.LocalRecentFragment
-import com.yizisu.music.and.video.module.fragment.LocalVideoFragment
+import com.yizisu.music.and.video.module.fragment.test.LocalMusicFragment
+import com.yizisu.music.and.video.module.fragment.test.LocalRecentFragment
+import com.yizisu.music.and.video.module.fragment.test.LocalVideoFragment
 
 class LocalPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(
     fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT

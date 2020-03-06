@@ -539,4 +539,6 @@ public static java.lang.String TABLENAME;
 -keep class com.baidu.speechsynthesizer.**{*;}
 #百度智能语音
 -keep class com.baidu.speech.**{*;}
-
+#高斯模糊
+-keep class android.support.v8.renderscript.** { *; }
+-keep class androidx.renderscript.** { *; }

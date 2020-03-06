@@ -4,5 +4,9 @@
     <string name="hello_blank_fragment">这里是刚刚创建的fragment</string>
     <string name="local_music">本地音乐</string>
     <string name="local_video">本地视频</string>
-    <string name="local_recent">测试视频</string>
+    <string name="local_recent">最近播放</string>
+    <string name="see_more">更多</string>
+    <string name="my_heart">我喜欢</string>
+    <string name="recent_add">最近添加</string>
+    <string name="search">搜索</string>
 </resources>

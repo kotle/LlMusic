@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".module.lrc.LrcActivity"></activity>
         <activity
             android:name=".module.full_video.FullVideoActivity"
             android:configChanges="orientation|screenSize"
@@ -44,10 +45,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".module.local_music.LocalMusicActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
 
         <service
@@ -67,7 +69,13 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".module.main.MainActivity"></activity>
+        <activity android:name=".module.main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -149,7 +149,7 @@ public class LocalMusicUtil {
     }
 
     private static Bitmap defaultBitmap() {
-        BitmapDrawable drawable = ((BitmapDrawable) ViewExtFunKt.getResDrawable(app, R.mipmap.logo));
+        BitmapDrawable drawable = ((BitmapDrawable) ViewExtFunKt.getResDrawable(app, R.drawable.default_cover_icon));
         if (drawable != null) {
             return drawable.getBitmap();
         }

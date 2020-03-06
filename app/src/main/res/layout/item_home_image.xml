@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <com.yizisu.basemvvm.widget.BaseImageView
+        android:id="@+id/coverIv"
+        android:layout_width="@dimen/home_item_image_size"
+        android:layout_height="@dimen/home_item_image_size"
+        android:scaleType="centerCrop"
+        tools:src="#f00" />
+
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:id="@+id/titleTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/colorText"
+        android:textSize="12sp"
+        tools:text="策马啸西风" />
+
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:id="@+id/desTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/colorTextLight"
+        android:textSize="10sp"
+        tools:text="策马啸西风" />
+</com.yizisu.basemvvm.widget.BaseLinearLayout>

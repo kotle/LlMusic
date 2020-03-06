@@ -14,6 +14,8 @@ import com.yizisu.basemvvm.printBundle
 import com.yizisu.basemvvm.utils.getLastActivityIntent
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.music.and.video.R
+import com.yizisu.music.and.video.service.music.MusicService
+import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_CLOSE
 import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_NEXT
 import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_PAUSE
 import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_PLAY
@@ -50,16 +52,17 @@ fun Service.sendNotify(
             it.setShowCancelButton(true)
         })
         .addAction(
-            R.drawable.exo_icon_previous,
+            R.drawable.small_icon_pre,
             ACTION_PRE,
             createReceiverIntent(ACTION_PRE)
         )
         .addAction(
-            if (isPlay) R.drawable.exo_icon_pause else R.drawable.exo_icon_play,
+            if (isPlay) R.drawable.small_icon_pause else R.drawable.small_icon_play,
             if (isPlay) ACTION_PAUSE else ACTION_PLAY,
             createReceiverIntent(if (isPlay) ACTION_PAUSE else ACTION_PLAY)
         )
-        .addAction(R.drawable.exo_icon_next, ACTION_NEXT, createReceiverIntent(ACTION_NEXT))
+        .addAction(R.drawable.small_icon_next, ACTION_NEXT, createReceiverIntent(ACTION_NEXT))
+        .addAction(R.drawable.small_icon_stop, ACTION_CLOSE, createReceiverIntent(ACTION_CLOSE))
         //使用默认的声音、振动、闪光
 //      .setDefaults(Notification.DEFAULT_ALL)
         .setContentText(message)

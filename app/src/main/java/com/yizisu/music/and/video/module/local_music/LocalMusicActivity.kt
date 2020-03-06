@@ -48,9 +48,4 @@ class LocalMusicActivity : BaseUiActivity() {
     override fun isCanSwipeBack(): Boolean {
         return false
     }
-
-    override fun onBackPressed() {
-//        super.onBackPressed()
-        goHome()
-    }
 }

@@ -1,4 +1,4 @@
-package com.yizisu.music.and.video.module.fragment.adapter
+package com.yizisu.music.and.video.module.fragment.test.adapter
 
 import android.view.View
 import com.yizisu.basemvvm.view.BaseRcvAdapter
