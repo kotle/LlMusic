@@ -2,23 +2,19 @@ package com.yizisu.music.and.video.module.full_video
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Point
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import com.yizisu.basemvvm.logI
 import com.yizisu.basemvvm.utils.navigateTo
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
-import com.yizisu.music.and.video.service.music.MusicService.Companion.startPlay
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
@@ -65,7 +61,11 @@ class FullVideoActivity : BaseUiActivity() {
                         "视频无法播放".toast()
                         return
                     } else {
-                        videoData = FullVideoData(data, "")
+                        videoData = FullVideoData(
+                            data,
+                            intent.getStringExtra(Intent.EXTRA_TITLE)
+                                ?: intent.extras?.getString(Intent.EXTRA_TITLE)
+                        )
                     }
                 }
                 else -> {
@@ -84,14 +84,21 @@ class FullVideoActivity : BaseUiActivity() {
         player?.setAudioForceEnable(true)
         player?.addPlayerListener(listener)
         playerView.setVideoInfo(videoData?.title)
+        //双击监听
         playerView.setOnDoubleClickListener(View.OnClickListener {
             updatePlayerViewUi()
         })
+        //速率改变监听
+        playerView.setOnSpeedChangeListener {
+            player?.setVideoSpeed(it)
+        }
+        //拖动进度条监听
         playerView.setOnSeekBarListener { isFinish, slidingRatio ->
             logI("$isFinish,$slidingRatio")
             if (isFinish) {
                 //向右滑动slidingRatio小于0，所以需要取相反的
                 seekVideo(player?.getCurrentModel(), -slidingRatio)
+                player?.play()
             }
         }
         startPlayVideo()
@@ -107,6 +114,10 @@ class FullVideoActivity : BaseUiActivity() {
     }
 
     private fun updatePlayerViewUi() {
+        if (!isHadGetPlayerSize) {
+            startPlayVideo()
+            return
+        }
         player?.apply {
             val isPlay = !isPlaying()
             if (isPlay) {
@@ -121,7 +132,7 @@ class FullVideoActivity : BaseUiActivity() {
         return true
     }
 
-    private var isChangePlayerSize = false
+    private var isHadGetPlayerSize = false
     private var videoSize = Point()
     private val listener = object : SimplePlayerListener {
         override fun onTick(playerModel: PlayerModel) {
@@ -169,8 +180,8 @@ class FullVideoActivity : BaseUiActivity() {
         ) {
             videoSize.x = width
             videoSize.y = height
-            if (!isChangePlayerSize) {
-                isChangePlayerSize = true
+            if (!isHadGetPlayerSize) {
+                isHadGetPlayerSize = true
                 requestedOrientation = if (width < height) {
                     playerView.setVideoSize(width, height, true)
                     ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
@@ -192,6 +203,11 @@ class FullVideoActivity : BaseUiActivity() {
             if (!playStatus) {
                 showPauseState()
             }
+        }
+
+        override fun onStop(playStatus: Boolean, playerModel: PlayerModel?) {
+            super.onStop(playStatus, playerModel)
+            isHadGetPlayerSize = false
         }
     }
 
