@@ -476,9 +476,16 @@ public class LrcView extends View {
         canvas.restore();
     }
 
+    //是否正在横向滑动
+    private boolean isScrollingH = false;
+    //是否正则竖向滑动
+    private boolean isScrollingV = false;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+            isScrollingH = false;
+            isScrollingV = false;
             if (isTouching) {
                 isTouching = false;
                 if (hasLrc() && !isFling) {
@@ -517,11 +524,17 @@ public class LrcView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            //如果是横向滚动，不做处理
+            if (isScrollingH) {
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            }
             if (hasLrc()) {
                 //屏蔽横向滑动,需要横向滑动可以去掉这个判断
-                if (Math.abs(distanceX) > Math.abs(distanceY)) {
-                    return false;
+                if (Math.abs(distanceX) > Math.abs(distanceY) && !isScrollingV) {
+                    isScrollingH = true;
+                    return super.onScroll(e1, e2, distanceX, distanceY);
                 }
+                isScrollingV = true;
                 if (hasLrc() && mOnPlayClickListener != null && !isTouching) {
                     mScroller.forceFinished(true);
                     removeCallbacks(hideTimelineRunnable);

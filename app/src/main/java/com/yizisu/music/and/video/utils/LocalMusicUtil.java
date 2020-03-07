@@ -32,6 +32,7 @@ public class LocalMusicUtil {
                     if (song.title == null) {
                         song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
                     }
+                    song.id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
                     song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                     song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
                     song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
@@ -75,6 +76,7 @@ public class LocalMusicUtil {
                     if (song.title == null) {
                         song.title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
                     }
+                    song.id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
                     song.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST));
                     song.album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM));
                     song.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));

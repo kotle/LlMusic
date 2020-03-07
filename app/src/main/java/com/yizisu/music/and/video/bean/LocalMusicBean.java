@@ -1,6 +1,7 @@
 package com.yizisu.music.and.video.bean;
 
 public class LocalMusicBean {
+    public long id;//歌曲名
     public String title;//歌曲名
     public String singer;//歌手
     public String album = "";//专辑
@@ -9,6 +10,14 @@ public class LocalMusicBean {
     public int height;//歌曲时间长度
     public int width;//歌曲时间长度
     public String path;//歌曲地址
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public int getHeight() {
         return height;
