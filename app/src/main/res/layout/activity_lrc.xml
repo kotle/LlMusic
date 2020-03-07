@@ -77,21 +77,28 @@
             </com.yizisu.basemvvm.widget.BaseLinearLayout>
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
-        <Space
-            android:layout_width="wrap_content"
+        <com.yizisu.basemvvm.widget.BaseFrameLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:id="@+id/lrcFl"
+            android:layout_weight="1"
+            android:padding="16dp">
 
-        <com.yizisu.music.and.video.view.AutoRotationImageView
-            android:id="@+id/coverIv"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            app:srcCompat="@drawable/default_cover_icon" />
+            <com.yizisu.music.and.video.view.AutoRotationImageView
+                android:id="@+id/coverIv"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/default_cover_icon" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            <com.yizisu.music.and.video.view.MyLrcView
+                android:id="@+id/lrcView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                app:lrcNormalTextSize="13sp"
+                app:lrcTextSize="14sp" />
+        </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
         <LinearLayout
             android:id="@+id/progressLl"

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yizisu.basemvvm.widget.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingStart="16dp"
     android:paddingTop="4dp"
     android:paddingEnd="16dp"
@@ -109,4 +110,12 @@
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
     </com.yizisu.basemvvm.widget.BaseLinearLayout>
-</com.yizisu.basemvvm.widget.BaseFrameLayout>
+
+    <com.yizisu.music.and.video.view.MyLrcView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:lrcNormalTextSize="12sp"
+        app:lrcTextSize="13sp" />
+</com.yizisu.basemvvm.widget.BaseLinearLayout>

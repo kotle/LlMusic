@@ -75,6 +75,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(':mvvmlib')
     implementation project(':playerlib')
-    //高斯模糊（https://github.com/mmin18/RealtimeBlurView）
+//    高斯模糊（https://github.com/mmin18/RealtimeBlurView）
     implementation 'com.github.mmin18:realtimeblurview:1.2.1'
+    //歌词view（https://github.com/wangchenyan/lrcview）
+//    implementation 'me.wcy:lrcview:2.1.0'
+    implementation project(':lrclibrary')
+    //毛玻璃(https://github.com/wasabeef/glide-transformations)
+//    implementation 'jp.wasabeef:glide-transformations:4.1.0'
+    // If you want to use the GPU Filters
+//    implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
 }

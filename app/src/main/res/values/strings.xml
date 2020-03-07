@@ -9,4 +9,5 @@
     <string name="my_heart">我喜欢</string>
     <string name="recent_add">最近添加</string>
     <string name="search">搜索</string>
+    <string name="no_lrc">暂无歌词</string>
 </resources>

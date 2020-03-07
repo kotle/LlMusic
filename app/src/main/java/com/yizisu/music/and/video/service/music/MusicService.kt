@@ -109,6 +109,12 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
                 SEEK_MUSIC_EVENT, float, false, MusicService::class.java
             )
         }
+        //移动进度条
+        fun seekToMs(float: Long) {
+            MessageBus.post(
+                SEEK_MUSIC_EVENT, float, false, MusicService::class.java
+            )
+        }
     }
 
     //MediaSessionCompat
@@ -296,6 +302,9 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             SEEK_MUSIC_EVENT -> {
                 event.isThis<Float> {
                     player.seekRatioTo(this)
+                }
+                event.isThis<Long> {
+                    player.seekTo(this)
                 }
             }
         }

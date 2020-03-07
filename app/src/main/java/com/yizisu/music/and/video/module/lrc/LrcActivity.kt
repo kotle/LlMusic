@@ -9,11 +9,13 @@ import android.widget.SeekBar
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
+import com.yizisu.music.and.video.baselib.base.sendHttp
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.updateCover
+import com.yizisu.music.and.video.viewmodel.LrcViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.activity_lrc.*
 
@@ -66,7 +68,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv, coverIv, playListIv)
+        return listOf(preIv, playOrPauseIv, nextIv,  playListIv, lrcFl,lrcView)
     }
 
 
@@ -85,11 +87,20 @@ class LrcActivity : BaseActivity(), MusicEventListener {
             nextIv -> {
                 MusicService.sendBroadcastReceiver(this, MusicService.ACTION_NEXT)
             }
-            coverIv -> {
-//                CurrentPlayListDialog.show(appCompatActivity, playList)
-            }
+//            coverIv -> {
+////                CurrentPlayListDialog.show(appCompatActivity, playList)
+//            }
             playListIv -> {
                 CurrentPlayListDialog.show(this, playList)
+            }
+            lrcFl,lrcView -> {
+                if (coverIv.isVisible()) {
+                    coverIv.invisible()
+                    lrcView.visible()
+                } else {
+                    coverIv.visible()
+                    lrcView.invisible()
+                }
             }
         }
     }
@@ -120,7 +131,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         super.onPlayerModelChange(playerModel)
         currentPlayMode = playerModel
         coverIv.updateCover(playerModel, true)
-        fullImageIv.updateCover(playerModel, true)
+        fullImageIv.updateCover(playerModel)
         playerModel.safeGet<SongModel>()?.song?.apply {
             titleTv.textFrom(title)
             desTv.textFrom("${singer}-${album}".trimEnd('-'))
