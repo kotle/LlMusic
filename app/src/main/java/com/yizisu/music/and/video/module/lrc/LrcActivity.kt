@@ -36,6 +36,9 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         coverIv.setCircleImageFromRes(R.drawable.default_cover_icon)
         MusicService.addMusicEventListener(this)
+        lrcToolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 

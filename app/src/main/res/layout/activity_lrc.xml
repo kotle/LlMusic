@@ -22,39 +22,60 @@
     <com.yizisu.basemvvm.widget.BaseLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         tools:context=".module.lrc.LrcActivity">
 
-        <com.yizisu.basemvvm.widget.MarqueeTextView
-            android:id="@+id/titleTv"
+        <com.yizisu.basemvvm.widget.BaseFrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:singleLine="true"
-            android:text="@string/app_des"
-            android:textColor="@color/colorTextDeepBackground"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:transitionName="titleTv" />
+            android:layout_height="wrap_content">
 
-        <com.yizisu.basemvvm.widget.MarqueeTextView
-            android:id="@+id/desTv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="marquee"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:singleLine="true"
-            android:text="@string/app_des"
-            android:textColor="@color/colorTextDeepBackground"
-            android:textSize="12sp" />
+            <com.yizisu.basemvvm.widget.BaseToolBar
+                android:id="@+id/lrcToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:navigationIcon="@drawable/icon_back" />
+
+            <com.yizisu.basemvvm.widget.BaseLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="56dp"
+                android:layout_marginEnd="56dp"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <com.yizisu.basemvvm.widget.MarqueeTextView
+                    android:id="@+id/titleTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:singleLine="true"
+                    android:text="@string/app_des"
+                    android:textColor="@color/colorTextDeepBackground"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:transitionName="titleTv" />
+
+                <com.yizisu.basemvvm.widget.MarqueeTextView
+                    android:id="@+id/desTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:singleLine="true"
+                    android:text="@string/app_des"
+                    android:textColor="@color/colorTextDeepBackground"
+                    android:textSize="12sp" />
+            </com.yizisu.basemvvm.widget.BaseLinearLayout>
+        </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
         <Space
             android:layout_width="wrap_content"
