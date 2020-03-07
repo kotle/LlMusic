@@ -16,7 +16,7 @@
     <com.github.mmin18.widget.RealtimeBlurView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:realtimeBlurRadius="20dp"
+        app:realtimeBlurRadius="40dp"
         app:realtimeOverlayColor="@color/colorBlackTranslucent" />
 
     <com.yizisu.basemvvm.widget.BaseLinearLayout
@@ -78,35 +78,39 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:visibility="invisible">
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/currentProgressTv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minWidth="48dp"
-                android:textColor="#fff"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/colorTextDeepBackground"
                 android:textSize="12sp" />
 
             <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/progressBar"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:max="100" />
+                android:layout_weight="7"
+                android:max="100"
+                android:progressBackgroundTint="#f8f8f8"
+                android:progressTint="@color/colorTextDeepBackground"
+                android:secondaryProgressTint="#888888"
+                android:splitTrack="false"
+                android:thumbTint="@color/colorTextDeepBackground"
+                tools:progress="50"
+                tools:secondaryProgress="80" />
 
             <TextView
                 android:id="@+id/totalProgressTv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minWidth="48dp"
-                android:textColor="#fff"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textColor="@color/colorTextDeepBackground"
                 android:textSize="12sp" />
         </LinearLayout>
 

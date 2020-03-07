@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.widget.SeekBar
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
@@ -23,6 +25,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     }
 
     private var playList: MutableList<PlayerModel>? = null
+    private var currentPlayMode: PlayerModel? = null
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.activity_lrc
     }
@@ -30,8 +33,28 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         transparentStatusBar()
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         coverIv.setCircleImageFromRes(R.drawable.default_cover_icon)
         MusicService.addMusicEventListener(this)
+        progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                progressBar?.apply {
+                    val ratio = progress.toFloat() / max
+                    MusicService.seekRatio(ratio)
+                    currentPlayMode?.let {
+                        currentProgressTv.text =
+                            getCountTimeByLong((it.totalDuration * ratio).toLong())
+                    }
+                }
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -92,6 +115,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
 
     override fun onPlayerModelChange(playerModel: PlayerModel) {
         super.onPlayerModelChange(playerModel)
+        currentPlayMode = playerModel
         coverIv.updateCover(playerModel, true)
         fullImageIv.updateCover(playerModel, true)
         playerModel.safeGet<SongModel>()?.song?.apply {
@@ -118,6 +142,9 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         bufferProgress: Long?,
         allProgress: Long
     ) {
+        if (allProgress <= 0) {
+            return
+        }
         val max = progressBar.max
         if (currentProgress != null) {
             currentProgressTv.text = getCountTimeByLong(currentProgress)

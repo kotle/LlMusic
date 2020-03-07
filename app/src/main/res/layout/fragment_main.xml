@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:id="@+id/fullImageIv"
             android:layout_height="match_parent"
-            app:realtimeBlurRadius="20dp"
+            app:realtimeBlurRadius="40dp"
             app:realtimeOverlayColor="@color/colorBlackTranslucent" />
 
         <fragment

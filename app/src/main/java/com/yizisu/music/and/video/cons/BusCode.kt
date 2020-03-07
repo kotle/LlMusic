@@ -13,4 +13,8 @@ object BusCode {
      * 移除播放器监听
      */
     const val REMOVE_MUSIC_EVENT_LISTENER = 2
+    /**
+     * 移动进度条的比例
+     */
+    const val SEEK_MUSIC_EVENT = 3
 }

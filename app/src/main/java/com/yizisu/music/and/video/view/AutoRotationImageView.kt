@@ -36,6 +36,7 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         MusicService.removeMusicEventListener(this)
+        startAnim(false)
     }
 
     override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {

@@ -8,6 +8,6 @@ class App:Application() {
     override fun onCreate() {
         super.onCreate()
         initMvvmLib(this)
-        MusicService.start(this)
+//        MusicService.start(this)
     }
 }

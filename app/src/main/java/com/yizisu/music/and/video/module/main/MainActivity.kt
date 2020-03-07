@@ -7,6 +7,7 @@ import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
+import com.yizisu.music.and.video.service.music.MusicService
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -17,6 +18,7 @@ class MainActivity : BaseUiActivity() {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
+        MusicService.bindService(this)
         transparentStatusBar()
         homeVp.adapter = simpleFragmentPagerAdapter(
             mutableListOf(MainFragment.create())
@@ -26,5 +28,10 @@ class MainActivity : BaseUiActivity() {
     override fun onBackPressed() {
 //        super.onBackPressed()
         goHome()
+    }
+
+    override fun onDestroy() {
+        MusicService.unBindService(this)
+        super.onDestroy()
     }
 }
