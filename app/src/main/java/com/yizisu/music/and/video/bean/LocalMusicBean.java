@@ -1,7 +1,10 @@
 package com.yizisu.music.and.video.bean;
 
 public class LocalMusicBean {
-    public long id;//歌曲名
+    public static String SOURCE_TYPE_LOCAL = "本地";
+    public static String SOURCE_TYPE_BAIDU = "百度";
+    public static String SOURCE_TYPE_NETEASE = "网易云";
+    public long id;//歌曲id
     public String title;//歌曲名
     public String singer;//歌手
     public String album = "";//专辑
@@ -10,6 +13,33 @@ public class LocalMusicBean {
     public int height;//歌曲时间长度
     public int width;//歌曲时间长度
     public String path;//歌曲地址
+    public String sourceType;//歌曲来源
+    public String lrcUrl;//歌曲来源
+    public String coverUrl;//歌曲来源
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public String getLrcUrl() {
+        return lrcUrl;
+    }
+
+    public void setLrcUrl(String lrcUrl) {
+        this.lrcUrl = lrcUrl;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
 
     public long getId() {
         return id;

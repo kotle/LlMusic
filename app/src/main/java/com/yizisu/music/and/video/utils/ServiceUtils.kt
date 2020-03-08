@@ -6,6 +6,8 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Binder
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
@@ -25,7 +27,7 @@ import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_PR
  * 开启一个前台通知，进程保活
  */
 fun Service.sendNotify(
-    mp3Url: String,
+    coverBp: Bitmap?,
     title: String,
     message: String,
     id: Int,
@@ -66,7 +68,7 @@ fun Service.sendNotify(
         //使用默认的声音、振动、闪光
 //      .setDefaults(Notification.DEFAULT_ALL)
         .setContentText(message)
-        .setLargeIcon(LocalMusicUtil.loadingMusicCover(mp3Url))
+        .setLargeIcon(coverBp)
         .setAutoCancel(false)
         .setVibrate(null)
         .setShowWhen(false)

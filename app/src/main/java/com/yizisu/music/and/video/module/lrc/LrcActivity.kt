@@ -36,7 +36,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         super.initUi(savedInstanceState)
         transparentStatusBar()
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-        coverIv.setCircleImageFromRes(R.drawable.default_cover_icon)
+        coverIv.setImageGlide(R.drawable.default_cover_icon,radius = GLIDE_LOAD_RADIUS_CIRCLE)
         MusicService.addMusicEventListener(this)
         lrcToolbar.setNavigationOnClickListener {
             onBackPressed()
@@ -130,7 +130,6 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     override fun onPlayerModelChange(playerModel: PlayerModel) {
         super.onPlayerModelChange(playerModel)
         currentPlayMode = playerModel
-        coverIv.updateCover(playerModel, true)
         fullImageIv.updateCover(playerModel)
         playerModel.safeGet<SongModel>()?.song?.apply {
             titleTv.textFrom(title)

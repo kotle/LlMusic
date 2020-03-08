@@ -23,6 +23,7 @@
         <com.yizisu.basemvvm.widget.BaseTextView
             android:layout_width="match_parent"
             android:layout_height="32dp"
+            android:id="@+id/searchTv"
             android:background="@drawable/bg_home_edit"
             android:gravity="center"
             android:text="@string/search"

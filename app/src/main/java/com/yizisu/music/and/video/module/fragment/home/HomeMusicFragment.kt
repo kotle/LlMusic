@@ -36,7 +36,6 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        coverIv.setCircleImageFromRes(R.drawable.default_cover_icon)
         MusicService.addMusicEventListener(this)
     }
 
@@ -46,7 +45,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv, playListIv, headMusicLl)
+        return listOf(preIv, playOrPauseIv, nextIv, playListIv, headMusicLl, lrcView)
     }
 
 
@@ -68,7 +67,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
             playListIv -> {
                 CurrentPlayListDialog.show(appCompatActivity, playList)
             }
-            headMusicLl -> {
+            headMusicLl, lrcView -> {
                 LrcActivity.start(appCompatActivity)
             }
         }
@@ -98,7 +97,6 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
 
     override fun onPlayerModelChange(playerModel: PlayerModel) {
         super.onPlayerModelChange(playerModel)
-        coverIv.updateCover(playerModel, true)
         playerModel.safeGet<SongModel>()?.song?.apply {
             titleTv.textFrom(title)
         }

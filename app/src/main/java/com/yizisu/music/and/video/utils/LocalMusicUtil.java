@@ -84,6 +84,7 @@ public class LocalMusicUtil {
                     song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
                     song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT));
                     song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH));
+                    song.sourceType=LocalMusicBean.SOURCE_TYPE_LOCAL;
 //                把歌曲名字和歌手切割开
                     if (song.size > 1000 * 800) {
                         list.add(song);
@@ -109,6 +110,7 @@ public class LocalMusicUtil {
      * @param mediaUri
      * @return
      */
+
     public static Bitmap loadingMusicCover(String mediaUri) {
         try {
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();

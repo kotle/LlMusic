@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".module.lrc.LrcActivity"></activity>
+        <activity android:name=".module.search.SearchMusicActivity"></activity>
+        <activity android:name=".module.lrc.LrcActivity" />
         <activity
             android:name=".module.full_video.FullVideoActivity"
             android:configChanges="orientation|screenSize"

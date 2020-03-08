@@ -14,16 +14,16 @@ import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
 
-const val API_BASE_URL_NETEASE = ""
-/**
+/*private const val API_BASE_URL = ""
+*//**
  * 发送网络请求
- */
-fun String.sendNeteaseHttp(
+ *//*
+private fun String.sendHttp(
     params: MutableMap<String, String>,
     isGet: Boolean = false
 ): okhttp3.Call {
     val request = Request.Builder()
-    var url = API_BASE_URL_NETEASE.trimEnd('/') + "/" + this.trimStart('/')
+    var url = API_BASE_URL.trimEnd('/') + "/" + this.trimStart('/')
     if (isGet) {
         url += "?"
         for ((key, value) in params) {
@@ -34,7 +34,7 @@ fun String.sendNeteaseHttp(
     }
     request.url(url.trimEnd('&'))
     return okHttpClient.newCall(request.build())
-}
+}*/
 
 /**
  * 发送网络请求

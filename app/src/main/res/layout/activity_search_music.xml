@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".module.search.SearchMusicActivity">
+
+    <com.yizisu.basemvvm.widget.BaseFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.yizisu.basemvvm.widget.BaseToolBar
+            android:id="@+id/searchToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            app:navigationIcon="@drawable/icon_back">
+
+        </com.yizisu.basemvvm.widget.BaseToolBar>
+
+        <com.yizisu.basemvvm.widget.BaseEditText
+            android:id="@+id/searchEt"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:background="@drawable/bg_home_edit"
+            android:gravity="center"
+            android:hint="@string/search_hint"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorTextLight"
+            android:textSize="12sp" />
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/searchBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="8dp"
+            android:background="?selectableItemBackground"
+            android:padding="8dp"
+            android:text="@string/search"
+            android:textColor="@color/colorTextDeepBackground"
+            android:textSize="13sp" />
+    </com.yizisu.basemvvm.widget.BaseFrameLayout>
+
+    <com.yizisu.basemvvm.widget.BaseTabLayout
+        android:id="@+id/searchMusicTab"
+        app:tabUnboundedRipple="true"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabIndicatorFullWidth="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.yizisu.basemvvm.widget.BaseViewPager
+        android:id="@+id/searchVp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</com.yizisu.basemvvm.widget.BaseLinearLayout>

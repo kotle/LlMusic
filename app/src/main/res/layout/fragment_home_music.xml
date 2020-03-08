@@ -23,8 +23,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            tools:srcCompat="@drawable/default_cover_icon" />
+            android:layout_marginBottom="8dp" />
 
         <com.yizisu.basemvvm.widget.BaseFrameLayout
             android:layout_width="match_parent"
@@ -113,6 +112,7 @@
 
     <com.yizisu.music.and.video.view.MyLrcView
         android:layout_width="match_parent"
+        android:id="@+id/lrcView"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"

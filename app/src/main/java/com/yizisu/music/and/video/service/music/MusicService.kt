@@ -11,6 +11,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bumptech.glide.Glide
 import com.yizisu.basemvvm.activityList
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
@@ -109,6 +110,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
                 SEEK_MUSIC_EVENT, float, false, MusicService::class.java
             )
         }
+
         //移动进度条
         fun seekToMs(float: Long) {
             MessageBus.post(
@@ -127,7 +129,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
     private val player by lazy {
         SimplePlayer(this).apply {
             setAudioForceEnable(true)
-            setRepeatMode(SimplePlayer.LOOP_MODO_LIST)
+            setRepeatMode(SimplePlayer.LOOP_MODO_NONE)
             setHandleWakeLock(true)
         }
     }
@@ -151,7 +153,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
     override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
         super.onError(throwable, playerModel)
         "播放出错:${playerModel.safeGet<SongModel>()?.song?.title}".toast()
-        player.next()
+//        player.next()
     }
 
     /**
@@ -192,7 +194,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
      */
     private fun notifyByReceiver(playerModel: PlayerModel?) {
         playerModel.safeGet<SongModel>()?.song?.apply {
-            sendNotify(path, title, singer, 19, player.isPlaying(), session)
+            sendNotify(null, title, singer, 19, player.isPlaying(), session)
         }
     }
 

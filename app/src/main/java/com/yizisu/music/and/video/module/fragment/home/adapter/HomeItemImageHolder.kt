@@ -4,10 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.yizisu.basemvvm.utils.dip
-import com.yizisu.basemvvm.utils.setCircleImageFromNet
-import com.yizisu.basemvvm.utils.setCircleImageFromRes
-import com.yizisu.basemvvm.utils.textFrom
+import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.LocalMusicBean
 import com.yizisu.music.and.video.utils.LocalMusicUtil
@@ -34,7 +31,7 @@ class HomeItemImageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 //        val cover = LocalMusicUtil.loadingMusicCover(bean.path)
         val cover = null
         if (cover == null) {
-            coverIv.setCircleImageFromRes(R.drawable.icon_my_heart, dip(1))
+            coverIv.setImageGlide(R.drawable.icon_my_heart, radius = dip(1))
         } else {
             coverIv.setImageBitmap(cover)
         }

@@ -6,6 +6,7 @@ import android.view.View
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.getResColor
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.basemvvm.utils.isVisible
@@ -14,6 +15,7 @@ import com.yizisu.music.and.lrclibrary.LrcView
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.bean.LocalMusicBean
+import com.yizisu.music.and.video.bean.LrcBean
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
@@ -32,28 +34,14 @@ class MyLrcView : LrcView, MusicEventListener {
     private val lrcViewModel by lazy {
         val activity = context.safeGet<BaseActivity>()
         activity?.getViewModel<LrcViewModel>()?.apply {
-            lrcData.registerLiveBean(activity) {
-                when (it.status) {
-                    LiveBeanStatus.START -> {
-                    }
-                    LiveBeanStatus.SUCCESS -> {
-                        val list = it.data?.result
-                        if (list.isNullOrEmpty()) {
-                            if (lrcData.tag is String) {
-                                queryLrcFromNet(lrcData.tag as String, null)
-                                lrcData.tag = null
-                            } else {
-                                reset()
-                                setLabel(getResString(R.string.no_lrc).toString())
-                            }
-                        } else {
-                            loadLrcByUrl(list[0].lrc)
-                        }
-                    }
-                    LiveBeanStatus.FAIL -> {
-                        setLabel(it.errorMsg)
-                    }
+            lrcData.registerOnSuccessLiveBean(activity) {
+                val list = it.result
+                if (!list.isNullOrEmpty()) {
+                    loadLrcByUrl(list[0].lrc)
                 }
+            }
+            lrcNeteaseData.registerOnSuccessLiveBean(activity) {
+                loadLrc(it.lyric)
             }
         }
     }
@@ -91,7 +79,7 @@ class MyLrcView : LrcView, MusicEventListener {
         reset()
         lastSongModel = playerModel.safeGet<SongModel>()?.song
         lastSongModel?.apply {
-            queryLrcFromNet(title, singer)
+            queryLrcFromNet()
         }
     }
 
@@ -101,9 +89,23 @@ class MyLrcView : LrcView, MusicEventListener {
     }
 
     /*****************************************************************************/
-    fun queryLrcFromNet(name: String?, singer: String? = null) {
+    private fun queryLrcFromNet() {
+        val model = lastSongModel ?: return
         if (isVisible()) {
-            lrcViewModel?.queryLrc(name, singer)
+            reset()
+            when (model.sourceType) {
+                LocalMusicBean.SOURCE_TYPE_NETEASE -> {
+                    lrcViewModel?.queryLrcNetease(model.id.toString())
+                }
+                else -> {
+                    val lrc = lastSongModel?.lrcUrl
+                    if (lrc != null) {
+                        loadLrcByUrl(lrc)
+                    } else {
+                        lrcViewModel?.queryLrc(model.title, model.singer)
+                    }
+                }
+            }
         }
     }
 
@@ -111,7 +113,7 @@ class MyLrcView : LrcView, MusicEventListener {
         super.onVisibilityChanged(changedView, visibility)
         if (visibility == View.VISIBLE && !hasLrc()) {
             lastSongModel?.let {
-                queryLrcFromNet(it.title, it.singer)
+                queryLrcFromNet()
             }
         }
     }

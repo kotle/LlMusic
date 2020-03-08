@@ -5,6 +5,9 @@ import com.yizisu.music.and.video.baselib.base.BaseViewModel
 import com.yizisu.music.and.video.baselib.base.createOkHttpCall
 import com.yizisu.music.and.video.baselib.base.sendHttp
 import com.yizisu.music.and.video.bean.LrcBean
+import com.yizisu.music.and.video.bean.netease.LrcNeteaseBean
+import com.yizisu.music.and.video.net.netease.NETEAST_SONG_LRC
+import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
 
 class LrcViewModel : BaseViewModel() {
 
@@ -14,7 +17,6 @@ class LrcViewModel : BaseViewModel() {
     val lrcData = createLiveBean<LrcBean>()
 
     fun queryLrc(name: String?, singer: String?) {
-        lrcData.tag = name
         name ?: return
         val url = if (singer == null) {
             "http://gecimi.com/api/lyric/${name}"
@@ -23,5 +25,18 @@ class LrcViewModel : BaseViewModel() {
         }
         url.sendHttp(mutableMapOf(), true)
             .async(lrcData.createOkHttpCall())
+    }
+
+    /**
+     * 从网易云查询歌词
+     */
+    val lrcNeteaseData= createLiveBean<LrcNeteaseBean>()
+
+    fun queryLrcNetease(songId:String){
+        NETEAST_SONG_LRC.sendNeteaseHttp(mutableMapOf(
+            "id" to songId
+        )).async(
+            lrcNeteaseData.createOkHttpCall()
+        )
     }
 }

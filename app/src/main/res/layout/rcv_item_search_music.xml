@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yizisu.basemvvm.widget.BaseConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
+
+    <com.yizisu.basemvvm.widget.BaseImageView
+        android:id="@+id/songCoverIv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/default_cover_icon" />
+
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:id="@+id/songNameTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/songCoverIv"
+        app:layout_constraintTop_toTopOf="@+id/songCoverIv"
+        tools:text="@string/app_name" />
+
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:id="@+id/songSourceTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/colorTextLight"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="@string/app_name" />
+
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:id="@+id/songDesTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/colorTextLight"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
+        app:layout_constraintEnd_toStartOf="@id/songSourceTv"
+        app:layout_constraintStart_toStartOf="@id/songNameTv"
+        tools:text="@string/app_name" />
+</com.yizisu.basemvvm.widget.BaseConstraintLayout>

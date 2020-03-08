@@ -15,6 +15,7 @@
 package com.yizisu.music.and.lrclibrary;
 
 import android.animation.ValueAnimator;
+import android.os.Build;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -210,6 +211,9 @@ class LrcUtils {
     }
 
     public static void resetDurationScale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return;
+        }
         try {
             Field mField = ValueAnimator.class.getDeclaredField("sDurationScale");
             mField.setAccessible(true);

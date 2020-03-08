@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Looper;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -483,6 +484,7 @@ public class LrcView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        boolean eventResult = mGestureDetector.onTouchEvent(event);
         if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
             isScrollingH = false;
             isScrollingV = false;
@@ -494,7 +496,7 @@ public class LrcView extends View {
                 }
             }
         }
-        return mGestureDetector.onTouchEvent(event);
+        return eventResult;
     }
 
     private OnClickListener onClickListener;
@@ -512,18 +514,26 @@ public class LrcView extends View {
         @Override
         public boolean onDown(MotionEvent e) {
 //            if (hasLrc() && mOnPlayClickListener != null) {
-//                mScroller.forceFinished(true);
-//                removeCallbacks(hideTimelineRunnable);
-//                isTouching = true;
-//                isShowTimeline = true;
-//                invalidate();
-//                return true;
-//            }
+            if (isShowTimeline) {
+                mScroller.forceFinished(true);
+                removeCallbacks(hideTimelineRunnable);
+                isTouching = true;
+                isShowTimeline = true;
+                invalidate();
+                return true;
+            }
             return true;
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if (isShowTimeline) {
+                mOffset += -distanceY;
+                mOffset = Math.min(mOffset, getOffset(0));
+                mOffset = Math.max(mOffset, getOffset(mLrcEntryList.size() - 1));
+                invalidate();
+                return true;
+            }
             //如果是横向滚动，不做处理
             if (isScrollingH) {
                 return super.onScroll(e1, e2, distanceX, distanceY);
@@ -543,17 +553,16 @@ public class LrcView extends View {
                     invalidate();
                     return true;
                 }
-                mOffset += -distanceY;
-                mOffset = Math.min(mOffset, getOffset(0));
-                mOffset = Math.max(mOffset, getOffset(mLrcEntryList.size() - 1));
-                invalidate();
-                return true;
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            //如果不是竖向滚动不处理惯性事件
+            if (!isScrollingV && !isShowTimeline) {
+                return true;
+            }
             if (hasLrc()) {
                 mScroller.fling(0, (int) mOffset, 0, (int) velocityY, 0, 0, (int) getOffset(mLrcEntryList.size() - 1), (int) getOffset(0));
                 isFling = true;
