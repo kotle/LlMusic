@@ -2,6 +2,7 @@
 <com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/headMusicLl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -13,7 +14,6 @@
     tools:context=".module.fragment.home.HomeMusicFragment">
 
     <com.yizisu.basemvvm.widget.BaseLinearLayout
-        android:id="@+id/headMusicLl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -111,8 +111,8 @@
     </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
     <com.yizisu.music.and.video.view.MyLrcView
-        android:layout_width="match_parent"
         android:id="@+id/lrcView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"

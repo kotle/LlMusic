@@ -22,7 +22,7 @@ import android.text.TextUtils;
 /**
  * 一行歌词实体
  */
-class LrcEntry implements Comparable<LrcEntry> {
+public class LrcEntry implements Comparable<LrcEntry> {
     private long time;
     private String text;
     private String secondText;

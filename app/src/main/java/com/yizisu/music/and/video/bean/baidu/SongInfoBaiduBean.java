@@ -15,7 +15,7 @@ public class SongInfoBaiduBean {
     @SerializedName("error_code")
     private int errorCode;
     @SerializedName("bitrate")
-    private Object bitrate;
+    private BitrateBean bitrate;
 
     public SonginfoBean getSonginfo() {
         return songinfo;
@@ -34,10 +34,7 @@ public class SongInfoBaiduBean {
     }
 
     public BitrateBean getBitrate() {
-        if (bitrate instanceof BitrateBean) {
-            return (BitrateBean) bitrate;
-        }
-        return null;
+        return bitrate;
     }
 
     public void setBitrate(BitrateBean bitrate) {

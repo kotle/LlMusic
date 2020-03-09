@@ -18,6 +18,10 @@ class LrcViewModel : BaseViewModel() {
 
     fun queryLrc(name: String?, singer: String?) {
         name ?: return
+        if (lrcData.tag == name) {
+            return
+        }
+        lrcData.tag = name
         val url = if (singer == null) {
             "http://gecimi.com/api/lyric/${name}"
         } else {
@@ -30,12 +34,14 @@ class LrcViewModel : BaseViewModel() {
     /**
      * 从网易云查询歌词
      */
-    val lrcNeteaseData= createLiveBean<LrcNeteaseBean>()
+    val lrcNeteaseData = createLiveBean<LrcNeteaseBean>()
 
-    fun queryLrcNetease(songId:String){
-        NETEAST_SONG_LRC.sendNeteaseHttp(mutableMapOf(
-            "id" to songId
-        )).async(
+    fun queryLrcNetease(songId: String) {
+        NETEAST_SONG_LRC.sendNeteaseHttp(
+            mutableMapOf(
+                "id" to songId
+            )
+        ).async(
             lrcNeteaseData.createOkHttpCall()
         )
     }

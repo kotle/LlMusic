@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_home_music.*
 class HomeMusicFragment : BaseFragment(), MusicEventListener {
     private val mainActivity: MainActivity?
         get() = appCompatActivity?.safeGet()
+
     private var playList: MutableList<PlayerModel>? = null
 
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
@@ -37,6 +38,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         MusicService.addMusicEventListener(this)
+        lrcView.setDraggable(false, null)
     }
 
     override fun onDestroy() {
@@ -45,7 +47,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv, playListIv, headMusicLl, lrcView)
+        return listOf(preIv, playOrPauseIv, nextIv, playListIv, headMusicLl)
     }
 
 

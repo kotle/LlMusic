@@ -82,6 +82,17 @@ public class SearchBean {
         private String url;
         @SerializedName("pic")
         private String pic;
+        //1为vip
+        @SerializedName("fee")
+        private long fee;
+
+        public long getFee() {
+            return fee;
+        }
+
+        public void setFee(long fee) {
+            this.fee = fee;
+        }
 
         public String getType() {
             return type;

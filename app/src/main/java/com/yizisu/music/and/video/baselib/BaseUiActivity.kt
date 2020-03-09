@@ -1,5 +1,6 @@
 package com.yizisu.music.and.video.baselib
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.yizisu.basemvvm.activityList
 import com.yizisu.basemvvm.utils.isStatusBarBlackTextColor

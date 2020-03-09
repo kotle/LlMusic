@@ -18,8 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".module.search.SearchMusicActivity"></activity>
-        <activity android:name=".module.lrc.LrcActivity" />
+        <activity
+            android:name=".module.search.SearchMusicActivity"
+            android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".module.lrc.LrcActivity"
+            android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.full_video.FullVideoActivity"
             android:configChanges="orientation|screenSize"
@@ -45,7 +52,10 @@
                 <data android:mimeType="audio/x-pn-realaudio" />
             </intent-filter>
         </activity>
-        <activity android:name=".module.local_music.LocalMusicActivity">
+        <activity
+            android:name=".module.local_music.LocalMusicActivity"
+            android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
+            android:screenOrientation="portrait">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -61,16 +71,11 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
-        <service
-            android:name=".service.music.MusicService2"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
 
-        <activity android:name=".module.main.MainActivity">
+        <activity
+            android:name=".module.main.MainActivity"
+            android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,12 +1,11 @@
 package com.yizisu.music.and.video.module.search.adapter
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.yizisu.basemvvm.utils.getResString
-import com.yizisu.basemvvm.utils.setImageGlide
-import com.yizisu.basemvvm.utils.textFrom
+import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.dongwo.SearchBean
 
@@ -22,7 +21,20 @@ class SearchHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun setData(bean: SearchBean.DataBean) {
         songName.textFrom(bean.title)
-        songDes.textFrom((bean.author))
+        when (bean.fee) {
+            //VIP
+            1L -> {
+                songDes.textFromSpanBean(
+                    mutableListOf(
+                        SpanBean("[VIP] ", textColor = Color.RED),
+                        SpanBean(bean.author)
+                    )
+                )
+            }
+            else -> {
+                songDes.textFrom((bean.author))
+            }
+        }
         songSource.textFrom("${getResString(R.string.song_source)}：${bean.type}")
         songCover.setImageGlide(bean.pic, R.drawable.default_cover_icon, 4)
     }

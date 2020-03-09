@@ -18,6 +18,7 @@ class SongModel(val song: LocalMusicBean) : PlayerModel() {
         when (song.sourceType) {
             LocalMusicBean.SOURCE_TYPE_BAIDU -> {
                 queryBaiduUrl(uriCall, song)
+//                uriCall.invoke(Uri.parse("http://audio04.dmhmusic.com/71_53_T10046722712_128_4_1_0_sdk-cpm/cn/0208/M00/6F/02/ChR461uC3bWAXT8LAFBOio2zSeU812.mp3?xcode=8289fdd990a0ea765fd12efeb96377d4233096f"),null)
             }
             LocalMusicBean.SOURCE_TYPE_NETEASE -> {
 //                queryNetneaseUrl(uriCall, song)
@@ -51,6 +52,7 @@ class SongModel(val song: LocalMusicBean) : PlayerModel() {
                         modelSong.path = bitrate.fileLink
                         modelSong.coverUrl = song.picSmall
                         modelSong.lrcUrl = song.lrclink
+                        modelSong.path=bitrate.fileLink
                         //数据请求成功
                         uriCall.invoke(Uri.parse(bitrate.fileLink), null)
                     } else {

@@ -40,7 +40,7 @@ class SearchViewModel : BaseViewModel() {
     fun baiduToSearchBean(bean: SearchBaiduBean?): SearchBean? {
         bean ?: return null
         val searchBean = SearchBean()
-        searchBean.data = bean.song.map {
+        searchBean.data = bean.song?.map {
             SearchBean.DataBean().apply {
                 title = it.songname
                 songid = it.songid
@@ -51,6 +51,7 @@ class SearchViewModel : BaseViewModel() {
         return searchBean
     }
 
+    //316686 vip music id
     fun neteaseToSearchBean(bean: SearchNeteaseBean?): SearchBean? {
         val songs = bean?.result?.songs ?: return null
         val searchBean = SearchBean()
@@ -65,6 +66,7 @@ class SearchViewModel : BaseViewModel() {
                 pic = it.album.picUrl
                 url = it.mp3Url
                 type = LocalMusicBean.SOURCE_TYPE_NETEASE
+                fee = it.fee
             }
         }
         return searchBean

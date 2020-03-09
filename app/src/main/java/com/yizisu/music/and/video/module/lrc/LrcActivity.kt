@@ -7,6 +7,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.SeekBar
 import com.yizisu.basemvvm.utils.*
+import com.yizisu.music.and.lrclibrary.LrcEntry
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.baselib.base.sendHttp
@@ -36,7 +37,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         super.initUi(savedInstanceState)
         transparentStatusBar()
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-        coverIv.setImageGlide(R.drawable.default_cover_icon,radius = GLIDE_LOAD_RADIUS_CIRCLE)
+        coverIv.setImageGlide(R.drawable.default_cover_icon, radius = GLIDE_LOAD_RADIUS_CIRCLE)
         MusicService.addMusicEventListener(this)
         lrcToolbar.setNavigationOnClickListener {
             onBackPressed()
@@ -68,7 +69,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv,  playListIv, lrcFl,lrcView)
+        return listOf(preIv, playOrPauseIv, nextIv, playListIv, lrcFl, lrcView)
     }
 
 
@@ -93,7 +94,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
             playListIv -> {
                 CurrentPlayListDialog.show(this, playList)
             }
-            lrcFl,lrcView -> {
+            lrcFl, lrcView -> {
                 if (coverIv.isVisible()) {
                     coverIv.invisible()
                     lrcView.visible()

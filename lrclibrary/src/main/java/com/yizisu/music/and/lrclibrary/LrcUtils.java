@@ -152,10 +152,12 @@ class LrcUtils {
             if (conn.getResponseCode() == 200) {
                 InputStream is = conn.getInputStream();
                 int size = conn.getContentLength();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
-                lrcText = new String(buffer);
+                if (size > 0) {
+                    byte[] buffer = new byte[size];
+                    is.read(buffer);
+                    is.close();
+                    lrcText = new String(buffer);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

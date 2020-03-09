@@ -35,6 +35,12 @@ class SearchMusicActivity : BaseActivity() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         window.statusBarColor = getResColor(R.color.colorAccent)
+        searchEt.post {
+            showKeyboard(searchEt)
+        }
+        searchToolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
         searchEt.onSearch {
             startSearch()
         }
@@ -74,7 +80,12 @@ class SearchMusicActivity : BaseActivity() {
     }
 
     private fun startSearch() {
-        searchViewModel.search(searchEt.text?.toString())
+        val keyword = searchEt.text?.toString()
+        if (keyword.isNullOrBlank()) {
+            R.string.search_hint.toast()
+            return
+        }
+        searchViewModel.search(keyword)
         searchVp.visible()
         searchMusicTab.visible()
         hiddenKeyboard()

@@ -484,6 +484,9 @@ public class LrcView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (onClickListener == null && mOnPlayClickListener == null) {
+            return super.onTouchEvent(event);
+        }
         boolean eventResult = mGestureDetector.onTouchEvent(event);
         if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
             isScrollingH = false;
@@ -522,7 +525,7 @@ public class LrcView extends View {
                 invalidate();
                 return true;
             }
-            return true;
+            return onClickListener != null || mOnPlayClickListener != null;
         }
 
         @Override

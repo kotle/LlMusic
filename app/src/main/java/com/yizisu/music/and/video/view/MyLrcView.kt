@@ -91,7 +91,7 @@ class MyLrcView : LrcView, MusicEventListener {
     /*****************************************************************************/
     private fun queryLrcFromNet() {
         val model = lastSongModel ?: return
-        if (isVisible()) {
+        if (lastParentViewVisibility == View.VISIBLE) {
             reset()
             when (model.sourceType) {
                 LocalMusicBean.SOURCE_TYPE_NETEASE -> {
@@ -109,9 +109,11 @@ class MyLrcView : LrcView, MusicEventListener {
         }
     }
 
+    private var lastParentViewVisibility = View.VISIBLE
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
-        if (visibility == View.VISIBLE && !hasLrc()) {
+        lastParentViewVisibility = visibility
+        if (isVisible() && !hasLrc()) {
             lastSongModel?.let {
                 queryLrcFromNet()
             }

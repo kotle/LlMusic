@@ -53,6 +53,11 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
         }
     }
 
+    override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
+        super.onError(throwable, playerModel)
+        anim?.pause()
+    }
+
     override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
         super<MusicEventListener>.onPause(playStatus, playerModel)
         if (lastPlayerModel == playerModel) {
