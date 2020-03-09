@@ -34,13 +34,13 @@ class MyLrcView : LrcView, MusicEventListener {
     private val lrcViewModel by lazy {
         val activity = context.safeGet<BaseActivity>()
         activity?.getViewModel<LrcViewModel>()?.apply {
-            lrcData.registerOnSuccessLiveBean(activity) {
+            LrcViewModel.lrcData.registerOnSuccessLiveBean(activity) {
                 val list = it.result
                 if (!list.isNullOrEmpty()) {
                     loadLrcByUrl(list[0].lrc)
                 }
             }
-            lrcNeteaseData.registerOnSuccessLiveBean(activity) {
+            LrcViewModel.lrcNeteaseData.registerOnSuccessLiveBean(activity) {
                 loadLrc(it.lyric)
             }
         }
@@ -91,7 +91,7 @@ class MyLrcView : LrcView, MusicEventListener {
     /*****************************************************************************/
     private fun queryLrcFromNet() {
         val model = lastSongModel ?: return
-        if (lastParentViewVisibility == View.VISIBLE) {
+        if (lastParentViewVisibility == View.VISIBLE && isVisible()) {
             reset()
             when (model.sourceType) {
                 LocalMusicBean.SOURCE_TYPE_NETEASE -> {

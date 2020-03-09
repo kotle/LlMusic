@@ -10,11 +10,17 @@ import com.yizisu.music.and.video.net.netease.NETEAST_SONG_LRC
 import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
 
 class LrcViewModel : BaseViewModel() {
+    companion object {
+        /**
+         * 从歌词迷查询歌词
+         */
+        val lrcData = createLiveBean<LrcBean>()
+        /**
+         * 从网易云查询歌词
+         */
+        val lrcNeteaseData = createLiveBean<LrcNeteaseBean>()
+    }
 
-    /**
-     * 从歌词迷查询歌词
-     */
-    val lrcData = createLiveBean<LrcBean>()
 
     fun queryLrc(name: String?, singer: String?) {
         name ?: return
@@ -31,12 +37,12 @@ class LrcViewModel : BaseViewModel() {
             .async(lrcData.createOkHttpCall())
     }
 
-    /**
-     * 从网易云查询歌词
-     */
-    val lrcNeteaseData = createLiveBean<LrcNeteaseBean>()
 
     fun queryLrcNetease(songId: String) {
+        if (lrcNeteaseData.tag == songId) {
+            return
+        }
+        lrcNeteaseData.tag = songId
         NETEAST_SONG_LRC.sendNeteaseHttp(
             mutableMapOf(
                 "id" to songId
