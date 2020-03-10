@@ -27,12 +27,6 @@ class RecentPlayFragment : BaseFragment() {
         return R.layout.fragment_recent_play
     }
 
-
-    override fun initViewModel() {
-        super.initViewModel()
-        AppData.localMusicData.register(::onQueryLocalMusic)
-    }
-
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         adapter.setOnItemClickListener { itemView, position, itemData ->
@@ -44,39 +38,4 @@ class RecentPlayFragment : BaseFragment() {
         }
         recentPlayRcv.adapter = adapter
     }
-
-    override fun initData() {
-        super.initData()
-        getPermission(
-            mutableListOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        ) {
-            if (it) {
-                getActivityViewModel<LocalMusicViewModel>()?.queryLocalMusic()
-            }
-        }
-    }
-
-    /**
-     * 查询本地音乐
-     */
-    private fun onQueryLocalMusic(bean: LiveBean<MutableList<LocalMusicBean>>) {
-        when (bean.status) {
-            LiveBeanStatus.START -> {
-
-            }
-            LiveBeanStatus.SUCCESS -> {
-                val musics = bean.data
-                if (!musics.isNullOrEmpty()) {
-                    adapter.refreshList(musics)
-                }
-            }
-            LiveBeanStatus.FAIL -> {
-
-            }
-        }
-    }
-
 }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TestDbActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/insetAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="插入一个专辑" />
+
+        <EditText
+            android:id="@+id/albumId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/queryOneAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询一个专辑" />
+
+        <Button
+            android:id="@+id/queryAllAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询所有专辑" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/insetSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="插入一个歌曲" />
+
+        <EditText
+            android:id="@+id/songId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/queryOneSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询一个歌曲" />
+
+        <Button
+            android:id="@+id/queryAllSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查询所有歌曲" />
+
+        <Button
+            android:id="@+id/withSongAndAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关联歌曲和专辑" />
+    </LinearLayout>
+</LinearLayout>

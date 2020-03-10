@@ -4,6 +4,8 @@ package com.yizisu.music.and.video.module.main
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import com.yizisu.basemvvm.mvvm.mvvm_helper.createLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.music.and.video.R

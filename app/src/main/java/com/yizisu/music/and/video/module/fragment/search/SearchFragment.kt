@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
@@ -35,10 +36,6 @@ class SearchFragment : BaseFragment() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         searchRcv.adapter = searchAdapter
-        searchAdapter.setOnItemClickListener { itemView, position, itemData ->
-            startPlaySearchMusic(searchAdapter.datas, position)
-        }
-
     }
 
     override fun initViewModel() {
@@ -88,30 +85,11 @@ class SearchFragment : BaseFragment() {
 
     private fun refreshAdapter(bean: SearchBean?) {
 //        searchAdapter.loadMoreList(bean?.data)
-        searchAdapter.refreshList(bean?.data)
+        searchAdapter.refreshList(bean?.songInfoTables)
     }
 
     override fun getTitle(): CharSequence? {
         return sourceType
     }
 
-    /**
-     * 开始播放搜索音乐
-     */
-    private fun startPlaySearchMusic(
-        datas: MutableList<SearchBean.DataBean>,
-        position: Int
-    ) {
-        MusicService.startPlay(datas.map {
-            SongModel(LocalMusicBean().apply {
-                title = it.title
-                singer = it.author
-                album = ""
-                path = it.url
-                coverUrl = it.pic
-                sourceType = it.type
-                id = it.songid.toLong()
-            })
-        }.toMutableList(), position, true)
-    }
 }

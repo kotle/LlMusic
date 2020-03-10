@@ -9,6 +9,8 @@ import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 
 import com.yizisu.basemvvm.utils.ViewExtFunKt;
+import com.yizisu.music.and.roomdblibrary.DbCons;
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable;
 import com.yizisu.music.and.video.R;
 import com.yizisu.music.and.video.bean.LocalMusicBean;
 import com.yizisu.music.and.video.bean.LocalVideoBean;
@@ -19,6 +21,25 @@ import java.util.List;
 import static com.yizisu.basemvvm.MvvmLibKt.app;
 
 public class LocalMusicUtil {
+    public static List<SongInfoTable> getSongInfos(Context context) {
+        List<LocalMusicBean> musicInfo = getMusicInfo(context);
+        ArrayList<SongInfoTable> songs = new ArrayList<>();
+        if (musicInfo == null || musicInfo.size() == 0) {
+            return songs;
+        }
+        for (LocalMusicBean bean : musicInfo) {
+            SongInfoTable table = new SongInfoTable();
+            table.setName(bean.title);
+            table.setDes(bean.singer);
+            table.setId(bean.id);
+            table.setType(DbCons.TYPE_FREE);
+            table.setSource(DbCons.SOURCE_LOCAL);
+            table.setPlayFilePath(bean.path);
+            table.setDuration((long) bean.duration);
+            songs.add(table);
+        }
+        return songs;
+    }
 
     public static List<LocalMusicBean> getMusicInfo(Context context) {
         List<LocalMusicBean> list = new ArrayList<>();
@@ -84,7 +105,7 @@ public class LocalMusicUtil {
                     song.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
                     song.height = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT));
                     song.width = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH));
-                    song.sourceType=LocalMusicBean.SOURCE_TYPE_LOCAL;
+                    song.sourceType = LocalMusicBean.SOURCE_TYPE_LOCAL;
 //                把歌曲名字和歌手切割开
                     if (song.size > 1000 * 800) {
                         list.add(song);

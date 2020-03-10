@@ -17,12 +17,12 @@ abstract class BaseUiActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isStatusBarBlackTextColor(true)
+        isStatusBarBlackTextColor(false)
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawableResource(R.color.colorBackground)
         getToolbar()?.apply {
             setTitleTextAppearance(this@BaseUiActivity, R.style.ToolBarTitle)
-            setBackgroundResource(R.color.colorPrimary)
+            setBackgroundResource(R.color.colorAccent)
         }
     }
 

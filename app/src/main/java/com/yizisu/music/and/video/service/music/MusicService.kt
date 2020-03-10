@@ -16,10 +16,12 @@ import com.yizisu.basemvvm.activityList
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
+import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.finishAllActivity
 import com.yizisu.basemvvm.utils.isThis
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.basemvvm.utils.toast
+import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
@@ -152,7 +154,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
     override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
         super.onError(throwable, playerModel)
-        "播放出错:${playerModel.safeGet<SongModel>()?.song?.title}".toast()
+        "播放出错:${playerModel.safeGet<SongModel>()?.song?.name}".toast()
 //        player.next()
     }
 
@@ -194,7 +196,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
      */
     private fun notifyByReceiver(playerModel: PlayerModel?) {
         playerModel.safeGet<SongModel>()?.song?.apply {
-            sendNotify(null, title, singer, 19, player.isPlaying(), session)
+            sendNotify(null, name, des, 19, player.isPlaying(), session)
         }
     }
 
@@ -206,8 +208,8 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             return@setMediaSession MediaDescriptionCompat.Builder()
                 .setExtras(Bundle().apply {
                     it.safeGet<SongModel>()?.song?.apply {
-                        putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
-                        putString(MediaMetadataCompat.METADATA_KEY_ARTIST, singer)
+                        putString(MediaMetadataCompat.METADATA_KEY_TITLE, name)
+                        putString(MediaMetadataCompat.METADATA_KEY_ARTIST, des)
                     }
                 })
                 .build()
@@ -315,6 +317,14 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
     override fun onPlayerModelChange(playerModel: PlayerModel) {
         super.onPlayerModelChange(playerModel)
         notifyByReceiver(playerModel)
+        playerModel.isThis<SongModel> {
+            AppData.currentPlaySong.success(this)
+        }
+    }
+
+    override fun onPlayerListChange(playerModels: MutableList<PlayerModel>) {
+        super.onPlayerListChange(playerModels)
+        AppData.currentPlayList.success(playerModels)
     }
 
     override fun onTick(playerModel: PlayerModel) {

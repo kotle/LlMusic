@@ -31,19 +31,19 @@ class LocalVideoFragment : BaseFragment() {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.localVideoData.register(::onQueryLocalMusic)
+//        AppData.localVideoData.register(::onQueryLocalMusic)
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
 
         adapter.setOnItemClickListener { itemView, position, itemData ->
-            FullVideoActivity.start(
-                appCompatActivity, FullVideoActivity.FullVideoData(
-                    itemData.path,
-                    itemData.title
-                )
-            )
+//            FullVideoActivity.start(
+//                appCompatActivity, FullVideoActivity.FullVideoData(
+//                    itemData.path,
+//                    itemData.title
+//                )
+//            )
         }
         localMusicRcv.adapter = adapter
     }
@@ -163,7 +163,7 @@ class LocalVideoFragment : BaseFragment() {
                         album = ""
                         path = "http://ivi.bupt.edu.cn/hls/cctv12hd.m3u8"
                     })
-                    adapter.refreshList(musics)
+//                    adapter.refreshList(musics)
                 }
             }
             LiveBeanStatus.FAIL -> {

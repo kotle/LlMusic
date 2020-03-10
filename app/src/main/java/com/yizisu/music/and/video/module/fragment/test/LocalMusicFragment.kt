@@ -32,7 +32,6 @@ class LocalMusicFragment : BaseFragment() {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.localMusicData.register(::onQueryLocalMusic)
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
@@ -70,7 +69,7 @@ class LocalMusicFragment : BaseFragment() {
             LiveBeanStatus.SUCCESS -> {
                 val musics = bean.data
                 if (!musics.isNullOrEmpty()) {
-                    adapter.refreshList(musics)
+//                    adapter.refreshList(musics)
                 }
             }
             LiveBeanStatus.FAIL -> {

@@ -10,6 +10,7 @@ import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.baselib.base.BaseViewModel
 import com.yizisu.music.and.video.baselib.base.createOkHttpCall
 import com.yizisu.music.and.video.baselib.base.sendHttp
+import com.yizisu.music.and.video.bean.LocalMusicBean
 import com.yizisu.music.and.video.bean.TestVideoBean
 import com.yizisu.music.and.video.utils.LocalMusicUtil
 
@@ -17,17 +18,19 @@ class LocalMusicViewModel : BaseViewModel() {
     /**
      * 查询本地音乐
      */
+    val localMusicData by lazy { createLiveBean<MutableList<LocalMusicBean>>() }
+
     fun queryLocalMusic() {
-        AppData.localMusicData.start()
+        localMusicData.start()
         launchThread {
-            AppData.localMusicData.success(LocalMusicUtil.getMusicInfo(app))
+            localMusicData.success(LocalMusicUtil.getMusicInfo(app))
         }
     }
 
     fun queryLocalVideo() {
-        AppData.localMusicData.start()
+        localMusicData.start()
         launchThread {
-            AppData.localVideoData.success(LocalMusicUtil.getVideoInfo(app))
+            //            localVideoData.success(LocalMusicUtil.getVideoInfo(app))
         }
     }
 

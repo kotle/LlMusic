@@ -8,6 +8,7 @@ import android.view.WindowManager
 import android.widget.SeekBar
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.lrclibrary.LrcEntry
+import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.baselib.base.sendHttp
@@ -27,17 +28,28 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         }
     }
 
-    private var playList: MutableList<PlayerModel>? = null
-    private var currentPlayMode: PlayerModel? = null
+    private val currentPlayMode: PlayerModel?
+        get() = AppData.currentPlaySong.data
+
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.activity_lrc
+    }
+
+    override fun initViewModel() {
+        super.initViewModel()
+        AppData.currentPlaySong.registerOnSuccess {
+            fullImageIv.updateCover(it)
+            it?.song?.apply {
+                titleTv.textFrom(name)
+                desTv.textFrom(des)
+            }
+        }
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         transparentStatusBar()
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-        coverIv.setImageGlide(R.drawable.default_cover_icon, radius = GLIDE_LOAD_RADIUS_CIRCLE)
         MusicService.addMusicEventListener(this)
         lrcToolbar.setNavigationOnClickListener {
             onBackPressed()
@@ -92,7 +104,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
 ////                CurrentPlayListDialog.show(appCompatActivity, playList)
 //            }
             playListIv -> {
-                CurrentPlayListDialog.show(this, playList)
+                CurrentPlayListDialog.show(this)
             }
             lrcFl, lrcView -> {
                 if (coverIv.isVisible()) {
@@ -125,22 +137,6 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         } else {
             playOrPauseIv.setImageResource(R.drawable.icon_play)
         }
-    }
-
-
-    override fun onPlayerModelChange(playerModel: PlayerModel) {
-        super.onPlayerModelChange(playerModel)
-        currentPlayMode = playerModel
-        fullImageIv.updateCover(playerModel)
-        playerModel.safeGet<SongModel>()?.song?.apply {
-            titleTv.textFrom(title)
-            desTv.textFrom("${singer}-${album}".trimEnd('-'))
-        }
-    }
-
-    override fun onPlayerListChange(playerModels: MutableList<PlayerModel>) {
-        super.onPlayerListChange(playerModels)
-        playList = playerModels
     }
 
     override fun onTick(playerModel: PlayerModel) {

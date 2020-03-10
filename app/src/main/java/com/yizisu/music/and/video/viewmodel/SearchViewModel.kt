@@ -2,6 +2,9 @@ package com.yizisu.music.and.video.viewmodel
 
 import androidx.lifecycle.Observer
 import com.yizisu.basemvvm.mvvm.mvvm_helper.*
+import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.bean.SingerInfoTable
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.baselib.base.BaseViewModel
 import com.yizisu.music.and.video.baselib.base.createOkHttpCall
 import com.yizisu.music.and.video.bean.LocalMusicBean
@@ -16,6 +19,7 @@ import com.yizisu.music.and.video.net.baidu.sendBaiduHttp
 import com.yizisu.music.and.video.net.netease.NETEAST_SEARCH
 import com.yizisu.music.and.video.net.netease.NETEAST_SONG_INFO
 import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
+import java.lang.StringBuilder
 
 class SearchViewModel : BaseViewModel() {
 
@@ -40,12 +44,25 @@ class SearchViewModel : BaseViewModel() {
     fun baiduToSearchBean(bean: SearchBaiduBean?): SearchBean? {
         bean ?: return null
         val searchBean = SearchBean()
-        searchBean.data = bean.song?.map {
-            SearchBean.DataBean().apply {
-                title = it.songname
-                songid = it.songid
-                author = it.artistname
-                type = LocalMusicBean.SOURCE_TYPE_BAIDU
+        searchBean.songInfoTables = bean.song?.map {
+            SongInfoTable().apply {
+                name = it.songname
+                id = it.songid.toLong()
+                source = DbCons.SOURCE_BAIDU
+                type = DbCons.TYPE_FREE
+                if (!bean.album.isNullOrEmpty()) {
+                    coverUrlPath = bean.album[0].artistpic
+                }
+                des = it.artistname
+                searchBean.singerInfoTables = bean.artist?.map {
+                    SingerInfoTable().apply {
+                        coverUrlPath = it.artistpic
+                        id = it.artistid.toLong()
+                        name = it.artistname
+                        source = DbCons.SOURCE_BAIDU
+                        type = DbCons.TYPE_FREE
+                    }
+                }
             }
         }
         return searchBean
@@ -55,18 +72,25 @@ class SearchViewModel : BaseViewModel() {
     fun neteaseToSearchBean(bean: SearchNeteaseBean?): SearchBean? {
         val songs = bean?.result?.songs ?: return null
         val searchBean = SearchBean()
-        searchBean.data = songs.map {
-            SearchBean.DataBean().apply {
-                title = it.name
-//                songid = "${it.hMusic?.id ?: it.lMusic?.id ?: it.mMusic?.id ?: it.bMusic?.id}"
-                songid = it.id.toString()
-                author = it.artists.map {
-                    it.name
-                }.toString().trimStart('[').trimEnd(']')
-                pic = it.album.picUrl
-                url = it.mp3Url
-                type = LocalMusicBean.SOURCE_TYPE_NETEASE
-                fee = it.fee
+        searchBean.songInfoTables = songs.map {
+            SongInfoTable().apply {
+                name = it.name
+                id = it.id
+                source = DbCons.SOURCE_NETEASE
+                type = it.fee.toInt()
+                coverUrlPath = it.album.picUrl
+                playUrlPath = "http://music.163.com/song/media/outer/url?id=${id}.mp3"
+                val singers = StringBuilder()
+                searchBean.singerInfoTables = it.artists.map {
+                    SingerInfoTable().apply {
+                        id = it.id
+                        name = it.name
+                        source = DbCons.SOURCE_NETEASE
+                        type = DbCons.TYPE_FREE
+                        singers.append("${it.name},")
+                    }
+                }
+                des = singers.toString().trimEnd(',')
             }
         }
         return searchBean

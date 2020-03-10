@@ -7,28 +7,39 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanValue
 import com.yizisu.basemvvm.mvvm.mvvm_helper.createLiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.utils.launchThread
+import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.bean.baidu.SongInfoBaiduBean
 import com.yizisu.music.and.video.bean.netease.SongInfoNeteaseBean
 import com.yizisu.music.and.video.viewmodel.SearchViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
+import java.lang.IllegalArgumentException
 import java.util.*
 
-class SongModel(val song: LocalMusicBean) : PlayerModel() {
+class SongModel(val song: SongInfoTable) : PlayerModel() {
     override fun callMediaUri(uriCall: (Uri?, Throwable?) -> Unit) {
-        when (song.sourceType) {
-            LocalMusicBean.SOURCE_TYPE_BAIDU -> {
+        if (song.playFilePath != null) {
+            uriCall.invoke(Uri.parse(song.playFilePath), null)
+            return
+        }
+        if (song.playUrlPath != null) {
+            uriCall.invoke(Uri.parse(song.playUrlPath), null)
+            return
+        }
+        when (song.source) {
+            DbCons.SOURCE_BAIDU -> {
                 queryBaiduUrl(uriCall, song)
 //                uriCall.invoke(Uri.parse("http://audio04.dmhmusic.com/71_53_T10046722712_128_4_1_0_sdk-cpm/cn/0208/M00/6F/02/ChR461uC3bWAXT8LAFBOio2zSeU812.mp3?xcode=8289fdd990a0ea765fd12efeb96377d4233096f"),null)
             }
-            LocalMusicBean.SOURCE_TYPE_NETEASE -> {
+            DbCons.SOURCE_NETEASE -> {
 //                queryNetneaseUrl(uriCall, song)
-                uriCall.invoke(Uri.parse("http://music.163.com/song/media/outer/url?id=${song.id}.mp3"),null)
-            }
-            LocalMusicBean.SOURCE_TYPE_LOCAL -> {
-                uriCall.invoke(Uri.parse(song.path), null)
+                uriCall.invoke(
+                    Uri.parse("http://music.163.com/song/media/outer/url?id=${song.id}.mp3"),
+                    null
+                )
             }
             else -> {
-                uriCall.invoke(Uri.parse(song.path), null)
+                throw IllegalArgumentException("没有可以播放的地址")
             }
         }
     }
@@ -38,7 +49,7 @@ class SongModel(val song: LocalMusicBean) : PlayerModel() {
      */
     private val searchViewModel by lazy { SearchViewModel() }
     private val baiduSongInfoData by lazy { createLiveBean<SongInfoBaiduBean>() }
-    private fun queryBaiduUrl(uriCall: (Uri?, Throwable?) -> Unit, modelSong: LocalMusicBean) {
+    private fun queryBaiduUrl(uriCall: (Uri?, Throwable?) -> Unit, modelSong: SongInfoTable) {
         var observable: Observer<LiveBeanValue<SongInfoBaiduBean>>? = null
         observable = Observer {
             when (it.status) {
@@ -49,10 +60,9 @@ class SongModel(val song: LocalMusicBean) : PlayerModel() {
                     val song = it.value?.songinfo
                     val bitrate = it.value?.bitrate
                     if (song != null && bitrate != null) {
-                        modelSong.path = bitrate.fileLink
-                        modelSong.coverUrl = song.picSmall
-                        modelSong.lrcUrl = song.lrclink
-                        modelSong.path=bitrate.fileLink
+                        modelSong.playUrlPath = bitrate.fileLink
+                        modelSong.coverUrlPath = song.picBig
+                        modelSong.lrcUrlPath = song.lrclink
                         //数据请求成功
                         uriCall.invoke(Uri.parse(bitrate.fileLink), null)
                     } else {
@@ -72,45 +82,5 @@ class SongModel(val song: LocalMusicBean) : PlayerModel() {
         }
         baiduSongInfoData.observeForever(observable)
         searchViewModel.songInfoByBaidu(modelSong.id.toString(), baiduSongInfoData)
-    }
-
-    /**
-     * 获取网易云的歌曲信息
-     */
-    private val neteaseSongInfoData by lazy { createLiveBean<SongInfoNeteaseBean>() }
-
-    private fun queryNetneaseUrl(uriCall: (Uri?, Throwable?) -> Unit, modelSong: LocalMusicBean) {
-        var observable: Observer<LiveBeanValue<SongInfoNeteaseBean>>? = null
-        observable = Observer {
-            when (it.status) {
-                LiveBeanStatus.START -> {
-
-                }
-                LiveBeanStatus.SUCCESS -> {
-//                    val song = it.value?.songinfo
-//                    val bitrate = it.value?.bitrate
-//                    if (song != null && bitrate != null) {
-//                        modelSong.path = bitrate.fileLink
-//                        modelSong.coverUrl = song.picSmall
-//                        modelSong.lrcUrl = song.lrclink
-//                        //数据请求成功
-//                        uriCall.invoke(Uri.parse(bitrate.fileLink), null)
-//                    } else {
-//                        uriCall.invoke(null, Throwable("请求成功，未返回结果"))
-//                    }
-                    observable?.let {
-                        neteaseSongInfoData.removeObserver(it)
-                    }
-                }
-                LiveBeanStatus.FAIL -> {
-                    uriCall.invoke(null, Throwable(it.errorMsg))
-                    observable?.let {
-                        neteaseSongInfoData.removeObserver(it)
-                    }
-                }
-            }
-        }
-        neteaseSongInfoData.observeForever(observable)
-        searchViewModel.songInfoByNetease(modelSong.id.toString(), neteaseSongInfoData)
     }
 }

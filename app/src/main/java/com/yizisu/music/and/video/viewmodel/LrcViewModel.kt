@@ -34,7 +34,7 @@ class LrcViewModel : BaseViewModel() {
             "http://gecimi.com/api/lyric/${name}/${singer}"
         }
         url.sendHttp(mutableMapOf(), true)
-            .async(lrcData.createOkHttpCall())
+            .async(lrcData.createOkHttpCall(false))
     }
 
 

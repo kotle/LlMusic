@@ -1,24 +1,3 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
 -ignorewarnings
 -dontwarn com.baidu.**
 -dontwarn com.tencent.**
@@ -40,7 +19,6 @@ public static java.lang.String TABLENAME;
     public static void createTable(org.greenrobot.greendao.database.Database, boolean);
 }
 
-
 # If you do not use SQLCipher:
 -dontwarn net.sqlcipher.database.**
 # If you do not use RxJava:
@@ -52,7 +30,7 @@ public static java.lang.String TABLENAME;
 -keep class vi.com.**{*;}
 -keep class vi.com.gdi.bgl.**{*;}
 
-#机关推送
+#极光推送
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
 -keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
@@ -105,49 +83,12 @@ public static java.lang.String TABLENAME;
 -dontskipnonpubliclibraryclassmembers    # 是否混淆第三方jar
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*  # 混淆时所采用的算法
 
-
-# ------ 保持哪些类不被混淆    ---------------不需要更改-------------------------------------------------
-
-#-keep public class * extends android.app.Activity
-#-keep public class * extends android.app.Application
-#-keep public class * extends android.app.Service
-#-keep public class * extends android.content.BroadcastReceiver
-#-keep public class * extends android.content.ContentProvider
-#-keep public class * extends android.app.backup.BackupAgentHelper
-#-keep public class * extends android.preference.Preference
-#-keep public class com.android.vending.licensing.ILicensingService
-
-
-# ------ 保持一些方法不被混淆    ----------------不需要更改----------------------------------------------
 #------保持native方法不被混淆 ------
 -keepclasseswithmembernames class * {
     native <methods>;
 }
-#------保持自定义控件类不被混淆------
-#-keepclasseswithmembers class * {
-#    public <init>(android.content.Context, android.util.AttributeSet);
-#}
-#------保持自定义控件类不被混淆------
-#-keepclasseswithmembers class * {
-#    public <init>(android.content.Context, android.util.AttributeSet, int);
-#}
-#------保持自定义控件类不被混淆------
-#-keepclassmembers class * extends android.app.Activity {
-#    public void *(android.view.View);
-#}
-#------保持枚举 enum 类不被混淆 ------
-#-keepclassmembers enum * {
-#    public static **[] values();
-#    public static ** valueOf(java.lang.String);
-#}
-#------保持 Parcelable 不被混淆------
--keep class * implements android.os.Parcelable {
-    public static final android.os.Parcelable$Creator *;
-}
 
 # ------ 去掉发出的警告   ----------------随情况更改-------------------------------------
-
-
 
 -dontwarn com.wintone.Adaptor.**          #去掉该路径下的类所发出的警告
 -keep class com.wintone.Adaptor.** { *;}  #如果该路径发出了警告，就不混淆该路径
@@ -163,12 +104,6 @@ public static java.lang.String TABLENAME;
 -keep class utills.** { *;}
 -dontwarn com.kernal.lisence.DeviceFP.**
 -keep class com.kernal.lisence.DeviceFP.** { *;}
-
-# ------ 序列号授权需要   -----------
-#-dontwarn org.**
-#-keep class org.** { *;}
-
-
 #混淆end
 #------------------------------------------------------车牌识别end
 
@@ -483,31 +418,10 @@ public static java.lang.String TABLENAME;
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
-#-keep public class * extends android.app.Activity{
-#	public <fields>;
-#	public <methods>;
-#}
-#-keep public class * extends android.app.Application{
-#	public <fields>;
-#	public <methods>;
-#}
-#-keep public class * extends android.app.Service
-#-keep public class * extends android.content.BroadcastReceiver
-#-keep public class * extends android.content.ContentProvider
-#-keep public class * extends android.app.backup.BackupAgentHelper
-#-keep public class * extends android.preference.Preference
 
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
-}
-
--keepclasseswithmembers class * {
-	public <init>(android.content.Context, android.util.AttributeSet);
-}
-
--keepclasseswithmembers class * {
-	public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
 -keepattributes *Annotation*

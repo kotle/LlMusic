@@ -7,12 +7,14 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
+import com.yizisu.basemvvm.mvvm.MvvmActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.NoParamsLifecycleObserver
 import com.yizisu.basemvvm.utils.GLIDE_LOAD_RADIUS_CIRCLE
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.basemvvm.utils.setCircleImageFromRes
 import com.yizisu.basemvvm.utils.setImageGlide
 import com.yizisu.basemvvm.widget.BaseImageView
+import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
@@ -29,12 +31,21 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
     )
 
     init {
-        context.safeGet<LifecycleOwner>()?.lifecycle?.addObserver(this)
-        setImageGlide(R.drawable.default_cover_icon, radius = GLIDE_LOAD_RADIUS_CIRCLE)
+        if (AppData.currentPlaySong.data == null) {
+            updateCover(null, true)
+        }
+        context.safeGet<MvvmActivity>()?.apply {
+            lifecycle.addObserver(this@AutoRotationImageView)
+            AppData.currentPlaySong.registerOnSuccess {
+                updateCover(it, true)
+            }
+        }
     }
 
     private var anim: ObjectAnimator? = null
-    private var lastPlayerModel: PlayerModel? = null
+    private val lastPlayerModel: PlayerModel?
+        get() = AppData.currentPlaySong.data
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         MusicService.addMusicEventListener(this)
@@ -63,12 +74,6 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
         if (lastPlayerModel == playerModel) {
             startAnim(playStatus)
         }
-    }
-
-    override fun onPlayerModelChange(playerModel: PlayerModel) {
-        super.onPlayerModelChange(playerModel)
-        lastPlayerModel = playerModel
-        updateCover(playerModel, true)
     }
 
     override fun onStart() {

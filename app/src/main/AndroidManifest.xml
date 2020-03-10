@@ -18,6 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".module.play_list_detail.PlayListDetailActivity"></activity>
+        <activity android:name=".TestDbActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
         <activity
             android:name=".module.search.SearchMusicActivity"
             android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"

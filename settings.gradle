@@ -1,4 +1,4 @@
-include ':app',':mvvmlib',':playerlib', ':lrclibrary'
+include ':app',':mvvmlib',':playerlib', ':lrclibrary', ':roomdblibrary'
 rootProject.name='MusicAndVideo'
 
 //项目地址（https://gitee.com/kotle/MvvmLib/tree/mvvm2）

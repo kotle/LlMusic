@@ -11,6 +11,7 @@ import com.yizisu.basemvvm.utils.navigateWithViews
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.basemvvm.utils.setCircleImageFromRes
 import com.yizisu.basemvvm.utils.textFrom
+import com.yizisu.music.and.video.AppData
 
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
@@ -29,10 +30,17 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     private val mainActivity: MainActivity?
         get() = appCompatActivity?.safeGet()
 
-    private var playList: MutableList<PlayerModel>? = null
-
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.fragment_home_music
+    }
+
+    override fun initViewModel() {
+        super.initViewModel()
+        AppData.currentPlaySong.registerOnSuccess {
+            it?.song?.apply {
+                titleTv.textFrom(name)
+            }
+        }
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
@@ -67,7 +75,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
                 MusicService.sendBroadcastReceiver(context, MusicService.ACTION_NEXT)
             }
             playListIv -> {
-                CurrentPlayListDialog.show(appCompatActivity, playList)
+                CurrentPlayListDialog.show(appCompatActivity)
             }
             headMusicLl, lrcView -> {
                 LrcActivity.start(appCompatActivity)
@@ -94,22 +102,5 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
         } else {
             playOrPauseIv.setImageResource(R.drawable.icon_play)
         }
-    }
-
-
-    override fun onPlayerModelChange(playerModel: PlayerModel) {
-        super.onPlayerModelChange(playerModel)
-        playerModel.safeGet<SongModel>()?.song?.apply {
-            titleTv.textFrom(title)
-        }
-    }
-
-    override fun onPlayerListChange(playerModels: MutableList<PlayerModel>) {
-        super.onPlayerListChange(playerModels)
-        playList = playerModels
-    }
-
-    override fun onTick(playerModel: PlayerModel) {
-
     }
 }
