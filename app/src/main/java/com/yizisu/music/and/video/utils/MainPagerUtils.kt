@@ -1,7 +1,9 @@
 package com.yizisu.music.and.video.utils
 
+import android.graphics.drawable.TransitionDrawable
 import android.widget.ImageView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
@@ -18,7 +20,11 @@ import com.yizisu.playerlibrary.helper.PlayerModel
 /**
  * 更新封面
  */
-fun ImageView.updateCover(playerModel: SongModel?, isCircle: Boolean = false) {
+fun ImageView.updateCover(
+    playerModel: SongModel?,
+    isCircle: Boolean = false,
+    transition: DrawableTransitionOptions? = DrawableTransitionOptions.withCrossFade(400)
+) {
     val coverUrl = playerModel?.song?.coverFilePath
         ?: playerModel?.song?.coverUrlPath
         ?: R.drawable.default_cover_icon
@@ -26,12 +32,14 @@ fun ImageView.updateCover(playerModel: SongModel?, isCircle: Boolean = false) {
         setImageGlide(
             coverUrl,
             R.drawable.default_cover_icon,
-            radius = GLIDE_LOAD_RADIUS_CIRCLE
+            radius = GLIDE_LOAD_RADIUS_CIRCLE,
+            transition = transition
         )
     } else {
         setImageGlide(
             coverUrl,
-            R.drawable.default_cover_icon
+            R.drawable.default_cover_icon,
+            transition = transition
         )
     }
 }
@@ -78,4 +86,35 @@ fun repelaceCurrentList(list: MutableList<SongInfoTable>?) {
         }
     }
 
+}
+
+fun setIsHeart(iv: ImageView) {
+    val current = AppData.currentPlaySong.data?.song ?: return
+    val heartAlbum = AppData.dbHeartAlbumData.data ?: return
+    launchThread {
+        val resId = if (DbHelper.isSongInAlbum(current, heartAlbum)) {
+            R.drawable.heart_red
+        } else {
+            R.drawable.heart_empty
+        }
+        runOnUi {
+            iv.setImageGlide(
+                resId
+                , transition = DrawableTransitionOptions.withCrossFade(400)
+            )
+        }
+    }
+}
+
+fun heartIvClick() {
+    val current = AppData.currentPlaySong.data?.song ?: return
+    val heartAlbum = AppData.dbHeartAlbumData.data ?: return
+    launchThread {
+        if (DbHelper.isSongInAlbum(current, heartAlbum)) {
+            DbHelper.removeSongToAlbum(current, heartAlbum)
+        } else {
+            DbHelper.addSongToAlbum(current, heartAlbum)
+        }
+        dbViewModel.queryHeartList()
+    }
 }

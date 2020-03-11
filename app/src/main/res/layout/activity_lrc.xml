@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:transitionName="fullImageIv"
         app:srcCompat="@drawable/icon_my_heart" />
 
     <com.github.mmin18.widget.RealtimeBlurView
@@ -154,12 +153,12 @@
                 android:layout_weight="1" />
 
             <com.yizisu.basemvvm.widget.BaseImageView
-                android:id="@+id/repeatIv"
+                android:id="@+id/heartIv"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?selectableItemBackground"
-                android:padding="8dp"
-                app:srcCompat="@drawable/icon_repet_list" />
+                android:padding="10dp"
+                app:srcCompat="@drawable/heart_empty" />
 
             <Space
                 android:layout_width="0dp"

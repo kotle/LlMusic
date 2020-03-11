@@ -16,6 +16,10 @@ class LrcViewModel : BaseViewModel() {
          */
         val lrcData = createLiveBean<LrcBean>()
         /**
+         *
+         */
+        val lrcFileData = createLiveBean<String>()
+        /**
          * 从网易云查询歌词
          */
         val lrcNeteaseData = createLiveBean<LrcNeteaseBean>()

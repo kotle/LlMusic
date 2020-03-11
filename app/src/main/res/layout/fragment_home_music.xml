@@ -41,6 +41,19 @@
                     android:layout_weight="2" />
 
                 <com.yizisu.basemvvm.widget.BaseImageView
+                    android:id="@+id/heartIv"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?selectableItemBackground"
+                    android:padding="10dp"
+                    app:srcCompat="@drawable/heart_empty" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <com.yizisu.basemvvm.widget.BaseImageView
                     android:id="@+id/preIv"
                     android:layout_width="48dp"
                     android:layout_height="48dp"

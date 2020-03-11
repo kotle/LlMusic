@@ -40,6 +40,21 @@ object DbHelper {
     }
 
     /**
+     * 查询某个歌曲是否在歌单
+     */
+    fun isSongInAlbum(song: SongInfoTable, album: AlbumInfoTable): Boolean {
+        val dao = songWithAlbumDao ?: return false
+        song.dbId ?: return false
+        album.dbId ?: return false
+        //判断歌曲是否存在
+        val old = dao.queryBuilder().where(
+            SongWithAlbumDao.Properties.SongId.eq(song.dbId),
+            SongWithAlbumDao.Properties.AlbumId.eq(album.dbId)
+        ).unique()
+        return old != null
+    }
+
+    /**
      * 插入歌曲到歌单
      */
     fun removeSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {

@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_home_menu.*
 
 
 class HomeMenuFragment : BaseFragment() {
+
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.fragment_home_menu
     }
@@ -41,7 +42,9 @@ class HomeMenuFragment : BaseFragment() {
             MusicService.startPlay(
                 it.songInfoTables.map {
                     SongModel(it)
-                }.toMutableList(), 0, true,
+                }.toMutableList(),
+                AppData.currentPlayIndex,
+                true,
                 false
             )
         }

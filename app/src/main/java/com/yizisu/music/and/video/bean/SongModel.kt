@@ -17,13 +17,13 @@ import java.lang.IllegalArgumentException
 import java.util.*
 
 class SongModel(val song: SongInfoTable) : PlayerModel() {
-    override fun callMediaUri(uriCall: (Uri?, Throwable?) -> Unit) {
+    override fun callMediaUri(uriCall: (Uri?, Throwable?,Boolean) -> Unit) {
         if (song.playFilePath != null) {
-            uriCall.invoke(Uri.parse(song.playFilePath), null)
+            uriCall.invoke(Uri.parse(song.playFilePath), null,false)
             return
         }
         if (song.playUrlPath != null) {
-            uriCall.invoke(Uri.parse(song.playUrlPath), null)
+            uriCall.invoke(Uri.parse(song.playUrlPath), null,false)
             return
         }
         when (song.source) {
@@ -35,7 +35,8 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
 //                queryNetneaseUrl(uriCall, song)
                 uriCall.invoke(
                     Uri.parse("http://music.163.com/song/media/outer/url?id=${song.id}.mp3"),
-                    null
+                    null,
+                    false
                 )
             }
             else -> {
@@ -49,7 +50,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
      */
     private val searchViewModel by lazy { SearchViewModel() }
     private val baiduSongInfoData by lazy { createLiveBean<SongInfoBaiduBean>() }
-    private fun queryBaiduUrl(uriCall: (Uri?, Throwable?) -> Unit, modelSong: SongInfoTable) {
+    private fun queryBaiduUrl(uriCall: (Uri?, Throwable?,Boolean) -> Unit, modelSong: SongInfoTable) {
         var observable: Observer<LiveBeanValue<SongInfoBaiduBean>>? = null
         observable = Observer {
             when (it.status) {
@@ -64,16 +65,16 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         modelSong.coverUrlPath = song.picBig
                         modelSong.lrcUrlPath = song.lrclink
                         //数据请求成功
-                        uriCall.invoke(Uri.parse(bitrate.fileLink), null)
+                        uriCall.invoke(Uri.parse(bitrate.fileLink), null,true)
                     } else {
-                        uriCall.invoke(null, Throwable("请求成功，未返回结果"))
+                        uriCall.invoke(null, Throwable("请求成功，未返回结果"),false)
                     }
                     observable?.let {
                         baiduSongInfoData.removeObserver(it)
                     }
                 }
                 LiveBeanStatus.FAIL -> {
-                    uriCall.invoke(null, Throwable(it.errorMsg))
+                    uriCall.invoke(null, Throwable(it.errorMsg),false)
                     observable?.let {
                         baiduSongInfoData.removeObserver(it)
                     }

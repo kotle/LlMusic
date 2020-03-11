@@ -260,8 +260,8 @@ class FullVideoActivity : BaseUiActivity() {
     }
 
     private class VideoMode(private val data: FullVideoData) : PlayerModel() {
-        override fun callMediaUri(uriCall: (Uri?, Throwable?) -> Unit) {
-            uriCall.invoke(Uri.parse(data.path),null)
+        override fun callMediaUri(uriCall: (Uri?, Throwable?,Boolean) -> Unit) {
+            uriCall.invoke(Uri.parse(data.path),null,false)
         }
     }
 }

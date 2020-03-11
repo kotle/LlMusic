@@ -7,17 +7,15 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.SeekBar
 import com.yizisu.basemvvm.utils.*
-import com.yizisu.music.and.lrclibrary.LrcEntry
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
-import com.yizisu.music.and.video.baselib.base.sendHttp
-import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
+import com.yizisu.music.and.video.utils.heartIvClick
+import com.yizisu.music.and.video.utils.setIsHeart
 import com.yizisu.music.and.video.utils.updateCover
-import com.yizisu.music.and.video.viewmodel.LrcViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.activity_lrc.*
 
@@ -38,11 +36,15 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     override fun initViewModel() {
         super.initViewModel()
         AppData.currentPlaySong.registerOnSuccess {
-            fullImageIv.updateCover(it)
             it?.song?.apply {
+                fullImageIv.updateCover(it)
+                setIsHeart(heartIv)
                 titleTv.textFrom(name)
                 desTv.textFrom(des)
             }
+        }
+        AppData.dbHeartAlbumData.registerOnSuccess {
+            setIsHeart(heartIv)
         }
     }
 
@@ -81,7 +83,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv, playListIv, lrcFl, lrcView)
+        return listOf(preIv, playOrPauseIv, nextIv, playListIv, lrcFl, lrcView, heartIv)
     }
 
 
@@ -100,9 +102,9 @@ class LrcActivity : BaseActivity(), MusicEventListener {
             nextIv -> {
                 MusicService.sendBroadcastReceiver(this, MusicService.ACTION_NEXT)
             }
-//            coverIv -> {
-////                CurrentPlayListDialog.show(appCompatActivity, playList)
-//            }
+            heartIv -> {
+                heartIvClick()
+            }
             playListIv -> {
                 CurrentPlayListDialog.show(this)
             }

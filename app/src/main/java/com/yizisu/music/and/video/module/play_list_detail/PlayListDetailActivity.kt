@@ -45,6 +45,10 @@ class PlayListDetailActivity : BaseUiActivity() {
         return true
     }
 
+    override fun isCanSwipeBack(): Boolean {
+        return super.isCanSwipeBack()
+    }
+
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         if (albumDbId < 0) {

@@ -1,6 +1,7 @@
 package com.yizisu.music.and.video.service.music
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.app.Service
 import android.content.*
 import android.media.AudioManager
@@ -53,6 +54,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         const val ACTION_NEXT = "ACTION_NEXT"
         const val ACTION_PRE = "ACTION_PRE"
         const val ACTION_CLOSE = "ACTION_CLOSE"
+        private const val NOTIFY_MUSIC_ID = 19
         //启动服务
         fun start(context: Context) {
             context.startService(Intent(context, MusicService::class.java))
@@ -137,6 +139,9 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
     }
 
     private val musicEventListener = mutableListOf<MusicEventListener>()
+    private val notificationManager by lazy {
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
@@ -187,6 +192,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
     private fun closeApp() {
         stopForeground(true)
+        notificationManager.cancel(NOTIFY_MUSIC_ID)
         stopSelf()
         finishAllActivity(true)
     }
@@ -196,7 +202,10 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
      */
     private fun notifyByReceiver(playerModel: PlayerModel?) {
         playerModel.safeGet<SongModel>()?.song?.apply {
-            sendNotify(null, name, des, 19, player.isPlaying(), session)
+            sendNotify(
+                notificationManager,
+                null, name, des, NOTIFY_MUSIC_ID, player.isPlaying(), session
+            )
         }
     }
 

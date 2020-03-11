@@ -11,6 +11,7 @@ import com.yizisu.basemvvm.utils.navigateWithViews
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.basemvvm.utils.setCircleImageFromRes
 import com.yizisu.basemvvm.utils.textFrom
+import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.video.AppData
 
 import com.yizisu.music.and.video.R
@@ -22,13 +23,13 @@ import com.yizisu.music.and.video.module.main.MainActivity
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.LocalMusicUtil
+import com.yizisu.music.and.video.utils.heartIvClick
+import com.yizisu.music.and.video.utils.setIsHeart
 import com.yizisu.music.and.video.utils.updateCover
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.fragment_home_music.*
 
 class HomeMusicFragment : BaseFragment(), MusicEventListener {
-    private val mainActivity: MainActivity?
-        get() = appCompatActivity?.safeGet()
 
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.fragment_home_music
@@ -39,7 +40,11 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
         AppData.currentPlaySong.registerOnSuccess {
             it?.song?.apply {
                 titleTv.textFrom(name)
+                setIsHeart(heartIv)
             }
+        }
+        AppData.dbHeartAlbumData.registerOnSuccess {
+            setIsHeart(heartIv)
         }
     }
 
@@ -55,7 +60,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv, playListIv, headMusicLl)
+        return listOf(preIv, playOrPauseIv, nextIv, playListIv, headMusicLl,heartIv)
     }
 
 
@@ -79,6 +84,9 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
             }
             headMusicLl, lrcView -> {
                 LrcActivity.start(appCompatActivity)
+            }
+            heartIv -> {
+                heartIvClick()
             }
         }
     }

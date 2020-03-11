@@ -22,6 +22,7 @@ import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.viewmodel.LrcViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
+import java.io.File
 
 class MyLrcView : LrcView, MusicEventListener {
     constructor(context: Context?) : super(context)
@@ -35,6 +36,7 @@ class MyLrcView : LrcView, MusicEventListener {
     private val lrcViewModel by lazy {
         val activity = context.safeGet<BaseActivity>()
         activity?.getViewModel<LrcViewModel>()?.apply {
+            //歌词迷歌词
             LrcViewModel.lrcData.registerOnSuccessLiveBean(activity) {
                 val list = it.result
                 if (!list.isNullOrEmpty()) {
@@ -47,10 +49,21 @@ class MyLrcView : LrcView, MusicEventListener {
                     }
                 }
             }
+            //网易云纯文本歌词
             LrcViewModel.lrcNeteaseData.registerOnSuccessLiveBean(activity) {
                 loadLrc(it.lyric)
                 AppData.currentPlaySong.data?.song?.let { song ->
                     song.lrcString = it.lyric
+                    launchThread {
+                        DbHelper.insetOrUpdateSong(song)
+                    }
+                }
+            }
+            //文件歌词
+            LrcViewModel.lrcFileData.registerOnSuccessLiveBean(activity) {
+                loadLrc(File(it))
+                AppData.currentPlaySong.data?.song?.let { song ->
+                    song.lrcFilePath = it
                     launchThread {
                         DbHelper.insetOrUpdateSong(song)
                     }
@@ -108,6 +121,10 @@ class MyLrcView : LrcView, MusicEventListener {
                         lyric = model.lrcString
                     }
                 )
+                return
+            }
+            if (model.lrcFilePath != null) {
+                LrcViewModel.lrcFileData.success(model.lrcFilePath)
                 return
             }
             if (model.lrcUrlPath != null) {

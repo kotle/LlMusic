@@ -27,6 +27,7 @@ import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_PR
  * 开启一个前台通知，进程保活
  */
 fun Service.sendNotify(
+    notificationManager:NotificationManager,
     coverBp: Bitmap?,
     title: String,
     message: String,
@@ -76,7 +77,7 @@ fun Service.sendNotify(
         //锁屏权限
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 //        .setTicker("$title-$message")//在状态栏短暂显示的文字
-    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channel = NotificationChannel(
             id.toString(),
