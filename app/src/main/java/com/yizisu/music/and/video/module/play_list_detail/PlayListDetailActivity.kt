@@ -70,20 +70,24 @@ class PlayListDetailActivity : BaseUiActivity() {
         showLoadingView()
         launchThread {
             val album = DbHelper.queryAlbumByDbId(albumDbId) ?: return@launchThread
-            if (albumDbId == DbCons.ALBUM_ID_LOCAL) {
-                //查询本地音乐
-                val songs = LocalMusicUtil.getSongInfos(this@PlayListDetailActivity)
-                AppData.dbLocalAlbumData.apply {
-                    data?.songInfoTables = songs
-                    data?.let {
-                        success(it)
+            when (albumDbId) {
+                DbCons.ALBUM_ID_LOCAL -> {
+                    //查询本地音乐
+                    val songs = LocalMusicUtil.getSongInfos(this@PlayListDetailActivity)
+                    AppData.dbLocalAlbumData.apply {
+                        data?.songInfoTables = songs
+                        data?.let {
+                            success(it)
+                        }
                     }
+                    refreshList(album, songs)
+                    return@launchThread
                 }
-                refreshList(album, songs)
-                return@launchThread
+                else -> {
+                    val songs = album.songInfoTables
+                    refreshList(album, songs?.asReversed())
+                }
             }
-            val songs = album.songInfoTables
-            refreshList(album, songs?.asReversed())
         }
     }
 
@@ -92,10 +96,15 @@ class PlayListDetailActivity : BaseUiActivity() {
         songs: MutableList<SongInfoTable>?
     ) {
         launchUi {
+            if (songs.isNullOrEmpty()) {
+                showOtherView("真的忍心让我寂寞着嘛")
+            } else {
+                showContentView()
+            }
             title = album.title
-            showContentView()
             getSwitchView()?.stopRefresh()
             adapter.refreshList(songs)
+
         }
     }
 }

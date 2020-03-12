@@ -74,4 +74,6 @@ object AppData {
     val dbRecentAlbumData by lazy { createLiveBean<AlbumInfoTable>() }
     //数据库本地音乐列表
     val dbLocalAlbumData by lazy { createLiveBean<AlbumInfoTable>() }
+    //我的所有歌单
+    val allAlbumData by lazy { createLiveBean<MutableList<AlbumInfoTable>>() }
 }

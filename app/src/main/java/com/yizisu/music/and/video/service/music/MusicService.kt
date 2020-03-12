@@ -4,6 +4,9 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.app.Service
 import android.content.*
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.Binder
 import android.os.Bundle
@@ -11,6 +14,7 @@ import android.os.IBinder
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.yizisu.basemvvm.activityList
@@ -18,11 +22,9 @@ import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
-import com.yizisu.basemvvm.utils.finishAllActivity
-import com.yizisu.basemvvm.utils.isThis
-import com.yizisu.basemvvm.utils.safeGet
-import com.yizisu.basemvvm.utils.toast
+import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.video.AppData
+import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
@@ -55,6 +57,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         const val ACTION_PRE = "ACTION_PRE"
         const val ACTION_CLOSE = "ACTION_CLOSE"
         private const val NOTIFY_MUSIC_ID = 19
+        private const val BITMAP_WIDTH_HEIGHT = 300
         //启动服务
         fun start(context: Context) {
             context.startService(Intent(context, MusicService::class.java))
@@ -137,6 +140,15 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             setHandleWakeLock(true)
         }
     }
+    //默认通知栏图标
+    private val defaultBigIcon by lazy {
+        getResDrawable(R.drawable.default_cover_icon)?.toBitmap(
+            BITMAP_WIDTH_HEIGHT,
+            BITMAP_WIDTH_HEIGHT,
+            Bitmap.Config.RGB_565
+        )
+    }
+    private var lastBigIconBitmap: Bitmap? = null
 
     private val musicEventListener = mutableListOf<MusicEventListener>()
     private val notificationManager by lazy {
@@ -204,7 +216,12 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         playerModel.safeGet<SongModel>()?.song?.apply {
             sendNotify(
                 notificationManager,
-                null, name, des, NOTIFY_MUSIC_ID, player.isPlaying(), session
+                lastBigIconBitmap ?: defaultBigIcon,
+                name,
+                des,
+                NOTIFY_MUSIC_ID,
+                player.isPlaying(),
+                session
             )
         }
     }
@@ -325,11 +342,37 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
     override fun onPlayerModelChange(playerModel: PlayerModel) {
         super.onPlayerModelChange(playerModel)
-        notifyByReceiver(playerModel)
         playerModel.isThis<SongModel> {
             AppData.currentPlaySong.success(this)
+            //下载封面图片
+            val url = song.coverFilePath ?: song.coverUrlPath
+            if (url == null) {
+                lastBigIconBitmap?.recycle()
+                lastBigIconBitmap = null
+                notifyByReceiver(playerModel)
+            } else {
+                Glide.with(this@MusicService)
+                    .asDrawable()
+                    .load(url)
+                    .addListener(SimpleGlideLoadListener<Drawable> { drawable, error ->
+                        lastBigIconBitmap?.recycle()
+                        lastBigIconBitmap = if (drawable == null || error != null) {
+                            null
+                        } else {
+                            drawable.toBitmap(
+                                BITMAP_WIDTH_HEIGHT,
+                                BITMAP_WIDTH_HEIGHT,
+                                Bitmap.Config.RGB_565
+                            )
+                        }
+                        notifyByReceiver(playerModel)
+                    })
+                    .submit(BITMAP_WIDTH_HEIGHT, BITMAP_WIDTH_HEIGHT)
+            }
+
         }
     }
+
 
     override fun onPlayerListChange(playerModels: MutableList<PlayerModel>) {
         super.onPlayerListChange(playerModels)

@@ -22,26 +22,16 @@ import com.yizisu.playerlibrary.helper.PlayerModel
  */
 fun ImageView.updateCover(
     playerModel: SongModel?,
-    isCircle: Boolean = false,
-    transition: DrawableTransitionOptions? = DrawableTransitionOptions.withCrossFade(400)
+    transition: DrawableTransitionOptions? = DrawableTransitionOptions.withCrossFade()
 ) {
     val coverUrl = playerModel?.song?.coverFilePath
         ?: playerModel?.song?.coverUrlPath
         ?: R.drawable.default_cover_icon
-    if (isCircle) {
-        setImageGlide(
-            coverUrl,
-            R.drawable.default_cover_icon,
-            radius = GLIDE_LOAD_RADIUS_CIRCLE,
-            transition = transition
-        )
-    } else {
-        setImageGlide(
-            coverUrl,
-            R.drawable.default_cover_icon,
-            transition = transition
-        )
-    }
+    setImageGlide(
+        coverUrl,
+        R.drawable.default_cover_icon,
+        transition = transition
+    )
 }
 
 /**
@@ -88,6 +78,9 @@ fun repelaceCurrentList(list: MutableList<SongInfoTable>?) {
 
 }
 
+/**
+ * 设置是否是我喜欢的歌曲
+ */
 fun setIsHeart(iv: ImageView) {
     val current = AppData.currentPlaySong.data?.song ?: return
     val heartAlbum = AppData.dbHeartAlbumData.data ?: return
@@ -106,6 +99,9 @@ fun setIsHeart(iv: ImageView) {
     }
 }
 
+/**
+ * 喜欢或者不喜欢歌曲
+ */
 fun heartIvClick() {
     val current = AppData.currentPlaySong.data?.song ?: return
     val heartAlbum = AppData.dbHeartAlbumData.data ?: return
@@ -116,5 +112,17 @@ fun heartIvClick() {
             DbHelper.addSongToAlbum(current, heartAlbum)
         }
         dbViewModel.queryHeartList()
+    }
+}
+
+/**
+ * 获取所有歌单
+ */
+fun refreshAllAlbum() {
+    launchThread {
+        AppData.allAlbumData.success(
+            DbHelper.queryAllAlbumByDbId()
+                ?: mutableListOf()
+        )
     }
 }

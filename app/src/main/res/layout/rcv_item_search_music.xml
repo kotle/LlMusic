@@ -18,16 +18,25 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/default_cover_icon" />
 
+    <com.yizisu.basemvvm.widget.BaseFrameLayout
+        android:id="@+id/musicJumpFl"
+        android:layout_width="14dp"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/songCoverIv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/songCoverIv" />
+
     <com.yizisu.basemvvm.widget.BaseTextView
         android:id="@+id/songNameTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@color/colorText"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/musicJumpFl"
         app:layout_constraintStart_toEndOf="@+id/songCoverIv"
         app:layout_constraintTop_toTopOf="@+id/songCoverIv"
         tools:text="@string/app_name" />
@@ -37,12 +46,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@color/colorTextLight"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/musicJumpFl"
         tools:text="@string/app_name" />
 
     <com.yizisu.basemvvm.widget.BaseTextView

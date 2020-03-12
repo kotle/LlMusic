@@ -5,6 +5,7 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.*
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.bean.SingerInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
+import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.baselib.base.BaseViewModel
 import com.yizisu.music.and.video.baselib.base.createOkHttpCall
 import com.yizisu.music.and.video.bean.LocalMusicBean
@@ -28,6 +29,7 @@ class SearchViewModel : BaseViewModel() {
      */
     val baiduSearchData = createLiveBean<SearchBaiduBean>()
     val neteaseSearchData = createLiveBean<SearchNeteaseBean>()
+    val localSearchData = createLiveBean<SearchBean>()
 
 //    val searchData = createMediatorLiveBean<SearchBean>().apply {
 //        addLiveBeanListener(baiduSearchData, Observer {
@@ -99,6 +101,7 @@ class SearchViewModel : BaseViewModel() {
     fun search(keyword: String?) {
         searchByNetease(keyword)
         searchByBaidu(keyword)
+        searchByLocal(keyword)
     }
     /******************************************百度*********************************************/
     /**
@@ -146,9 +149,28 @@ class SearchViewModel : BaseViewModel() {
             mutableMapOf(
                 "s" to keyword,
                 "offset" to "0",
-                "limit" to "10",
+                "limit" to "50",
                 "type" to "1"
             )
         ).async(neteaseSearchData.createOkHttpCall())
+    }
+
+    /****************************************/
+    fun searchByLocal(keyword: String?) {
+        val list = mutableListOf<SongInfoTable>()
+        val bean = SearchBean()
+        bean.songInfoTables = list
+        if (keyword.isNullOrBlank()) {
+            localSearchData.success(bean)
+            return
+        }
+        AppData.dbLocalAlbumData.data?.songInfoTables?.forEach {
+            if (it.name.contains(keyword) || it.des.contains(keyword) ||
+                keyword.contains(it.name) || keyword.contains(it.des)
+            ) {
+                list.add(it)
+            }
+        }
+        localSearchData.success(bean)
     }
 }

@@ -1,5 +1,6 @@
 package com.yizisu.music.and.video.baselib.base
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -30,7 +31,7 @@ open class ListDialog<T> : BaseDialog() {
     private var itemLayoutRes: Int? = null
 
     private var onItemClickListener: ((dialog: ListDialog<T>, temView: View, position: Int, data: T) -> Unit)? =
-            null
+        null
     private var onBindData: ((itemView: View, position: Int, itemData: T) -> Unit)? = null
     private var onLayoutParams: Function2<RecyclerView, FrameLayout.LayoutParams, Unit>? = null
 
@@ -68,8 +69,9 @@ open class ListDialog<T> : BaseDialog() {
 
     /**
      * 设置数据
+     * 应该在setItemLayoutRes之后调用
      */
-    fun setDatas(datas: MutableList<T>): ListDialog<T> {
+    fun setDatas(datas: MutableList<T>?): ListDialog<T> {
         if (itemLayoutRes == null) {
             safeDismiss()
         }
@@ -93,10 +95,11 @@ open class ListDialog<T> : BaseDialog() {
     override fun getContentResOrView(): Any? = BaseLinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         addView(recyclerView)
+        setBackgroundColor(Color.WHITE)
     }
 
     private inner class Adapter : BaseRcvAdapter<T, Holder>() {

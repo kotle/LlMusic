@@ -3,10 +3,7 @@ package com.yizisu.music.and.roomdblibrary
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.github.yuweiguocn.library.greendao.MigrationHelper
-import com.greendao.gen.AlbumInfoTableDao
-import com.greendao.gen.DaoMaster
-import com.greendao.gen.SingerInfoTableDao
-import com.greendao.gen.SongInfoTableDao
+import com.greendao.gen.*
 import org.greenrobot.greendao.database.Database
 
 class UpdateDbHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?) :
@@ -26,7 +23,9 @@ class UpdateDbHelper(context: Context, name: String, factory: SQLiteDatabase.Cur
             },
             AlbumInfoTableDao::class.java,
             SingerInfoTableDao::class.java,
-            SongInfoTableDao::class.java
+            SongInfoTableDao::class.java,
+            SongWithAlbumDao::class.java,
+            SongWithSingerDao::class.java
         )
     }
 }

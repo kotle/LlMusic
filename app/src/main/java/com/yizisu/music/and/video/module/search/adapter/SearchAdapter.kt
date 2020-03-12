@@ -9,6 +9,9 @@ import com.yizisu.music.and.video.bean.netease.SongInfoNeteaseBean
 import com.yizisu.music.and.video.service.music.MusicService
 
 class SearchAdapter : BaseRcvAdapter<SongInfoTable, SearchHolder>() {
+
+    var keyWords: String? = null
+    var isNeedMusicJumpView=false
     init {
         setOnItemClickListener { itemView, position, itemData ->
             startPlaySearchMusic(position)
@@ -33,6 +36,6 @@ class SearchAdapter : BaseRcvAdapter<SongInfoTable, SearchHolder>() {
         position: Int,
         itemData: SongInfoTable
     ) {
-        holder.setData(itemData)
+        holder.setData(itemData,keyWords,isNeedMusicJumpView)
     }
 }

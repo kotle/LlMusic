@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_play_list_8_r"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
+
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/create_play_list"
+        android:textColor="@color/colorText"
+        android:textSize="16sp" />
+
+    <com.yizisu.basemvvm.widget.BaseEditText
+        android:id="@+id/titleEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_stroke_4_light_color"
+        android:hint="@string/please_input_play_list_title_hint"
+        android:lines="1"
+        android:maxLength="20"
+        android:minHeight="40dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorTextHint"
+        android:textSize="12sp" />
+
+
+    <com.yizisu.basemvvm.widget.BaseEditText
+        android:id="@+id/desEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_stroke_4_light_color"
+        android:gravity="top"
+        android:hint="@string/please_input_play_list_des_hint"
+        android:minHeight="96dp"
+        android:padding="8dp"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorTextHint"
+        android:textSize="12sp" />
+
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/hintTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="@string/play_list_title_not_allow_empty"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/dialogCancelTv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?selectableItemBackground"
+            android:padding="8dp"
+            android:text="@android:string/cancel"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp" />
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/dialogOkTv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?selectableItemBackground"
+            android:padding="8dp"
+            android:text="@android:string/ok"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp" />
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
+</com.yizisu.basemvvm.widget.BaseLinearLayout>

@@ -1,23 +1,26 @@
 package com.yizisu.music.and.video.module.fragment.home
 
 
-import android.Manifest
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
+import com.yizisu.basemvvm.utils.gone
+import com.yizisu.basemvvm.utils.launchThread
+import com.yizisu.basemvvm.utils.visible
+import com.yizisu.basemvvm.widget.BaseLinearLayout
+import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.createNormalAlbum
 import com.yizisu.music.and.video.AppData
 
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
-import com.yizisu.music.and.video.bean.LocalMusicBean
-import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.dialog.CreatePlayListDialog
 import com.yizisu.music.and.video.module.fragment.home.adapter.HomeItemImageAdapter
-import com.yizisu.music.and.video.service.music.MusicService
-import com.yizisu.music.and.video.viewmodel.LocalMusicViewModel
+import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
+import com.yizisu.music.and.video.utils.refreshAllAlbum
 import kotlinx.android.synthetic.main.fragment_recent_play.*
 
 class RecentPlayFragment : BaseFragment() {
@@ -30,12 +33,39 @@ class RecentPlayFragment : BaseFragment() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         adapter.setOnItemClickListener { itemView, position, itemData ->
-            MusicService.startPlay(
-                adapter.datas.map {
-                    SongModel(it)
-                }.toMutableList(), position, true
-            )
+            PlayListDetailActivity.start(appCompatActivity, itemData.dbId)
         }
         recentPlayRcv.adapter = adapter
+        refreshAllAlbum()
     }
+
+    override fun initViewModel() {
+        super.initViewModel()
+        AppData.allAlbumData.registerOnSuccess {
+            val playLists = it.filter {
+                it.id == DbCons.ALBUM_ID_NORMAL
+            }.toMutableList()
+            if (playLists.isNullOrEmpty()) {
+                noPlayListHintTv.visible()
+            } else {
+                noPlayListHintTv.gone()
+            }
+            adapter.refreshList(playLists.asReversed())
+        }
+    }
+
+    override fun getClickView(): List<View?>? {
+        return listOf(createPlayListTv)
+    }
+
+    override fun onSingleClick(view: View) {
+        super.onSingleClick(view)
+        when (view) {
+            createPlayListTv -> {
+                CreatePlayListDialog.show(appCompatActivity)
+            }
+        }
+    }
+
+
 }

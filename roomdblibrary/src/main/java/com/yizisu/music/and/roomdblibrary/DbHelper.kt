@@ -23,10 +23,20 @@ object DbHelper {
 
     /**************************************************************************************/
 
-
+    /**
+     * 通过歌单id查询歌单
+     */
     fun queryAlbumByDbId(dbId: Long): AlbumInfoTable? {
         val dao = albumInfoTableDao ?: return null
         return dao.loadByRowId(dbId)
+    }
+
+    /**
+     * 查询所有歌单
+     */
+    fun queryAllAlbumByDbId(): MutableList<AlbumInfoTable>? {
+        val dao = albumInfoTableDao ?: return null
+        return dao.loadAll()
     }
 
     /**
@@ -129,6 +139,14 @@ object DbHelper {
             album.dbId = dbId
         }
         album.updateTime = System.currentTimeMillis()
+        return dao.insertOrReplace(album)
+    }
+
+    /**
+     * 直接插入，albumId是一样的
+     */
+    fun insetAlbum(album: AlbumInfoTable): Long? {
+        val dao = albumInfoTableDao ?: return null
         return dao.insertOrReplace(album)
     }
 

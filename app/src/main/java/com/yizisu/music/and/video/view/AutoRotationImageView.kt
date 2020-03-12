@@ -5,23 +5,17 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
 import com.yizisu.basemvvm.mvvm.MvvmActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.NoParamsLifecycleObserver
-import com.yizisu.basemvvm.utils.GLIDE_LOAD_RADIUS_CIRCLE
 import com.yizisu.basemvvm.utils.safeGet
-import com.yizisu.basemvvm.utils.setCircleImageFromRes
-import com.yizisu.basemvvm.utils.setImageGlide
-import com.yizisu.basemvvm.widget.BaseImageView
 import com.yizisu.music.and.video.AppData
-import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.updateCover
 import com.yizisu.playerlibrary.helper.PlayerModel
+import de.hdodenhof.circleimageview.CircleImageView
 
-class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecycleObserver {
+class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifecycleObserver {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -32,16 +26,17 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
 
     init {
         if (AppData.currentPlaySong.data == null) {
-            updateCover(null, true)
+            updateCover(null, null)
         }
         context.safeGet<MvvmActivity>()?.apply {
             lifecycle.addObserver(this@AutoRotationImageView)
             AppData.currentPlaySong.registerOnSuccess {
-                updateCover(it, true)
+                updateCover(it, null)
             }
         }
     }
 
+    private var animIsRun = false
     private var anim: ObjectAnimator? = null
     private val lastPlayerModel: PlayerModel?
         get() = AppData.currentPlaySong.data
@@ -86,8 +81,24 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
         anim?.pause()
     }
 
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        //隐藏不执行动画
+        if (animIsRun) {
+            if (changedView == this) {
+                if (visibility == View.VISIBLE) {
+                    anim?.resume()
+                } else {
+                    anim?.pause()
+                }
+            }
+        }
+
+    }
+
     private fun startAnim(isPlay: Boolean) {
         if (isPlay) {
+            animIsRun = true
             if (anim == null) {
                 anim =
                     ObjectAnimator.ofFloat(this, View.ROTATION, rotation, rotation + 360f).apply {
@@ -98,6 +109,7 @@ class AutoRotationImageView : BaseImageView, MusicEventListener, NoParamsLifecyc
                 anim?.start()
             }
         } else {
+            animIsRun = false
             anim?.cancel()
             anim = null
         }

@@ -27,6 +27,22 @@ fun createNewLocalAlbum(id: Long?, name: String) {
     )
 }
 
+fun createNormalAlbum(name: String, des: String?) {
+    val album = AlbumInfoTable(
+        null,
+        DbCons.ALBUM_ID_NORMAL,
+        DbCons.SOURCE_DB,
+        DbCons.TYPE_FREE,
+        null,
+        null,
+        name,
+        des,
+        System.currentTimeMillis(),
+        System.currentTimeMillis()
+    )
+    DbHelper.insetAlbum(album)
+}
+
 /**
  * 初始化并且创建默认歌单
  */

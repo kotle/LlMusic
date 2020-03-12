@@ -8,6 +8,7 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MediatorLiveBean
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
+import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.bean.LocalMusicBean
@@ -53,8 +54,9 @@ class SearchMusicActivity : BaseActivity() {
         }
         searchVp.adapter = simpleFragmentPagerAdapter(
             mutableListOf(
-                SearchFragment.create(LocalMusicBean.SOURCE_TYPE_NETEASE),
-                SearchFragment.create(LocalMusicBean.SOURCE_TYPE_BAIDU)
+                SearchFragment.create(DbCons.SOURCE_LOCAL),
+                SearchFragment.create(DbCons.SOURCE_NETEASE),
+                SearchFragment.create(DbCons.SOURCE_BAIDU)
             )
         )
         searchVp.invisible()

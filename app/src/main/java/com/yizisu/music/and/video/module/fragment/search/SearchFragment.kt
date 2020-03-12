@@ -3,31 +3,36 @@ package com.yizisu.music.and.video.module.fragment.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.TextView
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.basemvvm.utils.getResString
+import com.yizisu.basemvvm.utils.textFrom
+import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
-
+import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
-import com.yizisu.music.and.video.bean.LocalMusicBean
-import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.baselib.base.ListDialog
 import com.yizisu.music.and.video.bean.dongwo.SearchBean
 import com.yizisu.music.and.video.module.search.adapter.SearchAdapter
-import com.yizisu.music.and.video.service.music.MusicService
+import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
 class SearchFragment : BaseFragment() {
     companion object {
-        fun create(type: String): SearchFragment {
+        fun create(type: Int): SearchFragment {
             return SearchFragment().apply {
                 sourceType = type
             }
         }
     }
 
-    private var sourceType: String? = null
+    private var sourceType: Int? = null
     private val searchAdapter = SearchAdapter()
     private val searchViewModel by lazy { getActivityViewModel<SearchViewModel>() }
     override fun getContentResOrView(inflater: LayoutInflater): Any? = R.layout.fragment_search
@@ -36,13 +41,38 @@ class SearchFragment : BaseFragment() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         searchRcv.adapter = searchAdapter
+        searchAdapter.setOnItemLongClickListener { itemView, position, itemData ->
+            val song = itemData
+            ListDialog<AlbumInfoTable>().apply {
+                setItemLayoutRes(R.layout.rcv_item_local_music)
+                setOnBindDataListener { itemView, position, itemData ->
+                    itemView.findViewById<TextView>(R.id.songNameTv)?.textFrom(itemData.title)
+                    itemView.findViewById<TextView>(R.id.songDesTv)?.textFrom(itemData.des)
+                }
+                setItemClickListener { dialog, itemView, position, data ->
+                    DbHelper.addSongToAlbum(song, data)
+                    dialog.dismiss()
+                }
+                setDatas(AppData.allAlbumData.data?.filter {
+                    it.id != DbCons.ALBUM_ID_LOCAL
+                }?.toMutableList())
+            }.show(appCompatActivity)
+        }
+    }
+
+    private val titles by lazy {
+        mutableMapOf(
+            DbCons.SOURCE_LOCAL to getResString(R.string.local_music),
+            DbCons.SOURCE_NETEASE to getResString(R.string.netease_music),
+            DbCons.SOURCE_BAIDU to getResString(R.string.baidu_music)
+        )
     }
 
     override fun initViewModel() {
         super.initViewModel()
         when (sourceType) {
             //搜索网易云
-            LocalMusicBean.SOURCE_TYPE_NETEASE -> {
+            DbCons.SOURCE_NETEASE -> {
                 searchViewModel?.neteaseSearchData?.register {
                     loadSuccess(it) {
                         refreshAdapter(searchViewModel?.neteaseToSearchBean(it.data))
@@ -50,10 +80,17 @@ class SearchFragment : BaseFragment() {
                 }
             }
             //搜索百度
-            LocalMusicBean.SOURCE_TYPE_BAIDU -> {
+            DbCons.SOURCE_BAIDU -> {
                 searchViewModel?.baiduSearchData?.register {
                     loadSuccess(it) {
                         refreshAdapter(searchViewModel?.baiduToSearchBean(it.data))
+                    }
+                }
+            }
+            DbCons.SOURCE_LOCAL -> {
+                searchViewModel?.localSearchData?.register {
+                    loadSuccess(it) {
+                        refreshAdapter(it.data)
                     }
                 }
             }
@@ -85,11 +122,15 @@ class SearchFragment : BaseFragment() {
 
     private fun refreshAdapter(bean: SearchBean?) {
 //        searchAdapter.loadMoreList(bean?.data)
-        searchAdapter.refreshList(bean?.songInfoTables)
+        if (bean?.songInfoTables.isNullOrEmpty()) {
+            showOtherView("什么都没搜到呢")
+        } else {
+            searchAdapter.refreshList(bean?.songInfoTables)
+        }
     }
 
     override fun getTitle(): CharSequence? {
-        return sourceType
+        return titles[sourceType]
     }
 
 }
