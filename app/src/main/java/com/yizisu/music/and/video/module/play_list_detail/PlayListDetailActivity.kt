@@ -84,8 +84,14 @@ class PlayListDetailActivity : BaseUiActivity() {
                     return@launchThread
                 }
                 else -> {
-                    val songs = album.songInfoTables
-                    refreshList(album, songs?.asReversed())
+                    val songs = album.songInfoTables?.asReversed()
+                    if (!songs.isNullOrEmpty()) {
+                        val firstSong = songs[0]
+                        album.filePath = firstSong.coverFilePath
+                        album.urlPath = firstSong.coverUrlPath
+                        DbHelper.insetOrUpdateAlbum(album)
+                    }
+                    refreshList(album, songs)
                 }
             }
         }

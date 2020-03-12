@@ -36,6 +36,10 @@ class RecentPlayFragment : BaseFragment() {
             PlayListDetailActivity.start(appCompatActivity, itemData.dbId)
         }
         recentPlayRcv.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
         refreshAllAlbum()
     }
 

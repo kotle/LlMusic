@@ -43,10 +43,12 @@ object DbHelper {
      * 插入歌曲到歌单
      */
     fun addSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
-        insetOrUpdateSong(song)
-        insetOrUpdateAlbum(album)
+        val songId=insetOrUpdateSong(song)
+        album.urlPath=song.coverUrlPath
+        album.filePath=song.coverFilePath
+        val albumId=insetOrUpdateAlbum(album)
         //歌曲和歌单做关联
-        withSongAndAlbum(song, album)
+        withSongAndAlbum(songId, albumId)
     }
 
     /**
@@ -154,20 +156,20 @@ object DbHelper {
      * 通过歌曲id和歌单id，插入关联
      * 如果存在不更新
      */
-    fun withSongAndAlbum(song: SongInfoTable, album: AlbumInfoTable): Long? {
+    fun withSongAndAlbum(songId: Long?, albumId: Long?): Long? {
         val dao = songWithAlbumDao ?: return null
-        song.dbId ?: return null
-        album.dbId ?: return null
+        songId ?: return null
+        albumId ?: return null
         //判断歌曲是否存在
         val old = dao.queryBuilder().where(
-            SongWithAlbumDao.Properties.SongId.eq(song.dbId),
-            SongWithAlbumDao.Properties.AlbumId.eq(album.dbId)
+            SongWithAlbumDao.Properties.SongId.eq(songId),
+            SongWithAlbumDao.Properties.AlbumId.eq(albumId)
         ).unique()
         if (old != null) {
             return old.id
         }
         val time = System.currentTimeMillis()
-        return dao.insert(SongWithAlbum(null, album.dbId, song.dbId, time, time))
+        return dao.insert(SongWithAlbum(null, albumId, songId, time, time))
     }
 
     /**

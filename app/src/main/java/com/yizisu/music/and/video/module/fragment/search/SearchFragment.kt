@@ -4,9 +4,13 @@ package com.yizisu.music.and.video.module.fragment.search
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.TextView
+import com.yizisu.basemvvm.mvvm.MvvmDialog
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.getResString
+import com.yizisu.basemvvm.utils.launchThread
+import com.yizisu.basemvvm.utils.runOnUi
 import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
@@ -50,13 +54,26 @@ class SearchFragment : BaseFragment() {
                     itemView.findViewById<TextView>(R.id.songDesTv)?.textFrom(itemData.des)
                 }
                 setItemClickListener { dialog, itemView, position, data ->
-                    DbHelper.addSongToAlbum(song, data)
+                    addNewSongToAlbum(song, data)
                     dialog.dismiss()
                 }
                 setDatas(AppData.allAlbumData.data?.filter {
-                    it.id != DbCons.ALBUM_ID_LOCAL
+                    it.id == DbCons.ALBUM_ID_HEART || it.id == DbCons.ALBUM_ID_NORMAL
                 }?.toMutableList())
             }.show(appCompatActivity)
+        }
+    }
+
+    private fun addNewSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
+        launchThread {
+            DbHelper.addSongToAlbum(song, album)
+            when (album.dbId) {
+                DbCons.ALBUM_ID_HEART -> {
+                    dbViewModel.queryHeartList()
+                }
+                else -> {
+                }
+            }
         }
     }
 

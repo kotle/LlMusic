@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/local_recent"
+            android:text="@string/my_play_list"
             android:textColor="@color/colorText"
             android:textSize="14sp"
             android:textStyle="bold" />
