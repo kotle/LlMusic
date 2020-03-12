@@ -9,6 +9,12 @@
         <item name="colorControlNormal">@color/colorTextDeepBackground</item>
     </style>
 
+    <style name="LauncherTheme" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
     <style name="ToolBarTitle">
         <item name="android:textColor">@color/colorTextDeepBackground</item>
         <item name="android:textSize">16sp</item>

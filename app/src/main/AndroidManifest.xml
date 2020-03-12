@@ -85,7 +85,8 @@
         <activity
             android:name=".module.main.MainActivity"
             android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/LauncherTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

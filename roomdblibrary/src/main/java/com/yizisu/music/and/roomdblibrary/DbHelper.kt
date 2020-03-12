@@ -43,10 +43,14 @@ object DbHelper {
      * 插入歌曲到歌单
      */
     fun addSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
-        val songId=insetOrUpdateSong(song)
-        album.urlPath=song.coverUrlPath
-        album.filePath=song.coverFilePath
-        val albumId=insetOrUpdateAlbum(album)
+        val songId = insetOrUpdateSong(song)
+        if (!song.coverUrlPath.isNullOrBlank()) {
+            album.urlPath = song.coverUrlPath
+        }
+        if (!song.coverFilePath.isNullOrBlank()) {
+            album.filePath = song.coverFilePath
+        }
+        val albumId = insetOrUpdateAlbum(album)
         //歌曲和歌单做关联
         withSongAndAlbum(songId, albumId)
     }

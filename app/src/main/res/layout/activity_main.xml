@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="#ff0"
+    tools:background="#000"
     tools:context=".module.main.MainActivity">
 
     <com.yizisu.basemvvm.widget.BaseViewPager
@@ -21,13 +21,14 @@
         android:padding="16dp">
 
         <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/searchTv"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:id="@+id/searchTv"
             android:background="@drawable/bg_home_edit"
             android:gravity="center"
             android:text="@string/search"
             android:textColor="@color/colorText"
             android:textSize="12sp" />
     </com.yizisu.basemvvm.widget.BaseLinearLayout>
+
 </com.yizisu.basemvvm.widget.BaseFrameLayout>

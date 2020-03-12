@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <color android:color="@color/colorBackground" />
+    </item>
+
+    <item
+        android:gravity="top"
+        android:top="500px">
+        <bitmap
+            android:gravity="top"
+            android:src="@drawable/icon_local_music" />
+    </item>
+
+</layer-list>
