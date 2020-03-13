@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".module.play_list_detail.PlayListDetailActivity"></activity>
+        <activity android:name=".module.add_song_to_album.ImportSongActivity"></activity>
+        <activity android:name=".module.add_song_to_album.AddSongToAlbumActivity" />
+        <activity android:name=".module.play_list_detail.PlayListDetailActivity" />
         <activity android:name=".TestDbActivity">
 
             <!-- <intent-filter> -->
@@ -36,6 +38,7 @@
         <activity
             android:name=".module.lrc.LrcActivity"
             android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.full_video.FullVideoActivity"

@@ -17,4 +17,19 @@ object BusCode {
      * 移动进度条的比例
      */
     const val SEEK_MUSIC_EVENT = 3
+
+    /**
+     * 传递编辑的歌曲
+     */
+    const val EDIT_SONG = 4
+
+    /**
+     * 传递歌单
+     */
+    const val ALBUM_INFO = 5
+
+    /**
+     * 需要刷新歌单
+     */
+    const val REFRESH_PLAY_LIST_DETAIL=6
 }

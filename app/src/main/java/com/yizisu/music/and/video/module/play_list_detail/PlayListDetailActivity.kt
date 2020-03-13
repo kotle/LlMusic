@@ -3,10 +3,14 @@ package com.yizisu.music.and.video.module.play_list_detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.basemvvm.utils.launchUi
 import com.yizisu.basemvvm.utils.navigateTo
+import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
@@ -14,27 +18,26 @@ import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
+import com.yizisu.music.and.video.cons.BusCode
+import com.yizisu.music.and.video.dialog.SelectPlayListDialog
+import com.yizisu.music.and.video.module.add_song_to_album.ImportSongActivity
 import com.yizisu.music.and.video.module.search.adapter.SearchAdapter
 import com.yizisu.music.and.video.utils.LocalMusicUtil
 import kotlinx.android.synthetic.main.activity_play_list_detail.*
 
 class PlayListDetailActivity : BaseUiActivity() {
     companion object {
-        fun start(appCompatActivity: AppCompatActivity?, albumDbId: Long) {
-            appCompatActivity?.navigateTo(PlayListDetailActivity::class.java) {
-                it.putExtra("albumDbId", albumDbId)
-            }
+        fun start(appCompatActivity: AppCompatActivity?, albumDbId: AlbumInfoTable?) {
+            albumDbId ?: return
+            appCompatActivity?.navigateTo(PlayListDetailActivity::class.java)
+            MessageBus.post(BusCode.ALBUM_INFO, albumDbId, true, PlayListDetailActivity::class.java)
         }
     }
 
     private val adapter = SearchAdapter()
-    private val albumDbId by lazy { intent.getLongExtra("albumDbId", -1) }
+
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.activity_play_list_detail
-    }
-
-    override fun initViewModel() {
-        super.initViewModel()
     }
 
     override fun isNeedToolbar(): Boolean {
@@ -45,16 +48,9 @@ class PlayListDetailActivity : BaseUiActivity() {
         return true
     }
 
-    override fun isCanSwipeBack(): Boolean {
-        return super.isCanSwipeBack()
-    }
-
+    private var currentAlbumInfoTable: AlbumInfoTable? = null
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        if (albumDbId < 0) {
-            finish()
-            return
-        }
         playListDetailRcv.adapter = adapter
         refreshData()
         getSwitchView()?.apply {
@@ -63,14 +59,55 @@ class PlayListDetailActivity : BaseUiActivity() {
                 refreshData()
             }
         }
+        getToolbar()?.apply {
+            setTheme(R.style.ToolBarMenu)
+        }
+    }
+
+    override fun onMessageBus(event: Any?, code: Int) {
+        super.onMessageBus(event, code)
+        MessageBus.clearStickyValue(event)
+        when (code) {
+            BusCode.ALBUM_INFO -> {
+                event.safeGet<AlbumInfoTable>()?.let {
+                    currentAlbumInfoTable = it
+                    refreshData()
+                }
+            }
+            BusCode.REFRESH_PLAY_LIST_DETAIL -> {
+                refreshData()
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (currentAlbumInfoTable?.dbId == DbCons.ALBUM_ID_HEART
+            || currentAlbumInfoTable?.dbId == DbCons.ALBUM_ID_NORMAL
+        ) {
+            menuInflater.inflate(R.menu.menu_play_list_detail, menu)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.importSonsMenu -> {
+                SelectPlayListDialog.show(this) {
+                    ImportSongActivity.start(this, currentAlbumInfoTable, it)
+                }
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 
     private fun refreshData() {
+        val album = currentAlbumInfoTable ?: return
         showLoadingView()
         launchThread {
-            val album = DbHelper.queryAlbumByDbId(albumDbId) ?: return@launchThread
-            when (albumDbId) {
+            when (album.dbId) {
                 DbCons.ALBUM_ID_LOCAL -> {
                     //查询本地音乐
                     val songs = LocalMusicUtil.getSongInfos(this@PlayListDetailActivity)
@@ -84,6 +121,7 @@ class PlayListDetailActivity : BaseUiActivity() {
                     return@launchThread
                 }
                 else -> {
+                    album.resetSongInfoTables()
                     val songs = album.songInfoTables?.asReversed()
                     if (!songs.isNullOrEmpty()) {
                         val firstSong = songs[0]

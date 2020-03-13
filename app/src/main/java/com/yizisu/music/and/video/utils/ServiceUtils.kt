@@ -16,6 +16,7 @@ import com.yizisu.basemvvm.printBundle
 import com.yizisu.basemvvm.utils.getLastActivityIntent
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.music.and.video.R
+import com.yizisu.music.and.video.module.lrc.LrcActivity
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_CLOSE
 import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_NEXT
@@ -27,7 +28,7 @@ import com.yizisu.music.and.video.service.music.MusicService.Companion.ACTION_PR
  * 开启一个前台通知，进程保活
  */
 fun Service.sendNotify(
-    notificationManager:NotificationManager,
+    notificationManager: NotificationManager,
     coverBp: Bitmap?,
     title: String,
     message: String,
@@ -41,7 +42,8 @@ fun Service.sendNotify(
         .setContentIntent(
             PendingIntent.getActivity(
                 this, 100,
-                getLastActivityIntent(), PendingIntent.FLAG_UPDATE_CURRENT
+                Intent(this, LrcActivity::class.java)
+                , PendingIntent.FLAG_UPDATE_CURRENT
             )
         )
         //true setColor为背景色,文字自动反色

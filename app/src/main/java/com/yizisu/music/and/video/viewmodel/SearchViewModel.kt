@@ -58,7 +58,7 @@ class SearchViewModel : BaseViewModel() {
                 des = it.artistname
                 searchBean.singerInfoTables = bean.artist?.map {
                     SingerInfoTable().apply {
-                        coverUrlPath = it.artistpic
+//                        coverUrlPath = it.artistpic
                         id = it.artistid.toLong()
                         name = it.artistname
                         source = DbCons.SOURCE_BAIDU

@@ -23,6 +23,7 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.SongModel
@@ -30,9 +31,7 @@ import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.SEEK_MUSIC_EVENT
 import com.yizisu.music.and.video.cons.BusCode.SERVICE_PLAY_LIST
-import com.yizisu.music.and.video.utils.registerSession
-import com.yizisu.music.and.video.utils.sendNotify
-import com.yizisu.music.and.video.utils.unregisterSession
+import com.yizisu.music.and.video.utils.*
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
@@ -291,7 +290,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             //播放列表改变
             SERVICE_PLAY_LIST -> {
                 event.isThis<PlayModelBean> {
-                    if (!isNewList) {
+                    if (!isNewList && player.getAllPlayModel().isNotEmpty()) {
                         player.seekTo(0, index)
                         player.play()
                     } else {
@@ -342,8 +341,11 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
     override fun onPlayerModelChange(playerModel: PlayerModel) {
         super.onPlayerModelChange(playerModel)
+        AppData.currentPlayIndex = player.getCurrentPlayIndex()
         playerModel.isThis<SongModel> {
             AppData.currentPlaySong.success(this)
+            //保存到最近播放列表
+            saveToRecentDb()
             //下载封面图片
             val url = song.coverFilePath ?: song.coverUrlPath
             if (url == null) {
@@ -373,10 +375,15 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         }
     }
 
-
     override fun onPlayerListChange(playerModels: MutableList<PlayerModel>) {
         super.onPlayerListChange(playerModels)
-        AppData.currentPlayList.success(playerModels)
+        val newList = mutableListOf<SongInfoTable>()
+        playerModels.forEach {
+            it.isThis<SongModel> {
+                newList.add(song)
+            }
+        }
+        repelaceCurrentList(newList)
     }
 
     override fun onTick(playerModel: PlayerModel) {

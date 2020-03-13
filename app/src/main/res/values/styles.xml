@@ -11,7 +11,7 @@
 
     <style name="LauncherTheme" parent="AppTheme">
         <item name="android:windowTranslucentStatus">true</item>
-<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
 
@@ -20,8 +20,18 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="ToolBarMenu">
+        <item name="android:actionMenuTextColor">@color/colorTextDeepBackground</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CheckBok">
+        <item name="colorControlNormal">@color/colorText</item>
+    </style>
+
     <style name="FullVideoTheme" parent="AppTheme">
         <item name="android:screenOrientation">landscape</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+
 </resources>

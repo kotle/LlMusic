@@ -8,33 +8,24 @@
     android:orientation="vertical"
     android:paddingStart="16dp"
     android:paddingTop="8dp"
-
+    android:paddingEnd="16dp"
     android:paddingBottom="8dp">
 
     <com.yizisu.basemvvm.widget.BaseImageView
         android:id="@+id/songCoverIv"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="?selectableItemBackground"
         android:scaleType="centerCrop"
         tools:src="@drawable/default_cover_icon" />
 
-    <com.yizisu.basemvvm.widget.BaseImageView
-        android:id="@+id/editEt"
-        android:layout_width="48dp"
-        android:layout_height="0dp"
-        android:scaleType="center"
+    <com.yizisu.basemvvm.widget.BaseCheckBox
+        android:id="@+id/musicJumpFl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:theme="@style/CheckBok"
         app:layout_constraintBottom_toBottomOf="@id/songCoverIv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/songCoverIv"
-        app:srcCompat="@drawable/edit_icon" />
-
-    <com.yizisu.basemvvm.widget.BaseFrameLayout
-        android:id="@+id/musicJumpFl"
-        android:layout_width="14dp"
-        android:layout_height="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/songCoverIv"
-        app:layout_constraintEnd_toStartOf="@+id/editEt"
         app:layout_constraintTop_toTopOf="@id/songCoverIv" />
 
     <com.yizisu.basemvvm.widget.BaseTextView
@@ -61,7 +52,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@color/colorTextLight"
-        android:textSize="12sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
         app:layout_constraintEnd_toStartOf="@+id/musicJumpFl"
         tools:text="@string/app_name" />
@@ -75,7 +66,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@color/colorTextLight"
-        android:textSize="12sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
         app:layout_constraintEnd_toStartOf="@id/songSourceTv"
         app:layout_constraintStart_toStartOf="@id/songNameTv"

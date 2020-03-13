@@ -38,13 +38,11 @@ class CurrentPlayListDialog : BaseDialog() {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.currentPlayList.registerOnSuccess {
-            if (it.isNullOrEmpty()) {
+        AppData.dbCurrentAlbumData.registerOnSuccess {
+            if (it.songInfoTables.isNullOrEmpty()) {
                 dismiss()
             } else {
-                setAdapter(it.map {
-                    (it as SongModel).song
-                }.toMutableList())
+                setAdapter(it.songInfoTables)
             }
         }
         AppData.currentPlaySong.registerOnSuccess {

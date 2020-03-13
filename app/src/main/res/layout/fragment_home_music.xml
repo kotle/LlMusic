@@ -129,6 +129,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:lrcNormalTextSize="12sp"
-        app:lrcTextSize="13sp" />
+        app:lrcNormalTextSize="13sp"
+        app:lrcTextSize="14sp" />
 </com.yizisu.basemvvm.widget.BaseLinearLayout>

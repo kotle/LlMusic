@@ -69,10 +69,9 @@ fun repelaceCurrentList(list: MutableList<SongInfoTable>?) {
         //这里只需要保存到数据库，不需要赋值查询，当每次打开app，查询一次数据库，
         //获取当前播放列表，因为AppData一个播放列表集合
         AppData.dbCurrentAlbumData.data?.apply {
-            DbHelper.removeSongsFromAlbum(songInfoTables, dbId)
-            list.forEach {
-                DbHelper.addSongToAlbum(it, this)
-            }
+            DbHelper.removeAllSongsFromAlbum(dbId)
+            DbHelper.addSongToAlbum(list, this)
+            dbViewModel.queryCurrentList()
         }
     }
 

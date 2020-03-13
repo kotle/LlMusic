@@ -41,30 +41,7 @@ object AppData {
     // (经过测试同一个对象每次给liveData赋值会走回调)
 //    val playerStatus by lazy {  }
     //当前播放的歌曲
-    val currentPlaySong by lazy {
-        createLiveBean<SongModel?>().apply {
-            observeForever {
-                it.value?.saveToRecentDb()
-                val list = currentPlayList.data ?: return@observeForever
-                val playModel = it.value ?: return@observeForever
-                currentPlayIndex = list.indexOf(playModel)
-            }
-        }
-    }
-    //当前播放的列表
-    val currentPlayList by lazy {
-        createLiveBean<MutableList<PlayerModel>?>().apply {
-            observeForever {
-                val newList = mutableListOf<SongInfoTable>()
-                data?.forEach {
-                    it.isThis<SongModel> {
-                        newList.add(song)
-                    }
-                }
-                repelaceCurrentList(newList)
-            }
-        }
-    }
+    val currentPlaySong by lazy { createLiveBean<SongModel?>() }
 
     //我喜欢 歌单
     val dbHeartAlbumData by lazy { createLiveBean<AlbumInfoTable>() }

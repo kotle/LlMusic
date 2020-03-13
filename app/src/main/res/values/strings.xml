@@ -9,6 +9,7 @@
     <string name="local_recent">最近播放</string>
     <string name="see_more">更多</string>
     <string name="create_play_list">创建歌单</string>
+    <string name="edit_play_list">编辑歌单</string>
     <string name="my_play_list">我的歌单</string>
     <string name="my_heart">我喜欢</string>
     <string name="recent_add">最近添加</string>
@@ -21,4 +22,10 @@
     <string name="please_input_play_list_des_hint">请输入歌单描述(选填)</string>
     <string name="play_list_title_not_allow_empty">歌单名不能为空</string>
     <string name="current_playing">正在播放</string>
+    <string name="select_all">全选</string>
+    <string name="select_resever">反选</string>
+    <string name="select_play_list">选择歌单</string>
+    <string name="delete_play_list">删除歌单</string>
+    <string name="import_song">导入歌曲</string>
+    <string name="import_song_success">歌曲导入成功</string>
 </resources>

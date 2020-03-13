@@ -45,23 +45,6 @@ class SearchFragment : BaseFragment() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         searchRcv.adapter = searchAdapter
-        searchAdapter.setOnItemLongClickListener { itemView, position, itemData ->
-            val song = itemData
-            ListDialog<AlbumInfoTable>().apply {
-                setItemLayoutRes(R.layout.rcv_item_local_music)
-                setOnBindDataListener { itemView, position, itemData ->
-                    itemView.findViewById<TextView>(R.id.songNameTv)?.textFrom(itemData.title)
-                    itemView.findViewById<TextView>(R.id.songDesTv)?.textFrom(itemData.des)
-                }
-                setItemClickListener { dialog, itemView, position, data ->
-                    addNewSongToAlbum(song, data)
-                    dialog.dismiss()
-                }
-                setDatas(AppData.allAlbumData.data?.filter {
-                    it.id == DbCons.ALBUM_ID_HEART || it.id == DbCons.ALBUM_ID_NORMAL
-                }?.toMutableList())
-            }.show(appCompatActivity)
-        }
     }
 
     private fun addNewSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {

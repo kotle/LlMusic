@@ -26,10 +26,6 @@ abstract class BaseUiActivity : BaseActivity() {
         }
     }
 
-    override fun isCanSwipeBack(): Boolean {
-        return (this !is MainActivity) && activityList.count() > 0
-    }
-
     override fun initData() {
         super.initData()
     }

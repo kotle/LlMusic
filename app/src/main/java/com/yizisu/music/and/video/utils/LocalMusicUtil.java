@@ -1,5 +1,6 @@
 package com.yizisu.music.and.video.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 
 import com.yizisu.basemvvm.utils.ViewExtFunKt;
+import com.yizisu.basemvvm.utils.permission.PermissionUtil;
 import com.yizisu.music.and.roomdblibrary.DbCons;
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable;
 import com.yizisu.music.and.video.R;
@@ -22,6 +24,9 @@ import static com.yizisu.basemvvm.MvvmLibKt.app;
 
 public class LocalMusicUtil {
     public static List<SongInfoTable> getSongInfos(Context context) {
+        if (!PermissionUtil.INSTANCE.check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            return new ArrayList<>();
+        }
         List<LocalMusicBean> musicInfo = getMusicInfo(context);
         ArrayList<SongInfoTable> songs = new ArrayList<>();
         if (musicInfo == null || musicInfo.size() == 0) {

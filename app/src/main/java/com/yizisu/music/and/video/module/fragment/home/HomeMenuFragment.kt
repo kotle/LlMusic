@@ -27,6 +27,7 @@ class HomeMenuFragment : BaseFragment() {
         return listOf(recentAddMusicFl, headMusicFl, localMusicFl)
     }
 
+    private var isFirstCreate = true
     override fun initViewModel() {
         super.initViewModel()
         AppData.dbHeartAlbumData.registerOnSuccess {
@@ -39,14 +40,18 @@ class HomeMenuFragment : BaseFragment() {
             recentTv.textFrom("${it.title}(${it.songInfoTables.count()})")
         }
         AppData.dbCurrentAlbumData.registerOnSuccess {
-            MusicService.startPlay(
-                it.songInfoTables.map {
-                    SongModel(it)
-                }.toMutableList(),
-                AppData.currentPlayIndex,
-                true,
-                false
-            )
+            //这里会多次调用，只需要初始化调用一次
+            if (isFirstCreate) {
+                isFirstCreate = false
+                MusicService.startPlay(
+                    it.songInfoTables.map {
+                        SongModel(it)
+                    }.toMutableList(),
+                    AppData.currentPlayIndex,
+                    true,
+                    false
+                )
+            }
         }
     }
 
@@ -64,10 +69,10 @@ class HomeMenuFragment : BaseFragment() {
         super.onSingleClick(view)
         when (view) {
             recentAddMusicFl -> {
-                PlayListDetailActivity.start(appCompatActivity, DbCons.ALBUM_ID_RECENT)
+                PlayListDetailActivity.start(appCompatActivity, AppData.dbCurrentAlbumData.data)
             }
             headMusicFl -> {
-                PlayListDetailActivity.start(appCompatActivity, DbCons.ALBUM_ID_HEART)
+                PlayListDetailActivity.start(appCompatActivity, AppData.dbHeartAlbumData.data)
             }
             localMusicFl -> {
                 getPermission(
@@ -77,7 +82,10 @@ class HomeMenuFragment : BaseFragment() {
                     )
                 ) {
                     if (it) {
-                        PlayListDetailActivity.start(appCompatActivity, DbCons.ALBUM_ID_LOCAL)
+                        PlayListDetailActivity.start(
+                            appCompatActivity,
+                            AppData.dbLocalAlbumData.data
+                        )
                     }
                 }
             }

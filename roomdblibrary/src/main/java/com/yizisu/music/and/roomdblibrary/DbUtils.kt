@@ -47,8 +47,10 @@ fun createNormalAlbum(name: String, des: String?) {
  * 初始化并且创建默认歌单
  */
 internal fun checkAndInitDefaultAlbum() {
-    createNewLocalAlbum(DbCons.ALBUM_ID_HEART, "我喜欢")
-    createNewLocalAlbum(DbCons.ALBUM_ID_CURRENT, "当前播放")
-    createNewLocalAlbum(DbCons.ALBUM_ID_LOCAL, "本地歌曲")
-    createNewLocalAlbum(DbCons.ALBUM_ID_RECENT, "最近播放")
+    Thread {
+        createNewLocalAlbum(DbCons.ALBUM_ID_HEART, "我喜欢")
+        createNewLocalAlbum(DbCons.ALBUM_ID_CURRENT, "当前播放")
+        createNewLocalAlbum(DbCons.ALBUM_ID_LOCAL, "本地歌曲")
+        createNewLocalAlbum(DbCons.ALBUM_ID_RECENT, "最近播放")
+    }.start()
 }

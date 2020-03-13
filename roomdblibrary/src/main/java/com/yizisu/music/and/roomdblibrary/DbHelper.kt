@@ -40,8 +40,9 @@ object DbHelper {
     }
 
     /**
-     * 插入歌曲到歌单
+     * 插入单个歌曲到歌单
      */
+    @Synchronized
     fun addSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
         val songId = insetOrUpdateSong(song)
         if (!song.coverUrlPath.isNullOrBlank()) {
@@ -52,7 +53,31 @@ object DbHelper {
         }
         val albumId = insetOrUpdateAlbum(album)
         //歌曲和歌单做关联
-        withSongAndAlbum(songId, albumId)
+        if (!isSongInAlbum(song, album)) {
+            withSongAndAlbum(songId, albumId)
+        }
+    }
+
+    /**
+     * 批量的将歌曲插入歌单
+     */
+    @Synchronized
+    fun addSongToAlbum(song: MutableList<SongInfoTable>, album: AlbumInfoTable) {
+        val songWithAlbums = mutableListOf<SongWithAlbum>()
+        val albumId = insetOrUpdateAlbum(album)
+        song.forEach {
+            val songId = insetOrUpdateSong(it)
+            if (!it.coverUrlPath.isNullOrBlank()) {
+                album.urlPath = it.coverUrlPath
+            }
+            if (!it.coverFilePath.isNullOrBlank()) {
+                album.filePath = it.coverFilePath
+            }
+            if (!isSongInAlbum(it, album)) {
+                songWithAlbums.add(SongWithAlbum(null, albumId, songId, null, null))
+            }
+        }
+        songWithAlbumDao?.insertOrReplaceInTx(songWithAlbums)
     }
 
     /**
@@ -71,8 +96,9 @@ object DbHelper {
     }
 
     /**
-     * 插入歌曲到歌单
+     * 从歌单移除单个歌曲
      */
+    @Synchronized
     fun removeSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
         val dao = songWithAlbumDao ?: return
         song.dbId ?: return
@@ -90,23 +116,51 @@ object DbHelper {
     /**
      * 将歌曲从歌单移除
      */
-    fun removeSongsFromAlbum(mutableList: MutableList<SongInfoTable>, albumDbId: Long) {
+    @Synchronized
+    fun removeSongsFromAlbum(songs: MutableList<SongInfoTable>, album: AlbumInfoTable) {
         val dao = songWithAlbumDao ?: return
-        mutableList.forEach {
+        album.dbId ?: return
+        //判断歌曲是否存在
+        val songWithAlbums = mutableListOf<SongWithAlbum>()
+        songs.forEach {
             dao.queryBuilder().where(
                 SongWithAlbumDao.Properties.SongId.eq(it.dbId),
-                SongWithAlbumDao.Properties.AlbumId.eq(albumDbId)
+                SongWithAlbumDao.Properties.AlbumId.eq(album.dbId)
             ).unique()?.let {
-                dao.delete(it)
+                songWithAlbums.add(it)
             }
-
+        }
+        if (songWithAlbums.isNotEmpty()) {
+            dao.deleteInTx(songWithAlbums)
         }
     }
 
+    /**
+     * 删除歌单
+     */
+    fun deleteAlbum(id: Long) {
+        removeAllSongsFromAlbum(id)
+        albumInfoTableDao?.deleteByKey(id)
+    }
+
+    /**
+     * 从歌单中移除全部歌曲
+     */
+    @Synchronized
+    fun removeAllSongsFromAlbum(albumDbId: Long) {
+        val dao = songWithAlbumDao ?: return
+        val list = dao.queryBuilder().where(
+            SongWithAlbumDao.Properties.AlbumId.eq(albumDbId)
+        ).list()
+        if (!list.isNullOrEmpty()) {
+            dao.deleteInTx(list)
+        }
+    }
 
     /**
      * 通过dbId更新或者插入歌曲
      */
+    @Synchronized
     fun insetOrUpdateSong(song: SongInfoTable): Long? {
         val dao = songInfoTableDao ?: return null
         //判断歌曲是否存在
@@ -118,20 +172,27 @@ object DbHelper {
                 SongInfoTableDao.Properties.Source.eq(song.source)
             ).unique()
         }
-        old?.apply {
-            song.createTime = createTime
-            song.dbId = dbId
+//        old?.apply {
+//            song.createTime = createTime
+//            song.dbId = dbId
+//        }
+//        song.updateTime = System.currentTimeMillis()
+//        return dao.insertOrReplace(song)
+        //由于更新导致耗时太长，目前处理，如不存在只新增
+        return if (old == null) {
+            dao.insert(song)
+        } else {
+            old.dbId
         }
-        song.updateTime = System.currentTimeMillis()
-        return dao.insertOrReplace(song)
     }
 
     /**
      * 通过dbId更新或者插入歌单
      */
+    @Synchronized
     fun insetOrUpdateAlbum(album: AlbumInfoTable): Long? {
         val dao = albumInfoTableDao ?: return null
-        //判断歌曲是否存在
+        //判断专辑是否存在
         val old = if (album.dbId != null) {
             dao.loadByRowId(album.dbId)
         } else {
@@ -144,6 +205,9 @@ object DbHelper {
             album.createTime = createTime
             album.dbId = dbId
         }
+        if (album.des.isNullOrBlank()) {
+            album.des = "暂无描述"
+        }
         album.updateTime = System.currentTimeMillis()
         return dao.insertOrReplace(album)
     }
@@ -151,8 +215,12 @@ object DbHelper {
     /**
      * 直接插入，albumId是一样的
      */
+    @Synchronized
     fun insetAlbum(album: AlbumInfoTable): Long? {
         val dao = albumInfoTableDao ?: return null
+        if (album.des.isNullOrBlank()) {
+            album.des = "暂无描述"
+        }
         return dao.insertOrReplace(album)
     }
 
@@ -160,6 +228,7 @@ object DbHelper {
      * 通过歌曲id和歌单id，插入关联
      * 如果存在不更新
      */
+    @Synchronized
     fun withSongAndAlbum(songId: Long?, albumId: Long?): Long? {
         val dao = songWithAlbumDao ?: return null
         songId ?: return null
@@ -180,6 +249,7 @@ object DbHelper {
      * 通过歌曲id和歌单id，插入关联
      * 如果存在不更新
      */
+    @Synchronized
     fun withSongAndSinger(song: SongInfoTable, singer: SingerInfoTable): Long? {
         val dao = songWithSingerDao ?: return null
         song.dbId ?: return null

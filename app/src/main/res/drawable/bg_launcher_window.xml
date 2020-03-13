@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="@color/colorBackground" />
+        <color android:color="@color/colorAccent" />
     </item>
 
     <item
         android:gravity="top"
-        android:top="500px">
+        android:top="300dp">
         <bitmap
             android:gravity="top"
-            android:src="@drawable/icon_local_music" />
+            android:src="@drawable/bg_window_music" />
     </item>
 
 </layer-list>

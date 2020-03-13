@@ -4,15 +4,9 @@ package com.yizisu.music.and.video.module.fragment.home
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
 import com.yizisu.basemvvm.utils.gone
-import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.basemvvm.utils.visible
-import com.yizisu.basemvvm.widget.BaseLinearLayout
 import com.yizisu.music.and.roomdblibrary.DbCons
-import com.yizisu.music.and.roomdblibrary.createNormalAlbum
 import com.yizisu.music.and.video.AppData
 
 import com.yizisu.music.and.video.R
@@ -33,7 +27,10 @@ class RecentPlayFragment : BaseFragment() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         adapter.setOnItemClickListener { itemView, position, itemData ->
-            PlayListDetailActivity.start(appCompatActivity, itemData.dbId)
+            PlayListDetailActivity.start(appCompatActivity, itemData)
+        }
+        adapter.setOnItemLongClickListener { itemView, position, itemData ->
+            CreatePlayListDialog.show(appCompatActivity,itemData)
         }
         recentPlayRcv.adapter = adapter
     }
@@ -66,7 +63,7 @@ class RecentPlayFragment : BaseFragment() {
         super.onSingleClick(view)
         when (view) {
             createPlayListTv -> {
-                CreatePlayListDialog.show(appCompatActivity)
+                CreatePlayListDialog.show(appCompatActivity,null)
             }
         }
     }

@@ -45,7 +45,4 @@ class LocalMusicActivity : BaseUiActivity() {
         return false
     }
 
-    override fun isCanSwipeBack(): Boolean {
-        return false
-    }
 }

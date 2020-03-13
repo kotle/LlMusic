@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".module.add_song_to_album.AddSongToAlbumActivity">
+
+    <fragment
+        android:id="@+id/editSongFg"
+        android:name="com.yizisu.music.and.video.module.fragment.edit_song.EditSongFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.yizisu.basemvvm.widget.BaseButton
+        android:id="@+id/selectPlayList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/button_drawable"
+        android:text="@string/select_play_list"
+        android:textColor="@color/colorTextDeepBackground" />
+</com.yizisu.basemvvm.widget.BaseLinearLayout>
