@@ -17,11 +17,16 @@ class EditSongFragment : BaseFragment() {
     private val adapter = EditSongAdapter()
     override fun getContentResOrView(inflater: LayoutInflater): Any? = R.layout.fragment_edit_song
 
+    override fun isNeedSwitchView(): Boolean {
+        return true
+    }
+
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         editSongToolbar.setNavigationOnClickListener {
             appCompatActivity?.onBackPressed()
         }
+        switchView.showLoadingView()
         editSongRcv.adapter = adapter
         editSongToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -46,10 +51,15 @@ class EditSongFragment : BaseFragment() {
         editSongToolbar.title = title
     }
 
-    fun setAdapterDatas(list: MutableList<SongInfoTable>) {
-        adapter.refreshList(list.map {
-            EditSongAdapter.EditSongBean(it, false)
-        }.toMutableList())
+    fun setAdapterDatas(list: MutableList<SongInfoTable>?) {
+        if (list.isNullOrEmpty()) {
+            switchView.showOtherView("一首歌曲也没有呢", null)
+        } else {
+            switchView.showContentView()
+            adapter.refreshList(list.map {
+                EditSongAdapter.EditSongBean(it, false)
+            }.toMutableList())
+        }
     }
 
     /**

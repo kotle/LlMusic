@@ -25,6 +25,7 @@
     <string name="select_all">全选</string>
     <string name="select_resever">反选</string>
     <string name="select_play_list">选择歌单</string>
+    <string name="add_to_play_list">添加到歌单</string>
     <string name="delete_play_list">删除歌单</string>
     <string name="import_song">导入歌曲</string>
     <string name="import_song_success">歌曲导入成功</string>

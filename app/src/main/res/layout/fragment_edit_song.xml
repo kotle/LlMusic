@@ -17,9 +17,16 @@
         app:navigationIcon="@drawable/icon_back"
         app:titleTextAppearance="@style/ToolBarTitle" />
 
-    <com.yizisu.basemvvm.widget.BaseRecyclerView
-        android:id="@+id/editSongRcv"
+    <com.yizisu.music.and.video.baselib.base.SwitchView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:id="@+id/switchView"
+        android:layout_height="match_parent">
+
+        <com.yizisu.basemvvm.widget.BaseRecyclerView
+            android:id="@+id/editSongRcv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </com.yizisu.music.and.video.baselib.base.SwitchView>
+
 </com.yizisu.basemvvm.widget.BaseLinearLayout>

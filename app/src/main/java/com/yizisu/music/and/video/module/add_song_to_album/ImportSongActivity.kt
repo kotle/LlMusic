@@ -99,10 +99,13 @@ class ImportSongActivity : BaseUiActivity() {
                     sourceAlbum = it.source
                     fg.setTitle(it.target.title)
                     addAlbumBt.text = "导入到 ${it.source.title}"
-                    fg.setAdapterDatas(it.target.songInfoTables)
+                    launchThread {
+                        val list = it.target.songInfoTables
+                        runOnUi {
+                            fg.setAdapterDatas(list)
+                        }
+                    }
                 }
-            }
-            else -> {
             }
         }
     }

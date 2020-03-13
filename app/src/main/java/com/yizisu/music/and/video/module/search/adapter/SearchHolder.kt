@@ -104,7 +104,7 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
         val touch = intArrayOf(0, 0)
         val screenPoint = Point()
         it.display.getRealSize(screenPoint)
-        it.getLocationInWindow(touch)
+        it.getLocationOnScreen(touch)
         val isShowBottom = touch[1] < screenPoint.y / 2
         var popupWindow: PopupWindow? = null
         val rootView = BaseLinearLayout(
@@ -159,7 +159,6 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
                 animationStyle = R.style.PopupWindowScaleEndTopInToTop
                 showAtLocation(it, Gravity.BOTTOM or Gravity.END, dip(16), screenPoint.y - touch[1])
             }
-
         }
     }
 }
