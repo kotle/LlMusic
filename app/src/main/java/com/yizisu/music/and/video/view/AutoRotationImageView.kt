@@ -9,6 +9,7 @@ import com.yizisu.basemvvm.mvvm.MvvmActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.NoParamsLifecycleObserver
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.music.and.video.AppData
+import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.updateCover
@@ -52,19 +53,19 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
         startAnim(false)
     }
 
-    override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPlay(playStatus: Boolean, playerModel: SongModel?) {
         super.onPlay(playStatus, playerModel)
         if (lastPlayerModel == playerModel) {
             startAnim(playStatus)
         }
     }
 
-    override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
+    override fun onError(throwable: Throwable, playerModel: SongModel?) {
         super.onError(throwable, playerModel)
         anim?.pause()
     }
 
-    override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super<MusicEventListener>.onPause(playStatus, playerModel)
         if (lastPlayerModel == playerModel) {
             startAnim(playStatus)

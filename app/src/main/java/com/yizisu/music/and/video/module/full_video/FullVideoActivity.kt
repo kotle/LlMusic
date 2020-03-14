@@ -37,7 +37,7 @@ class FullVideoActivity : BaseUiActivity() {
         val title: String?
     ) : Serializable
 
-    private var player: SimplePlayer? = null
+    private var player: SimplePlayer<PlayerModel>? = null
 
     private var videoData: FullVideoData? = null
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
@@ -134,7 +134,7 @@ class FullVideoActivity : BaseUiActivity() {
 
     private var isHadGetPlayerSize = false
     private var videoSize = Point()
-    private val listener = object : SimplePlayerListener {
+    private val listener = object : SimplePlayerListener <PlayerModel>{
         override fun onTick(playerModel: PlayerModel) {
             playerModel.apply {
                 playerView.setProgress(

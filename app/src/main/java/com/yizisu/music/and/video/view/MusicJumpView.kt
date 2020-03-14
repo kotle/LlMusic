@@ -2,6 +2,7 @@ package com.yizisu.music.and.video.view
 
 import android.content.Context
 import android.util.AttributeSet
+import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.playerlibrary.helper.PlayerModel
@@ -26,12 +27,12 @@ class MusicJumpView : VoisePlayingIconView, MusicEventListener {
         MusicService.removeMusicEventListener(this)
     }
 
-    override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPlay(playStatus: Boolean, playerModel: SongModel?) {
         super.onPlay(playStatus, playerModel)
         start()
     }
 
-    override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super.onPause(playStatus, playerModel)
         if (!playStatus) {
             stop()

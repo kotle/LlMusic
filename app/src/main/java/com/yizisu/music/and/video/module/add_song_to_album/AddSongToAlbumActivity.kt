@@ -152,7 +152,9 @@ class AddSongToAlbumActivity : BaseUiActivity() {
                                 "源歌单:${it.albumInfoTable.title}"
                             }
                         )
-                        if (it.albumInfoTable?.id == DbCons.ALBUM_ID_CURRENT) {
+                        if (it.albumInfoTable?.id == DbCons.ALBUM_ID_CURRENT ||
+                            it.albumInfoTable?.id == DbCons.ALBUM_ID_LOCAL
+                        ) {
                             deleteSongTv.gone()
                         }
                     }

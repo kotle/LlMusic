@@ -10,6 +10,7 @@ import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
+import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
@@ -121,12 +122,12 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     }
 
 
-    override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super<MusicEventListener>.onPause(playStatus, playerModel)
         setPlayState(playStatus)
     }
 
-    override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPlay(playStatus: Boolean, playerModel: SongModel?) {
         super.onPlay(playStatus, playerModel)
         setPlayState(playStatus)
     }
@@ -141,7 +142,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         }
     }
 
-    override fun onTick(playerModel: PlayerModel) {
+    override fun onTick(playerModel: SongModel) {
         setProgress(
             playerModel.currentDuration,
             playerModel.currentBufferDuration,

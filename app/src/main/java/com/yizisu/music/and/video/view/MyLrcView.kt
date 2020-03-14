@@ -99,13 +99,13 @@ class MyLrcView : LrcView, MusicEventListener {
         MusicService.removeMusicEventListener(this)
     }
 
-    override fun onPlayerModelChange(playerModel: PlayerModel) {
+    override fun onPlayerModelChange(playerModel: SongModel) {
         super.onPlayerModelChange(playerModel)
         reset()
         queryLrcFromNet()
     }
 
-    override fun onTick(playerModel: PlayerModel) {
+    override fun onTick(playerModel: SongModel) {
         super.onTick(playerModel)
         updateTime(playerModel.currentDuration)
     }

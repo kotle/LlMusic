@@ -41,12 +41,12 @@ import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
 import kotlin.system.exitProcess
 
-class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
+class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongModel> {
     /**
      * messageBus数据类型
      */
     private data class PlayModelBean(
-        val models: MutableList<PlayerModel>,
+        val models: MutableList<SongModel>,
         val index: Int = 0,
         var isNewList: Boolean,
         val isPlayWhenReady: Boolean? = true
@@ -81,7 +81,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
         //开始播放
         fun startPlay(
-            models: MutableList<PlayerModel>,
+            models: MutableList<SongModel>,
             index: Int = 0,
             isNewList: Boolean,
             isPlayWhenReady: Boolean? = true
@@ -137,7 +137,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
 
     //播放器对象
     private val player by lazy {
-        SimplePlayer(this).apply {
+        SimplePlayer<SongModel>(this).apply {
             setAudioForceEnable(true)
             setRepeatMode(SimplePlayer.LOOP_MODO_NONE)
             setHandleWakeLock(true)
@@ -162,17 +162,17 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         return START_STICKY
     }
 
-    override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPlay(playStatus: Boolean, playerModel: SongModel?) {
         super.onPlay(playStatus, playerModel)
         notifyByReceiver(player.getCurrentModel())
     }
 
-    override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super.onPause(playStatus, playerModel)
         notifyByReceiver(player.getCurrentModel())
     }
 
-    override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
+    override fun onError(throwable: Throwable, playerModel: SongModel?) {
         super.onError(throwable, playerModel)
         "播放出错:${playerModel.safeGet<SongModel>()?.song?.name}".toast()
 //        player.next()
@@ -367,7 +367,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         }
     }
 
-    override fun onPlayerModelChange(playerModel: PlayerModel) {
+    override fun onPlayerModelChange(playerModel: SongModel) {
         super.onPlayerModelChange(playerModel)
         AppData.currentPlayIndex = player.getCurrentPlayIndex()
         playerModel.isThis<SongModel> {
@@ -403,7 +403,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         }
     }
 
-    override fun onPlayerListChange(playerModels: MutableList<PlayerModel>) {
+    override fun onPlayerListChange(playerModels: MutableList<SongModel>) {
         super.onPlayerListChange(playerModels)
         val newList = mutableListOf<SongInfoTable>()
         playerModels.forEach {
@@ -414,7 +414,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         repelaceCurrentList(newList)
     }
 
-    override fun onTick(playerModel: PlayerModel) {
+    override fun onTick(playerModel: SongModel) {
 
     }
 

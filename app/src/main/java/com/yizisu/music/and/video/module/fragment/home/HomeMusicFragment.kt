@@ -92,12 +92,12 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     }
 
 
-    override fun onPause(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super<MusicEventListener>.onPause(playStatus, playerModel)
         setPlayState(playStatus)
     }
 
-    override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
+    override fun onPlay(playStatus: Boolean, playerModel: SongModel?) {
         super.onPlay(playStatus, playerModel)
         setPlayState(playStatus)
     }
