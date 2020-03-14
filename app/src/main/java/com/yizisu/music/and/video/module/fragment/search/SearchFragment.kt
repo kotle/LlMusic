@@ -37,7 +37,7 @@ class SearchFragment : BaseFragment() {
     }
 
     private var sourceType: Int? = null
-    private val searchAdapter = SearchAdapter()
+    private val searchAdapter = SearchAdapter(null)
     private val searchViewModel by lazy { getActivityViewModel<SearchViewModel>() }
     override fun getContentResOrView(inflater: LayoutInflater): Any? = R.layout.fragment_search
 

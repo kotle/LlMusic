@@ -34,7 +34,7 @@ class PlayListDetailActivity : BaseUiActivity() {
         }
     }
 
-    private val adapter = SearchAdapter()
+    private val adapter by lazy { SearchAdapter(currentAlbumInfoTable) }
 
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.activity_play_list_detail
@@ -51,8 +51,6 @@ class PlayListDetailActivity : BaseUiActivity() {
     private var currentAlbumInfoTable: AlbumInfoTable? = null
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        playListDetailRcv.adapter = adapter
-        refreshData()
         getSwitchView()?.apply {
             isCanSwipeRefresh = true
             setOnRefreshListener {
@@ -71,6 +69,7 @@ class PlayListDetailActivity : BaseUiActivity() {
             BusCode.ALBUM_INFO -> {
                 event.safeGet<AlbumInfoTable>()?.let {
                     currentAlbumInfoTable = it
+                    playListDetailRcv.adapter = adapter
                     refreshData()
                 }
             }
@@ -92,11 +91,9 @@ class PlayListDetailActivity : BaseUiActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.importSonsMenu -> {
-                SelectPlayListDialog.show(this) {
+                SelectPlayListDialog.show(this, currentAlbumInfoTable) {
                     ImportSongActivity.start(this, currentAlbumInfoTable, it)
                 }
-            }
-            else -> {
             }
         }
         return super.onOptionsItemSelected(item)

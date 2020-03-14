@@ -69,7 +69,7 @@ class HomeMenuFragment : BaseFragment() {
         super.onSingleClick(view)
         when (view) {
             recentAddMusicFl -> {
-                PlayListDetailActivity.start(appCompatActivity, AppData.dbCurrentAlbumData.data)
+                PlayListDetailActivity.start(appCompatActivity, AppData.dbRecentAlbumData.data)
             }
             headMusicFl -> {
                 PlayListDetailActivity.start(appCompatActivity, AppData.dbHeartAlbumData.data)

@@ -17,16 +17,19 @@ class SelectPlayListDialog : BaseDialog() {
     companion object {
         fun show(
             appCompatActivity: AppCompatActivity?,
+            fiflt: AlbumInfoTable?,
             selectAlbum: Function1<AlbumInfoTable, Unit>
         ): SelectPlayListDialog? {
             appCompatActivity ?: return null
             return SelectPlayListDialog().apply {
                 onSelectAlbum = selectAlbum
+                fifltAlbumInfoTable = fiflt
                 show(appCompatActivity)
             }
         }
     }
 
+    private var fifltAlbumInfoTable: AlbumInfoTable? = null
     private var onSelectAlbum: Function1<AlbumInfoTable, Unit>? = null
 
     override fun getContentResOrView(): Any? {
@@ -57,7 +60,11 @@ class SelectPlayListDialog : BaseDialog() {
         super.initViewModel()
         AppData.allAlbumData.registerOnSuccess {
             adapter.refreshList(it.filter {
-                it.id == DbCons.ALBUM_ID_HEART || it.id == DbCons.ALBUM_ID_NORMAL
+                if (fifltAlbumInfoTable?.dbId == it.dbId) {
+                    false
+                } else {
+                    it.id == DbCons.ALBUM_ID_HEART || it.id == DbCons.ALBUM_ID_NORMAL
+                }
             }.toMutableList())
         }
     }

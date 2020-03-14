@@ -1,10 +1,7 @@
 package com.yizisu.music.and.video.utils
 
-import android.graphics.drawable.TransitionDrawable
 import android.widget.ImageView
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -12,10 +9,8 @@ import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
-import com.yizisu.music.and.video.bean.LocalMusicBean
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.viewmodel.DbViewModel
-import com.yizisu.playerlibrary.helper.PlayerModel
 
 /**
  * 更新封面
@@ -49,7 +44,7 @@ fun SongModel.saveToRecentDb() {
     isRunThread = true
     launchThread {
         //先移除再添加，这样最近播放就会把这首排在最前
-        DbHelper.removeSongToAlbum(this@saveToRecentDb.song, album)
+        DbHelper.removeSongFromAlbum(this@saveToRecentDb.song, album)
         DbHelper.addSongToAlbum(this@saveToRecentDb.song, album)
         dbViewModel.queryRecentPlayList()
         isRunThread = false
@@ -63,6 +58,10 @@ fun SongModel.saveToRecentDb() {
  */
 fun repelaceCurrentList(list: MutableList<SongInfoTable>?) {
     if (list.isNullOrEmpty()) {
+        launchThread {
+            DbHelper.removeAllSongsFromAlbum(DbCons.ALBUM_ID_CURRENT)
+            dbViewModel.queryCurrentList()
+        }
         return
     }
     launchThread {
@@ -106,7 +105,7 @@ fun heartIvClick() {
     val heartAlbum = AppData.dbHeartAlbumData.data ?: return
     launchThread {
         if (DbHelper.isSongInAlbum(current, heartAlbum)) {
-            DbHelper.removeSongToAlbum(current, heartAlbum)
+            DbHelper.removeSongFromAlbum(current, heartAlbum)
         } else {
             DbHelper.addSongToAlbum(current, heartAlbum)
         }

@@ -14,12 +14,29 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.yizisu.basemvvm.widget.BaseButton
-        android:id="@+id/selectPlayList"
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/button_drawable"
-        android:text="@string/add_to_play_list"
-        android:textColor="@color/colorTextDeepBackground" />
+        android:orientation="horizontal">
+
+        <com.yizisu.basemvvm.widget.BaseButton
+            android:id="@+id/selectPlayList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_drawable"
+            android:text="@string/add_to_play_list"
+            android:textColor="@color/colorTextDeepBackground" />
+
+        <com.yizisu.basemvvm.widget.BaseButton
+            android:id="@+id/deleteSongTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_drawable"
+            android:text="@string/delete_select_songs"
+            android:textColor="@color/colorTextDeepBackground" />
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
 </com.yizisu.basemvvm.widget.BaseLinearLayout>

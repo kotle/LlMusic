@@ -29,4 +29,7 @@
     <string name="delete_play_list">删除歌单</string>
     <string name="import_song">导入歌曲</string>
     <string name="import_song_success">歌曲导入成功</string>
+    <string name="delete_select_songs">删除已选歌曲</string>
+    <string name="delete_success">删除成功</string>
+    <string name="add_success">添加成功</string>
 </resources>

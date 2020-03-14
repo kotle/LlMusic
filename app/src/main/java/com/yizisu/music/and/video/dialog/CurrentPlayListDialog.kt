@@ -1,6 +1,7 @@
 package com.yizisu.music.and.video.dialog
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -33,7 +34,9 @@ class CurrentPlayListDialog : BaseDialog() {
         }
     }
 
-    private val adapter = SearchAdapter()
+
+    private val adapter = SearchAdapter(AppData.dbCurrentAlbumData.data)
+
     override fun getContentResOrView(): Any? = R.layout.dialog_current_play_list
 
     override fun initViewModel() {
@@ -72,9 +75,14 @@ class CurrentPlayListDialog : BaseDialog() {
     }
 
     private fun setAdapter(list: MutableList<SongInfoTable>) {
+        adapter.refreshList(list)
+        scrollCurrent()
+    }
+
+    override fun initUi(savedInstanceState: Bundle?) {
+        super.initUi(savedInstanceState)
         currentPlayListRcv.adapter = adapter
         adapter.isNeedMusicJumpView = true
-        adapter.refreshList(list)
         adapter.setOnItemClickListener { itemView, position, itemData ->
             MusicService.startPlay(
                 adapter.datas.map {
@@ -82,8 +90,8 @@ class CurrentPlayListDialog : BaseDialog() {
                 }.toMutableList(), position, false,
                 true
             )
+            adapter.notifyDataSetChanged()
         }
-        scrollCurrent()
     }
 
     override fun onRootViewLayoutParams(lp: FrameLayout.LayoutParams) {

@@ -43,7 +43,8 @@ object DbHelper {
      * 插入单个歌曲到歌单
      */
     @Synchronized
-    fun addSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
+    fun addSongToAlbum(song: SongInfoTable, album: AlbumInfoTable?) {
+        album?:return
         val songId = insetOrUpdateSong(song)
         if (!song.coverUrlPath.isNullOrBlank()) {
             album.urlPath = song.coverUrlPath
@@ -99,7 +100,7 @@ object DbHelper {
      * 从歌单移除单个歌曲
      */
     @Synchronized
-    fun removeSongToAlbum(song: SongInfoTable, album: AlbumInfoTable) {
+    fun removeSongFromAlbum(song: SongInfoTable, album: AlbumInfoTable) {
         val dao = songWithAlbumDao ?: return
         song.dbId ?: return
         album.dbId ?: return

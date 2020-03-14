@@ -23,10 +23,14 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
+import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.cons.BusCode
 import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.SEEK_MUSIC_EVENT
@@ -45,7 +49,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
         val models: MutableList<PlayerModel>,
         val index: Int = 0,
         var isNewList: Boolean,
-        val isPlayWhenReady: Boolean = true
+        val isPlayWhenReady: Boolean? = true
     )
 
     companion object {
@@ -80,7 +84,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
             models: MutableList<PlayerModel>,
             index: Int = 0,
             isNewList: Boolean,
-            isPlayWhenReady: Boolean = true
+            isPlayWhenReady: Boolean? = true
         ) {
             //判断服务是否启动
             MessageBus.post(
@@ -294,7 +298,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
                         player.seekTo(0, index)
                         player.play()
                     } else {
-                        if (isPlayWhenReady) {
+                        if (isPlayWhenReady ?: player.isPlaying()) {
                             player.prepareAndPlay(models, index)
                         } else {
                             player.prepare(models, index)
@@ -336,6 +340,30 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener {
                     player.seekTo(this)
                 }
             }
+            //歌单发生了增删改查
+            /*       BusCode.REFRESH_PLAY_LIST_DETAIL -> {
+                       event.safeGet<AlbumInfoTable>()?.apply {
+                           if (dbId == DbCons.ALBUM_ID_CURRENT) {
+                               launchThread {
+                                   DbHelper.queryAlbumByDbId(dbId)?.apply {
+                                       resetSongInfoTables()
+                                       val plays = player.getAllPlayModel().map { SongModel(it) }
+                                           .toMutableList()
+                                       val index = if (AppData.currentPlayIndex < plays.size) {
+                                           AppData.currentPlayIndex
+                                       } else {
+                                           0
+                                       }
+                                       if (player.isPlaying()) {
+                                           player.prepareAndPlay(plays, index)
+                                       } else {
+                                           player.prepare(plays, index)
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }*/
         }
     }
 

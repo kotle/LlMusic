@@ -78,8 +78,7 @@ class ImportSongActivity : BaseUiActivity() {
                         DbHelper.addSongToAlbum(songs, album)
                         runOnUi {
                             MessageBus.post(
-                                BusCode.REFRESH_PLAY_LIST_DETAIL, "refresh", false,
-                                PlayListDetailActivity::class.java
+                                BusCode.REFRESH_PLAY_LIST_DETAIL, album, false
                             )
                             R.string.import_song_success.toast()
                             finish()

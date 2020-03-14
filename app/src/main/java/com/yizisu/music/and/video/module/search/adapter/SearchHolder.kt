@@ -4,29 +4,38 @@ import android.content.ContextWrapper
 import android.graphics.Color
 import android.graphics.Point
 import android.text.TextUtils
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginEnd
 import androidx.recyclerview.widget.RecyclerView
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
+import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.widget.BaseLinearLayout
-import com.yizisu.basemvvm.widget.BasePopupWindow
 import com.yizisu.basemvvm.widget.BaseTextView
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
-import com.yizisu.music.and.video.bean.dongwo.SearchBean
+import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.cons.BusCode
+import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
+import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
+import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.view.MusicJumpView
 
-class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.ViewHolder(itemView) {
+class SearchHolder(
+    itemView: View,
+    val adapter: SearchAdapter,
+    val album: AlbumInfoTable?
+) : RecyclerView.ViewHolder(itemView) {
     companion object {
         const val LAYOUT_RES = R.layout.rcv_item_search_music
     }
@@ -46,6 +55,11 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
 
 
     fun setData(bean: SongInfoTable, keywords: String?, isNeedMusicJumpView: Boolean = false) {
+//        if (album?.id == DbCons.ALBUM_ID_CURRENT) {
+//            editEt.invisible()
+//        } else {
+//            editEt.visible()
+//        }
         //添加当前播放的跳动音符
         if (isNeedMusicJumpView
             && AppData.currentPlayIndex == adapterPosition
@@ -95,6 +109,7 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
      */
     private fun showPopup(it: View?) {
         var ctx = it?.context ?: return
+
         if (ctx !is AppCompatActivity) {
             if (ctx is ContextWrapper) {
                 ctx = ctx.baseContext
@@ -127,7 +142,7 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
                 setTextColor(Color.BLACK)
                 setOnClickListener {
                     popupWindow?.dismiss()
-                    SelectPlayListDialog.show(ctx.safeGet()) {
+                    SelectPlayListDialog.show(ctx.safeGet(), album) {
                         launchThread {
                             DbHelper.addSongToAlbum(song, it)
                             if (it.dbId == DbCons.ALBUM_ID_HEART) {
@@ -143,10 +158,33 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
                 gravity = Gravity.CENTER_VERTICAL
                 setTextColor(Color.BLACK)
                 setOnClickListener {
-                    SearchAdapter.toAllSongPage(this, adapter.datas)
+                    toAllSongPage(this, adapter.datas)
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
+            if (album != null && album.id != DbCons.ALBUM_ID_CURRENT) {
+                addView(BaseTextView(ctx).apply {
+                    text = "删除"
+                    gravity = Gravity.CENTER_VERTICAL
+                    setTextColor(Color.BLACK)
+                    setOnClickListener {
+                        launchThread {
+                            DbHelper.removeSongFromAlbum(song, album)
+                            runOnUi {
+                                if (album.dbId == DbCons.ALBUM_ID_HEART) {
+                                    dbViewModel.queryHeartList()
+                                }
+                                if (album.dbId == DbCons.ALBUM_ID_RECENT) {
+                                    dbViewModel.queryRecentPlayList()
+                                }
+                                adapter.datas.removeAt(layoutPosition)
+                                adapter.notifyItemRemoved(layoutPosition)
+                                popupWindow?.dismiss()
+                            }
+                        }
+                    }
+                }, LinearLayout.LayoutParams(dip(120), dip(40)))
+            }
         }
         popupWindow = MvvmPopupWindow(
             rootView, ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -160,5 +198,19 @@ class SearchHolder(itemView: View, val adapter: SearchAdapter) : RecyclerView.Vi
                 showAtLocation(it, Gravity.BOTTOM or Gravity.END, dip(16), screenPoint.y - touch[1])
             }
         }
+    }
+
+    private fun toAllSongPage(itemView: View, datas: MutableList<SongInfoTable>) {
+        var ctx = itemView.context
+        if (ctx !is AppCompatActivity) {
+            if (ctx is ContextThemeWrapper) {
+                ctx = ctx.baseContext
+            }
+        }
+        AddSongToAlbumActivity.start(
+            ctx.safeGet<AppCompatActivity>(),
+            datas,
+            album
+        )
     }
 }
