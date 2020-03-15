@@ -85,12 +85,16 @@ class FullVideoActivity : BaseUiActivity() {
         player?.addPlayerListener(listener)
         playerView.setVideoInfo(videoData?.title)
         //双击监听
-        playerView.setOnDoubleClickListener(View.OnClickListener {
+        playerView.setOnDoubleClickListener {
             updatePlayerViewUi()
-        })
+        }
         //速率改变监听
+        var oldSpeed = 1f
         playerView.setOnSpeedChangeListener {
-            player?.setVideoSpeed(it)
+            if (it != oldSpeed) {
+                oldSpeed = it
+                player?.setVideoSpeed(it)
+            }
         }
         //拖动进度条监听
         playerView.setOnSeekBarListener { isFinish, slidingRatio ->
@@ -134,7 +138,7 @@ class FullVideoActivity : BaseUiActivity() {
 
     private var isHadGetPlayerSize = false
     private var videoSize = Point()
-    private val listener = object : SimplePlayerListener <PlayerModel>{
+    private val listener = object : SimplePlayerListener<PlayerModel> {
         override fun onTick(playerModel: PlayerModel) {
             playerModel.apply {
                 playerView.setProgress(
@@ -260,8 +264,8 @@ class FullVideoActivity : BaseUiActivity() {
     }
 
     private class VideoMode(private val data: FullVideoData) : PlayerModel() {
-        override fun callMediaUri(uriCall: (Uri?, Throwable?,Boolean) -> Unit) {
-            uriCall.invoke(Uri.parse(data.path),null,false)
+        override fun callMediaUri(uriCall: (Uri?, Throwable?, Boolean) -> Unit) {
+            uriCall.invoke(Uri.parse(data.path), null, false)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.utils.*
+import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongWithAlbum
@@ -14,7 +15,9 @@ import com.yizisu.music.and.video.baselib.BaseUiActivity
 import com.yizisu.music.and.video.cons.BusCode
 import com.yizisu.music.and.video.module.fragment.edit_song.EditSongFragment
 import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
+import com.yizisu.music.and.video.utils.dbViewModel
 import kotlinx.android.synthetic.main.activity_import_song.*
+import kotlinx.android.synthetic.main.activity_test_db.*
 
 class ImportSongActivity : BaseUiActivity() {
     private data class ImportSongBean(
@@ -76,6 +79,9 @@ class ImportSongActivity : BaseUiActivity() {
                     showLoadingView()
                     launchThread {
                         DbHelper.addSongToAlbum(songs, album)
+                        if (album.id == DbCons.ALBUM_ID_HEART) {
+                            dbViewModel.queryHeartList()
+                        }
                         runOnUi {
                             MessageBus.post(
                                 BusCode.REFRESH_PLAY_LIST_DETAIL, album, false

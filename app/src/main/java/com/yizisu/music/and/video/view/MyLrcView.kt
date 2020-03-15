@@ -3,25 +3,20 @@ package com.yizisu.music.and.video.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.lrclibrary.LrcView
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
-import com.yizisu.music.and.video.bean.LocalMusicBean
-import com.yizisu.music.and.video.bean.LrcBean
 import com.yizisu.music.and.video.bean.SongModel
-import com.yizisu.music.and.video.bean.netease.LrcNeteaseBean
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.viewmodel.LrcViewModel
-import com.yizisu.playerlibrary.helper.PlayerModel
 import java.io.File
 
 class MyLrcView : LrcView, MusicEventListener {
@@ -36,38 +31,30 @@ class MyLrcView : LrcView, MusicEventListener {
     private val lrcViewModel by lazy {
         val activity = context.safeGet<BaseActivity>()
         activity?.getViewModel<LrcViewModel>()?.apply {
-            //歌词迷歌词
-            LrcViewModel.lrcData.registerOnSuccessLiveBean(activity) {
-                val list = it.result
-                if (!list.isNullOrEmpty()) {
-                    loadLrcByUrl(list[0].lrc)
-                    AppData.currentPlaySong.data?.song?.let { song ->
-                        song.lrcUrlPath = list[0].lrc
-                        launchThread {
-                            DbHelper.insetOrUpdateSong(song)
-                        }
-                    }
-                }
-            }
-            //网易云纯文本歌词
-            LrcViewModel.lrcNeteaseData.registerOnSuccessLiveBean(activity) {
-                loadLrc(it.lyric)
-                AppData.currentPlaySong.data?.song?.let { song ->
-                    song.lrcString = it.lyric
-                    launchThread {
-                        DbHelper.insetOrUpdateSong(song)
-                    }
-                }
+            //纯文本歌词
+            LrcViewModel.lrcStringData.registerOnSuccessLiveBean(activity) { lrcString ->
+                lrcString ?: return@registerOnSuccessLiveBean
+                loadLrc(lrcString)
             }
             //文件歌词
-            LrcViewModel.lrcFileData.registerOnSuccessLiveBean(activity) {
-                loadLrc(File(it))
-                AppData.currentPlaySong.data?.song?.let { song ->
-                    song.lrcFilePath = it
-                    launchThread {
-                        DbHelper.insetOrUpdateSong(song)
-                    }
+            LrcViewModel.lrcFileData.registerOnSuccessLiveBean(activity) { fileLrcPath ->
+                saveLrcToDb(fileLrcPath) { song ->
+                    loadLrc(File(fileLrcPath!!))
+                    song.lrcFilePath = fileLrcPath
                 }
+            }
+        }
+    }
+
+    /**
+     * 将歌词保存到数据库
+     */
+    inline fun saveLrcToDb(lrc: Any?, crossinline r: Function1<SongInfoTable, Unit>) {
+        lrc ?: return
+        AppData.currentPlaySong.data?.song?.let { song ->
+            r.invoke(song)
+            launchThread {
+                DbHelper.insetOrUpdateSong(song)
             }
         }
     }
@@ -101,6 +88,8 @@ class MyLrcView : LrcView, MusicEventListener {
 
     override fun onPlayerModelChange(playerModel: SongModel) {
         super.onPlayerModelChange(playerModel)
+        LrcViewModel.lrcFileData.success(null)
+        LrcViewModel.lrcStringData.success(null)
         reset()
         queryLrcFromNet()
     }
@@ -116,38 +105,19 @@ class MyLrcView : LrcView, MusicEventListener {
         if (lastParentViewVisibility == View.VISIBLE && isVisible()) {
             reset()
             if (model.lrcString != null) {
-                LrcViewModel.lrcNeteaseData.success(
-                    LrcNeteaseBean().apply {
-                        lyric = model.lrcString
-                    }
-                )
+                loadLrc(model.lrcString)
                 return
             }
             if (model.lrcFilePath != null) {
-                LrcViewModel.lrcFileData.success(model.lrcFilePath)
-                return
-            }
-            if (model.lrcUrlPath != null) {
-                LrcViewModel.lrcData.success(
-                    LrcBean().apply {
-                        result = mutableListOf(LrcBean.ResultBean().apply {
-                            lrc = model.lrcUrlPath
-                        })
-                    }
-                )
+                loadLrc(File(model.lrcFilePath))
                 return
             }
             when (model.source) {
                 DbCons.SOURCE_NETEASE -> {
-                    lrcViewModel?.queryLrcNetease(model.id.toString())
+                    lrcViewModel?.queryLrcNetease()
                 }
                 else -> {
-                    val lrc = model.lrcUrlPath
-                    if (lrc != null) {
-                        loadLrcByUrl(lrc)
-                    } else {
-                        lrcViewModel?.queryLrc(model.name, null)
-                    }
+                    lrcViewModel?.queryLrc()
                 }
             }
         }
