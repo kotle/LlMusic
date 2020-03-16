@@ -12,6 +12,7 @@ import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.dialog.CreatePlayListDialog
+import com.yizisu.music.and.video.dialog.ImportPlayListDialog
 import com.yizisu.music.and.video.module.fragment.home.adapter.HomeItemImageAdapter
 import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
 import com.yizisu.music.and.video.utils.refreshAllAlbum
@@ -30,7 +31,7 @@ class RecentPlayFragment : BaseFragment() {
             PlayListDetailActivity.start(appCompatActivity, itemData)
         }
         adapter.setOnItemLongClickListener { itemView, position, itemData ->
-            CreatePlayListDialog.show(appCompatActivity,itemData)
+            CreatePlayListDialog.show(appCompatActivity, itemData)
         }
         recentPlayRcv.adapter = adapter
     }
@@ -44,7 +45,10 @@ class RecentPlayFragment : BaseFragment() {
         super.initViewModel()
         AppData.allAlbumData.registerOnSuccess {
             val playLists = it.filter {
-                it.id == DbCons.ALBUM_ID_NORMAL
+                it.id != DbCons.ALBUM_ID_LOCAL
+                        && it.id != DbCons.ALBUM_ID_RECENT
+                        && it.id != DbCons.ALBUM_ID_CURRENT
+                        && it.id != DbCons.ALBUM_ID_HEART
             }.toMutableList()
             if (playLists.isNullOrEmpty()) {
                 noPlayListHintTv.visible()
@@ -56,14 +60,17 @@ class RecentPlayFragment : BaseFragment() {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(createPlayListTv)
+        return listOf(createPlayListTv, importPlayListTv)
     }
 
     override fun onSingleClick(view: View) {
         super.onSingleClick(view)
         when (view) {
             createPlayListTv -> {
-                CreatePlayListDialog.show(appCompatActivity,null)
+                CreatePlayListDialog.show(appCompatActivity, null)
+            }
+            importPlayListTv -> {
+                ImportPlayListDialog.show(appCompatActivity)
             }
         }
     }

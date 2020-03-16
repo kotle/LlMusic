@@ -63,9 +63,12 @@ object DbHelper {
      * 批量的将歌曲插入歌单
      */
     @Synchronized
-    fun addSongToAlbum(song: MutableList<SongInfoTable>, album: AlbumInfoTable) {
+    fun addSongToAlbum(song: MutableList<SongInfoTable>?, album: AlbumInfoTable) {
         val songWithAlbums = mutableListOf<SongWithAlbum>()
         val albumId = insetOrUpdateAlbum(album)
+        if (song.isNullOrEmpty()) {
+            return
+        }
         song.forEach {
             val songId = insetSong(it)
             if (!it.coverUrlPath.isNullOrBlank()) {
@@ -94,6 +97,19 @@ object DbHelper {
             SongWithAlbumDao.Properties.AlbumId.eq(album.dbId)
         ).unique()
         return old != null
+    }
+
+    /**
+     * 歌单是否存在
+     */
+    fun queryAlbum(id: Long, source: Int): List<AlbumInfoTable>? {
+        val dao = albumInfoTableDao ?: return null
+        //判断专辑是否存在
+        val list = dao.queryBuilder().where(
+            AlbumInfoTableDao.Properties.Id.eq(id),
+            AlbumInfoTableDao.Properties.Source.eq(source)
+        ).list()
+        return list
     }
 
     /**
@@ -213,23 +229,19 @@ object DbHelper {
     fun insetOrUpdateAlbum(album: AlbumInfoTable): Long? {
         val dao = albumInfoTableDao ?: return null
         //判断专辑是否存在
-        val old = if (album.dbId != null) {
-            dao.loadByRowId(album.dbId)
+        return if (album.dbId == null) {
+            dao.insert(album)
         } else {
-            dao.queryBuilder().where(
-                AlbumInfoTableDao.Properties.Id.eq(album.id),
-                AlbumInfoTableDao.Properties.Source.eq(album.source)
-            ).unique()
+            dao.loadByRowId(album.dbId)?.apply {
+                album.createTime = createTime
+                album.dbId = dbId
+            }
+            if (album.des.isNullOrBlank()) {
+                album.des = "暂无描述"
+            }
+            album.updateTime = System.currentTimeMillis()
+            dao.insertOrReplace(album)
         }
-        old?.apply {
-            album.createTime = createTime
-            album.dbId = dbId
-        }
-        if (album.des.isNullOrBlank()) {
-            album.des = "暂无描述"
-        }
-        album.updateTime = System.currentTimeMillis()
-        return dao.insertOrReplace(album)
     }
 
     /**

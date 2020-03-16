@@ -34,7 +34,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
             DbCons.SOURCE_NETEASE -> {
 //                queryNetneaseUrl(uriCall, song)
                 uriCall.invoke(
-                    Uri.parse("http://music.163.com/song/media/outer/url?id=${song.id}.mp3"),
+                    Uri.parse("http://music.163.com/song/media/outer/url?id=${song.id}"),
                     null,
                     false
                 )

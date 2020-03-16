@@ -32,4 +32,8 @@
     <string name="delete_select_songs">删除已选歌曲</string>
     <string name="delete_success">删除成功</string>
     <string name="add_success">添加成功</string>
+    <string name="import_playlist">导入网易云歌单</string>
+    <string name="please_input_play_list_url">请输入网易云歌单分享地址</string>
+    <string name="play_list_conflict">歌单冲突</string>
+    <string name="replace">替换</string>
 </resources>

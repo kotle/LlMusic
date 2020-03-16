@@ -23,6 +23,31 @@ import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
 import java.lang.StringBuilder
 
 class SearchViewModel : BaseViewModel() {
+    companion object {
+        fun neteaseSongsFormat(songs: MutableList<SearchNeteaseBean.ResultBean.SongsBean>): MutableList<SongInfoTable>? {
+            return songs.map {
+                SongInfoTable().apply {
+                    name = it.name
+                    id = it.id
+                    source = DbCons.SOURCE_NETEASE
+                    type = it.fee.toInt()
+                    coverUrlPath = it.album.picUrl
+                    playUrlPath = "http://music.163.com/song/media/outer/url?id=${id}"
+                    val singers = StringBuilder()
+                    it.artists.map {
+                        SingerInfoTable().apply {
+                            id = it.id
+                            name = it.name
+                            source = DbCons.SOURCE_NETEASE
+                            type = DbCons.TYPE_FREE
+                            singers.append("${it.name},")
+                        }
+                    }
+                    des = singers.toString().trimEnd(',')
+                }
+            }.toMutableList()
+        }
+    }
 
     /**
      * 百度搜索
@@ -58,7 +83,7 @@ class SearchViewModel : BaseViewModel() {
                 des = it.artistname
                 searchBean.singerInfoTables = bean.artist?.map {
                     SingerInfoTable().apply {
-//                        coverUrlPath = it.artistpic
+                        //                        coverUrlPath = it.artistpic
                         id = it.artistid.toLong()
                         name = it.artistname
                         source = DbCons.SOURCE_BAIDU
@@ -74,27 +99,7 @@ class SearchViewModel : BaseViewModel() {
     fun neteaseToSearchBean(bean: SearchNeteaseBean?): SearchBean? {
         val songs = bean?.result?.songs ?: return null
         val searchBean = SearchBean()
-        searchBean.songInfoTables = songs.map {
-            SongInfoTable().apply {
-                name = it.name
-                id = it.id
-                source = DbCons.SOURCE_NETEASE
-                type = it.fee.toInt()
-                coverUrlPath = it.album.picUrl
-                playUrlPath = "http://music.163.com/song/media/outer/url?id=${id}.mp3"
-                val singers = StringBuilder()
-                searchBean.singerInfoTables = it.artists.map {
-                    SingerInfoTable().apply {
-                        id = it.id
-                        name = it.name
-                        source = DbCons.SOURCE_NETEASE
-                        type = DbCons.TYPE_FREE
-                        singers.append("${it.name},")
-                    }
-                }
-                des = singers.toString().trimEnd(',')
-            }
-        }
+        searchBean.songInfoTables = neteaseSongsFormat(songs)
         return searchBean
     }
 

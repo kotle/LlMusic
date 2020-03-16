@@ -10,7 +10,7 @@ private const val HEART_ALBUM_LOCAL_ID = 1
 /**
  * 创建一个本地歌单
  */
-fun createNewLocalAlbum(id: Long?, name: String) {
+fun createNewLocalAlbum(id: Long, name: String) {
     DbHelper.insetOrUpdateAlbum(
         AlbumInfoTable(
             id,

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yizisu.basemvvm.widget.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_dialog_play_list_8_r"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="@string/import_playlist"
+            android:textColor="@color/colorText"
+            android:textSize="16sp" />
+
+        <com.yizisu.basemvvm.widget.BaseEditText
+            android:id="@+id/playListUrlEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_stroke_4_light_color"
+            android:gravity="top"
+            android:hint="@string/please_input_play_list_url"
+            android:minHeight="80dp"
+            android:padding="8dp"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorTextHint"
+            android:textSize="12sp" />
+
+
+        <com.yizisu.basemvvm.widget.BaseLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <com.yizisu.basemvvm.widget.BaseTextView
+                android:id="@+id/hintTv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:lines="1"
+                android:padding="8dp"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="12sp"
+                tools:text="@string/play_list_title_not_allow_empty" />
+
+            <com.yizisu.basemvvm.widget.BaseTextView
+                android:id="@+id/dialogCancelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:padding="8dp"
+                android:text="@android:string/cancel"
+                android:textColor="@color/colorAccent"
+                android:textSize="12sp" />
+
+            <com.yizisu.basemvvm.widget.BaseTextView
+                android:id="@+id/dialogOkTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:padding="8dp"
+                android:text="@android:string/ok"
+                android:textColor="@color/colorAccent"
+                android:textSize="12sp" />
+        </com.yizisu.basemvvm.widget.BaseLinearLayout>
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
+</com.yizisu.basemvvm.widget.BaseFrameLayout>

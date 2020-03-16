@@ -26,10 +26,24 @@
             android:textStyle="bold" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
-            android:id="@+id/createPlayListTv"
+            android:id="@+id/importPlayListTv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
+            android:background="?selectableItemBackground"
+            android:drawablePadding="8dp"
+            android:gravity="bottom"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/import_playlist"
+            android:textColor="@color/colorText"
+            android:textSize="12sp" />
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/createPlayListTv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?selectableItemBackground"
             android:drawablePadding="8dp"
             android:gravity="bottom"
             android:paddingStart="8dp"
@@ -51,10 +65,10 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/noPlayListHintTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:id="@+id/noPlayListHintTv"
             android:text="@string/no_play_list_hint"
             android:textColor="@color/colorTextLight"
             android:textSize="12sp" />

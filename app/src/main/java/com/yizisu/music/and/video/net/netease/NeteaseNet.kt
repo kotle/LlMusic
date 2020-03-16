@@ -8,6 +8,7 @@ private const val API_BASE_URL = "http://music.163.com/api/"
 const val NETEAST_SEARCH = "search/pc"
 const val NETEAST_SONG_INFO = "song"
 const val NETEAST_SONG_LRC = "song/media"
+const val NETEAST_PLAY_LIST_DETAIL = "playlist/detail"
 /**
  * 发送网络请求
  */
