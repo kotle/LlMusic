@@ -138,9 +138,9 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
     //播放器对象
     private val player by lazy {
         SimplePlayer<SongModel>(this).apply {
-            setAudioForceEnable(true)
-            setRepeatMode(SimplePlayer.LOOP_MODO_NONE)
+            setRepeatMode(SimplePlayer.LOOP_MODO_LIST)
             setHandleWakeLock(true)
+            setAudioForceEnable(true)
         }
     }
     //默认通知栏图标

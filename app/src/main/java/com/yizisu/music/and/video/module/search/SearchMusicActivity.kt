@@ -56,6 +56,7 @@ class SearchMusicActivity : BaseActivity() {
             mutableListOf(
                 SearchFragment.create(DbCons.SOURCE_LOCAL),
                 SearchFragment.create(DbCons.SOURCE_NETEASE),
+                SearchFragment.create(DbCons.SOURCE_KUGOU),
                 SearchFragment.create(DbCons.SOURCE_BAIDU)
             )
         )

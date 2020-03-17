@@ -45,10 +45,10 @@ class RecentPlayFragment : BaseFragment() {
         super.initViewModel()
         AppData.allAlbumData.registerOnSuccess {
             val playLists = it.filter {
-                it.id != DbCons.ALBUM_ID_LOCAL
-                        && it.id != DbCons.ALBUM_ID_RECENT
-                        && it.id != DbCons.ALBUM_ID_CURRENT
-                        && it.id != DbCons.ALBUM_ID_HEART
+                it.id != DbCons.ALBUM_ID_LOCAL.toString()
+                        && it.id != DbCons.ALBUM_ID_RECENT.toString()
+                        && it.id != DbCons.ALBUM_ID_CURRENT.toString()
+                        && it.id != DbCons.ALBUM_ID_HEART.toString()
             }.toMutableList()
             if (playLists.isNullOrEmpty()) {
                 noPlayListHintTv.visible()

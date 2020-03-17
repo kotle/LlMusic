@@ -1,19 +1,19 @@
 package com.yizisu.music.and.roomdblibrary.bean;
 
+import com.greendao.gen.AlbumInfoTableDao;
+import com.greendao.gen.DaoSession;
+import com.greendao.gen.SongInfoTableDao;
+
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.JoinEntity;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
 
-import org.greenrobot.greendao.DaoException;
-
-import com.greendao.gen.DaoSession;
-import com.greendao.gen.SongInfoTableDao;
-import com.greendao.gen.AlbumInfoTableDao;
 
 /**
  * 专辑表
@@ -29,7 +29,7 @@ public class AlbumInfoTable {
     private Long dbId;
     //id
     @Index
-    public Long id;
+    public String id;
 
     //歌曲来源，本地0，百度1，网易云2
     private Integer source;
@@ -61,19 +61,15 @@ public class AlbumInfoTable {
             targetProperty = "songId"
     )
     private List<SongInfoTable> songInfoTables;
-
-    public void setSongInfoTables(List<SongInfoTable> songInfoTables) {
-        this.songInfoTables = songInfoTables;
-    }
-
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
     /** Used for active entity operations. */
     @Generated(hash = 644635760)
     private transient AlbumInfoTableDao myDao;
-    @Generated(hash = 1988958292)
-    public AlbumInfoTable(Long dbId, Long id, Integer source, Integer type,
+
+    @Generated(hash = 1523763342)
+    public AlbumInfoTable(Long dbId, String id, Integer source, Integer type,
             String filePath, String urlPath, String title, String des,
             Long createTime, Long updateTime) {
         this.dbId = dbId;
@@ -87,69 +83,95 @@ public class AlbumInfoTable {
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
+
     @Generated(hash = 56033727)
     public AlbumInfoTable() {
     }
+
+    public void setSongInfoTables(List<SongInfoTable> songInfoTables) {
+        this.songInfoTables = songInfoTables;
+    }
+
     public Long getDbId() {
         return this.dbId;
     }
+
     public void setDbId(Long dbId) {
         this.dbId = dbId;
     }
-    public Long getId() {
+
+    public String getId() {
         return this.id;
     }
-    public void setId(Long id) {
+
+    public void setId(String id) {
         this.id = id;
     }
+
     public Integer getSource() {
         return this.source;
     }
+
     public void setSource(Integer source) {
         this.source = source;
     }
+
     public Integer getType() {
         return this.type;
     }
+
     public void setType(Integer type) {
         this.type = type;
     }
+
     public String getFilePath() {
         return this.filePath;
     }
+
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
+
     public String getUrlPath() {
         return this.urlPath;
     }
+
     public void setUrlPath(String urlPath) {
         this.urlPath = urlPath;
     }
+
     public String getTitle() {
         return this.title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public String getDes() {
         return this.des;
     }
+
     public void setDes(String des) {
         this.des = des;
     }
+
     public Long getCreateTime() {
         return this.createTime;
     }
+
     public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
+
     public Long getUpdateTime() {
         return this.updateTime;
     }
+
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
+
     /**
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
@@ -172,11 +194,13 @@ public class AlbumInfoTable {
         }
         return songInfoTables;
     }
+
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated(hash = 638000004)
     public synchronized void resetSongInfoTables() {
         songInfoTables = null;
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
      * Entity must attached to an entity context.
@@ -188,6 +212,7 @@ public class AlbumInfoTable {
         }
         myDao.delete(this);
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
      * Entity must attached to an entity context.
@@ -199,6 +224,7 @@ public class AlbumInfoTable {
         }
         myDao.refresh(this);
     }
+
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
      * Entity must attached to an entity context.
@@ -210,11 +236,11 @@ public class AlbumInfoTable {
         }
         myDao.update(this);
     }
+
     /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 1814313285)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getAlbumInfoTableDao() : null;
     }
-
 }

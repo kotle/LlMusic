@@ -12,6 +12,10 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+       val oldHash="8e496d133287434a933dcb63a5de8982"
+        val hashLong=oldHash.toLong()
+        val newHash=hashLong.toString(16)
+        val newHash1=hashLong.toString()
+        print(1)
     }
 }

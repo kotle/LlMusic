@@ -63,7 +63,8 @@ class SelectPlayListDialog : BaseDialog() {
                 if (fifltAlbumInfoTable?.dbId == it.dbId) {
                     false
                 } else {
-                    it.id == DbCons.ALBUM_ID_HEART || it.id == DbCons.ALBUM_ID_NORMAL
+                    it.id == DbCons.ALBUM_ID_HEART.toString()
+                            || it.id == DbCons.ALBUM_ID_NORMAL.toString()
                 }
             }.toMutableList())
         }

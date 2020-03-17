@@ -64,7 +64,8 @@ class SearchFragment : BaseFragment() {
         mutableMapOf(
             DbCons.SOURCE_LOCAL to getResString(R.string.local_music),
             DbCons.SOURCE_NETEASE to getResString(R.string.netease_music),
-            DbCons.SOURCE_BAIDU to getResString(R.string.baidu_music)
+            DbCons.SOURCE_BAIDU to getResString(R.string.baidu_music),
+            DbCons.SOURCE_KUGOU to getResString(R.string.kugou_music)
         )
     }
 
@@ -84,6 +85,13 @@ class SearchFragment : BaseFragment() {
                 searchViewModel?.baiduSearchData?.register {
                     loadSuccess(it) {
                         refreshAdapter(searchViewModel?.baiduToSearchBean(it.data))
+                    }
+                }
+            }
+            DbCons.SOURCE_KUGOU -> {
+                searchViewModel?.kugouSearchData?.register {
+                    loadSuccess(it) {
+                        refreshAdapter(searchViewModel?.kugouToSearchBean(it.data))
                     }
                 }
             }

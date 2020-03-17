@@ -80,8 +80,8 @@ class PlayListDetailActivity : BaseUiActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (currentAlbumInfoTable?.id == DbCons.ALBUM_ID_HEART
-            || currentAlbumInfoTable?.id == DbCons.ALBUM_ID_NORMAL
+        if (currentAlbumInfoTable?.id == DbCons.ALBUM_ID_HEART.toString()
+            || currentAlbumInfoTable?.id == DbCons.ALBUM_ID_NORMAL.toString()
         ) {
             menuInflater.inflate(R.menu.menu_play_list_detail, menu)
         }

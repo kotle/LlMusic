@@ -14,7 +14,7 @@ fun createNewLocalAlbum(id: Long, name: String) {
     DbHelper.insetOrUpdateAlbum(
         AlbumInfoTable(
             id,
-            id,
+            id.toString(),
             DbCons.SOURCE_DB,
             DbCons.TYPE_FREE,
             null,
@@ -30,7 +30,7 @@ fun createNewLocalAlbum(id: Long, name: String) {
 fun createNormalAlbum(name: String, des: String?) {
     val album = AlbumInfoTable(
         null,
-        DbCons.ALBUM_ID_NORMAL,
+        DbCons.ALBUM_ID_NORMAL.toString(),
         DbCons.SOURCE_DB,
         DbCons.TYPE_FREE,
         null,

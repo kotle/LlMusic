@@ -13,6 +13,7 @@ public class DbCons {
     public static final int SOURCE_BAIDU = 2;
     public static final int SOURCE_NETEASE = 3;
     public static final int SOURCE_LOCAL = 4;
+    public static final int SOURCE_KUGOU = 5;
 
     /*********************type*******************/
     public static final int TYPE_FREE = 0;

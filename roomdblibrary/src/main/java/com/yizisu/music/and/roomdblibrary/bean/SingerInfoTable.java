@@ -1,19 +1,19 @@
 package com.yizisu.music.and.roomdblibrary.bean;
 
+import com.greendao.gen.DaoSession;
+import com.greendao.gen.SingerInfoTableDao;
+import com.greendao.gen.SongInfoTableDao;
+
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.JoinEntity;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
 
-import org.greenrobot.greendao.DaoException;
-
-import com.greendao.gen.DaoSession;
-import com.greendao.gen.SongInfoTableDao;
-import com.greendao.gen.SingerInfoTableDao;
 
 /**
  * 歌手表
@@ -26,7 +26,7 @@ public class SingerInfoTable {
     private Long dbId;
     //id
     @Index
-    private Long id;
+    private String id;
     //歌曲来源，本地0，百度1，网易云2
     private Integer source;
 
@@ -54,8 +54,8 @@ public class SingerInfoTable {
     /** Used for active entity operations. */
     @Generated(hash = 590133284)
     private transient SingerInfoTableDao myDao;
-    @Generated(hash = 1711457912)
-    public SingerInfoTable(Long dbId, Long id, Integer source, Integer type,
+    @Generated(hash = 739759107)
+    public SingerInfoTable(Long dbId, String id, Integer source, Integer type,
             String name, String des, Long createTime, Long updateTime) {
         this.dbId = dbId;
         this.id = id;
@@ -75,10 +75,10 @@ public class SingerInfoTable {
     public void setDbId(Long dbId) {
         this.dbId = dbId;
     }
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public Integer getSource() {

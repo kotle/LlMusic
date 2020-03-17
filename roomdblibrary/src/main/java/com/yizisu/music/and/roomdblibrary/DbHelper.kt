@@ -189,12 +189,6 @@ object DbHelper {
                 SongInfoTableDao.Properties.Source.eq(song.source)
             ).unique()
         }
-//        old?.apply {
-//            song.createTime = createTime
-//            song.dbId = dbId
-//        }
-//        song.updateTime = System.currentTimeMillis()
-//        return dao.insertOrReplace(song)
         //由于更新导致耗时太长，目前处理，如不存在只新增
         return if (old == null) {
             dao.insert(song)
@@ -217,7 +211,6 @@ object DbHelper {
         }
         if (old != null) {
             song.dbId = old.dbId
-            song.updateTime = System.currentTimeMillis()
         }
         return dao.insertOrReplace(song)
     }
@@ -239,7 +232,6 @@ object DbHelper {
             if (album.des.isNullOrBlank()) {
                 album.des = "暂无描述"
             }
-            album.updateTime = System.currentTimeMillis()
             dao.insertOrReplace(album)
         }
     }

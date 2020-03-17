@@ -116,11 +116,6 @@ class SearchHolder(
             }
         }
         val song = adapter.datas[layoutPosition]
-        val touch = intArrayOf(0, 0)
-        val screenPoint = Point()
-        it.display.getRealSize(screenPoint)
-        it.getLocationOnScreen(touch)
-        val isShowBottom = touch[1] < screenPoint.y / 2
         var popupWindow: PopupWindow? = null
         val rootView = BaseLinearLayout(
             ctx
@@ -162,7 +157,7 @@ class SearchHolder(
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
-            if (album != null && album.id != DbCons.ALBUM_ID_CURRENT) {
+            if (album != null && album.id != DbCons.ALBUM_ID_CURRENT.toString()) {
                 addView(BaseTextView(ctx).apply {
                     text = "删除"
                     gravity = Gravity.CENTER_VERTICAL
@@ -190,13 +185,7 @@ class SearchHolder(
             rootView, ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply {
-            if (isShowBottom) {
-                animationStyle = R.style.PopupWindowScaleEndTopIn
-                showAtLocation(it, Gravity.TOP or Gravity.END, dip(16), touch[1] + it.height)
-            } else {
-                animationStyle = R.style.PopupWindowScaleEndTopInToTop
-                showAtLocation(it, Gravity.BOTTOM or Gravity.END, dip(16), screenPoint.y - touch[1])
-            }
+            showAsDropTopOrBottom(it, dip(16), true)
         }
     }
 

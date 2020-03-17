@@ -36,7 +36,7 @@ public class LocalMusicUtil {
             SongInfoTable table = new SongInfoTable();
             table.setName(bean.title);
             table.setDes(bean.singer);
-            table.setId(bean.id);
+            table.setId(bean.id+"");
             table.setType(DbCons.TYPE_FREE);
             table.setSource(DbCons.SOURCE_LOCAL);
             table.setPlayFilePath(bean.path);

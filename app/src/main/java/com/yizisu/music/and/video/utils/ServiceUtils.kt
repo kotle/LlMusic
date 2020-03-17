@@ -54,7 +54,7 @@ fun Service.sendNotify(
         .setStyle(androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle().also {
             it.setShowActionsInCompactView(0, 1, 2)
             it.setMediaSession(session.sessionToken)
-            it.setShowCancelButton(true)
+//            it.setShowCancelButton(true)
         })
         .addAction(
             R.drawable.small_icon_pre,

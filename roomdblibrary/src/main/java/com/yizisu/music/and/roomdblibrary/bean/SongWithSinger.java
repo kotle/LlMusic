@@ -1,14 +1,17 @@
 package com.yizisu.music.and.roomdblibrary.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
 
 @Entity
 public class SongWithSinger {
     @Id
     private Long id;
+    @Index
     private Long singerId;
+    @Index
     private Long songId;
     //创建时间
     private Long createTime;
@@ -56,5 +59,5 @@ public class SongWithSinger {
     public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
-
+   
 }

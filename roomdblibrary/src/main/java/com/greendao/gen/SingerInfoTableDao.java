@@ -30,7 +30,7 @@ public class SingerInfoTableDao extends AbstractDao<SingerInfoTable, Long> {
      */
     public static class Properties {
         public final static Property DbId = new Property(0, Long.class, "dbId", true, "_id");
-        public final static Property Id = new Property(1, Long.class, "id", false, "ID");
+        public final static Property Id = new Property(1, String.class, "id", false, "ID");
         public final static Property Source = new Property(2, Integer.class, "source", false, "SOURCE");
         public final static Property Type = new Property(3, Integer.class, "type", false, "TYPE");
         public final static Property Name = new Property(4, String.class, "name", false, "NAME");
@@ -57,7 +57,7 @@ public class SingerInfoTableDao extends AbstractDao<SingerInfoTable, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"singer_info\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: dbId
-                "\"ID\" INTEGER," + // 1: id
+                "\"ID\" TEXT," + // 1: id
                 "\"SOURCE\" INTEGER," + // 2: source
                 "\"TYPE\" INTEGER," + // 3: type
                 "\"NAME\" TEXT," + // 4: name
@@ -84,9 +84,9 @@ public class SingerInfoTableDao extends AbstractDao<SingerInfoTable, Long> {
             stmt.bindLong(1, dbId);
         }
  
-        Long id = entity.getId();
+        String id = entity.getId();
         if (id != null) {
-            stmt.bindLong(2, id);
+            stmt.bindString(2, id);
         }
  
         Integer source = entity.getSource();
@@ -129,9 +129,9 @@ public class SingerInfoTableDao extends AbstractDao<SingerInfoTable, Long> {
             stmt.bindLong(1, dbId);
         }
  
-        Long id = entity.getId();
+        String id = entity.getId();
         if (id != null) {
-            stmt.bindLong(2, id);
+            stmt.bindString(2, id);
         }
  
         Integer source = entity.getSource();
@@ -180,7 +180,7 @@ public class SingerInfoTableDao extends AbstractDao<SingerInfoTable, Long> {
     public SingerInfoTable readEntity(Cursor cursor, int offset) {
         SingerInfoTable entity = new SingerInfoTable( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // dbId
-            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // id
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // source
             cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // type
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // name
@@ -194,7 +194,7 @@ public class SingerInfoTableDao extends AbstractDao<SingerInfoTable, Long> {
     @Override
     public void readEntity(Cursor cursor, SingerInfoTable entity, int offset) {
         entity.setDbId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setSource(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
         entity.setType(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));

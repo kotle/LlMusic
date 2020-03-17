@@ -79,7 +79,7 @@ class ImportSongActivity : BaseUiActivity() {
                     showLoadingView()
                     launchThread {
                         DbHelper.addSongToAlbum(songs, album)
-                        if (album.id == DbCons.ALBUM_ID_HEART) {
+                        if (album.id == DbCons.ALBUM_ID_HEART.toString()) {
                             dbViewModel.queryHeartList()
                         }
                         runOnUi {

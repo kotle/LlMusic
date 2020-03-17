@@ -12,11 +12,14 @@ import com.yizisu.music.and.video.bean.LocalMusicBean
 import com.yizisu.music.and.video.bean.baidu.SearchBaiduBean
 import com.yizisu.music.and.video.bean.baidu.SongInfoBaiduBean
 import com.yizisu.music.and.video.bean.dongwo.SearchBean
+import com.yizisu.music.and.video.bean.kugou.SearchKugouBean
 import com.yizisu.music.and.video.bean.netease.SearchNeteaseBean
 import com.yizisu.music.and.video.bean.netease.SongInfoNeteaseBean
 import com.yizisu.music.and.video.net.baidu.BAIDU_SEARCH
 import com.yizisu.music.and.video.net.baidu.BAIDU_SONG_INFO
 import com.yizisu.music.and.video.net.baidu.sendBaiduHttp
+import com.yizisu.music.and.video.net.kugou.KUGOU_SEARCH
+import com.yizisu.music.and.video.net.kugou.sendKugouHttp
 import com.yizisu.music.and.video.net.netease.NETEAST_SEARCH
 import com.yizisu.music.and.video.net.netease.NETEAST_SONG_INFO
 import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
@@ -28,7 +31,7 @@ class SearchViewModel : BaseViewModel() {
             return songs.map {
                 SongInfoTable().apply {
                     name = it.name
-                    id = it.id
+                    id = it.id.toString()
                     source = DbCons.SOURCE_NETEASE
                     type = it.fee.toInt()
                     coverUrlPath = it.album.picUrl
@@ -36,7 +39,7 @@ class SearchViewModel : BaseViewModel() {
                     val singers = StringBuilder()
                     it.artists.map {
                         SingerInfoTable().apply {
-                            id = it.id
+                            id = it.id.toString()
                             name = it.name
                             source = DbCons.SOURCE_NETEASE
                             type = DbCons.TYPE_FREE
@@ -55,15 +58,7 @@ class SearchViewModel : BaseViewModel() {
     val baiduSearchData = createLiveBean<SearchBaiduBean>()
     val neteaseSearchData = createLiveBean<SearchNeteaseBean>()
     val localSearchData = createLiveBean<SearchBean>()
-
-//    val searchData = createMediatorLiveBean<SearchBean>().apply {
-//        addLiveBeanListener(baiduSearchData, Observer {
-//            setLiveDateValue(it.status, baiduToSearchBean(it.value), it.errorMsg, it.errorCode)
-//        })
-//        addLiveBeanListener(neteaseSearchData, Observer {
-//            setLiveDateValue(it.status, neteaseToSearchBean(it.value), it.errorMsg, it.errorCode)
-//        })
-//    }
+    val kugouSearchData = createLiveBean<SearchKugouBean>()
 
     /**
      * 百度搜索结果转为自己的
@@ -74,7 +69,7 @@ class SearchViewModel : BaseViewModel() {
         searchBean.songInfoTables = bean.song?.map {
             SongInfoTable().apply {
                 name = it.songname
-                id = it.songid.toLong()
+                id = it.songid.toString()
                 source = DbCons.SOURCE_BAIDU
                 type = DbCons.TYPE_FREE
                 if (!bean.album.isNullOrEmpty()) {
@@ -84,7 +79,7 @@ class SearchViewModel : BaseViewModel() {
                 searchBean.singerInfoTables = bean.artist?.map {
                     SingerInfoTable().apply {
                         //                        coverUrlPath = it.artistpic
-                        id = it.artistid.toLong()
+                        id = it.artistid.toString()
                         name = it.artistname
                         source = DbCons.SOURCE_BAIDU
                         type = DbCons.TYPE_FREE
@@ -106,6 +101,7 @@ class SearchViewModel : BaseViewModel() {
     fun search(keyword: String?) {
         searchByNetease(keyword)
         searchByBaidu(keyword)
+        searchByKugou(keyword)
         searchByLocal(keyword)
     }
     /******************************************百度*********************************************/
@@ -177,5 +173,35 @@ class SearchViewModel : BaseViewModel() {
             }
         }
         localSearchData.success(bean)
+    }
+
+    /*********************************************酷狗*****************************************/
+
+    fun searchByKugou(keyword: String?) {
+        keyword ?: return
+        KUGOU_SEARCH.sendKugouHttp(
+            mutableMapOf(
+                "keyword" to keyword,
+                "page" to "1",
+                "pagesize" to "50",
+                "showtype" to "1"
+            )
+        ).async(kugouSearchData.createOkHttpCall())
+    }
+
+    fun kugouToSearchBean(data: SearchKugouBean?): SearchBean? {
+        val searchBean=SearchBean()
+        searchBean.songInfoTables=data?.data?.info?.map {
+            SongInfoTable().apply {
+                name = it.songname
+                id = it.hash
+                source = DbCons.SOURCE_KUGOU
+                type = DbCons.TYPE_FREE
+                coverUrlPath = null
+                playUrlPath = null
+                des =it.singername
+            }
+        }?.toMutableList()
+        return searchBean
     }
 }

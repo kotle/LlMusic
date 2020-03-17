@@ -49,6 +49,11 @@ public class SongWithSingerDao extends AbstractDao<SongWithSinger, Long> {
                 "\"SONG_ID\" INTEGER," + // 2: songId
                 "\"CREATE_TIME\" INTEGER," + // 3: createTime
                 "\"UPDATE_TIME\" INTEGER);"); // 4: updateTime
+        // Add Indexes
+        db.execSQL("CREATE INDEX " + constraint + "IDX_SONG_WITH_SINGER_SINGER_ID ON \"SONG_WITH_SINGER\"" +
+                " (\"SINGER_ID\" ASC);");
+        db.execSQL("CREATE INDEX " + constraint + "IDX_SONG_WITH_SINGER_SONG_ID ON \"SONG_WITH_SINGER\"" +
+                " (\"SONG_ID\" ASC);");
     }
 
     /** Drops the underlying database table. */

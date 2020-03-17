@@ -148,7 +148,7 @@ class ImportPlayListDialog : BaseDialog() {
                 songInfoTables,
                 AlbumInfoTable(
                     null,
-                    id,
+                    id.toString(),
                     source,
                     DbCons.TYPE_FREE,
                     null,
@@ -166,5 +166,4 @@ class ImportPlayListDialog : BaseDialog() {
             }
         }
     }
-
 }
