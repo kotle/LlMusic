@@ -94,7 +94,7 @@ class CreatePlayListDialog : BaseDialog() {
             launchThread {
                 DbHelper.deleteAlbum(it.dbId)
                 refreshAllAlbum()
-                runOnUi {
+                switchToUi {
                     dismiss()
                 }
             }
@@ -109,7 +109,7 @@ class CreatePlayListDialog : BaseDialog() {
         launchThread {
             createNormalAlbum(name, des)
             refreshAllAlbum()
-            runOnUi {
+            switchToUi {
                 dismiss()
             }
         }
@@ -125,7 +125,7 @@ class CreatePlayListDialog : BaseDialog() {
                 DbHelper.insetOrUpdateAlbum(it)
                 refreshAllAlbum()
             }
-            runOnUi {
+            switchToUi {
                 dismiss()
             }
         }

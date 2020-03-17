@@ -9,15 +9,12 @@ import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
-import com.yizisu.music.and.roomdblibrary.bean.SongWithAlbum
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
 import com.yizisu.music.and.video.cons.BusCode
 import com.yizisu.music.and.video.module.fragment.edit_song.EditSongFragment
-import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
 import com.yizisu.music.and.video.utils.dbViewModel
 import kotlinx.android.synthetic.main.activity_import_song.*
-import kotlinx.android.synthetic.main.activity_test_db.*
 
 class ImportSongActivity : BaseUiActivity() {
     private data class ImportSongBean(
@@ -78,11 +75,11 @@ class ImportSongActivity : BaseUiActivity() {
                     addAlbumBt.isEnabled = false
                     showLoadingView()
                     launchThread {
-                        DbHelper.addSongToAlbum(songs, album)
+                        DbHelper.addSongToAlbum(songs.asReversed(), album)
                         if (album.id == DbCons.ALBUM_ID_HEART.toString()) {
                             dbViewModel.queryHeartList()
                         }
-                        runOnUi {
+                        switchToUi {
                             MessageBus.post(
                                 BusCode.REFRESH_PLAY_LIST_DETAIL, album, false
                             )
@@ -105,8 +102,8 @@ class ImportSongActivity : BaseUiActivity() {
                     fg.setTitle(it.target.title)
                     addAlbumBt.text = "导入到 ${it.source.title}"
                     launchThread {
-                        val list = it.target.songInfoTables
-                        runOnUi {
+                        val list = it.target.songInfoTables?.asReversed()
+                        switchToUi {
                             fg.setAdapterDatas(list)
                         }
                     }

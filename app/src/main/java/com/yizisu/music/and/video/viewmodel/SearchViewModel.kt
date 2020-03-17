@@ -2,7 +2,9 @@ package com.yizisu.music.and.video.viewmodel
 
 import androidx.lifecycle.Observer
 import com.yizisu.basemvvm.mvvm.mvvm_helper.*
+import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SingerInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
@@ -27,7 +29,10 @@ import java.lang.StringBuilder
 
 class SearchViewModel : BaseViewModel() {
     companion object {
-        fun neteaseSongsFormat(songs: MutableList<SearchNeteaseBean.ResultBean.SongsBean>): MutableList<SongInfoTable>? {
+        fun neteaseSongsFormat(
+            songs: MutableList<SearchNeteaseBean.ResultBean.SongsBean>,
+            searchBean: SearchBean? = null
+        ): MutableList<SongInfoTable>? {
             return songs.map {
                 SongInfoTable().apply {
                     name = it.name
@@ -37,10 +42,11 @@ class SearchViewModel : BaseViewModel() {
                     coverUrlPath = it.album.picUrl
                     playUrlPath = "http://music.163.com/song/media/outer/url?id=${id}"
                     val singers = StringBuilder()
-                    it.artists.map {
+                    searchBean?.singerInfoTables = it.artists.map {
                         SingerInfoTable().apply {
                             id = it.id.toString()
                             name = it.name
+                            des = it.picUrl
                             source = DbCons.SOURCE_NETEASE
                             type = DbCons.TYPE_FREE
                             singers.append("${it.name},")
@@ -78,7 +84,7 @@ class SearchViewModel : BaseViewModel() {
                 des = it.artistname
                 searchBean.singerInfoTables = bean.artist?.map {
                     SingerInfoTable().apply {
-                        //                        coverUrlPath = it.artistpic
+                        des = it.artistpic
                         id = it.artistid.toString()
                         name = it.artistname
                         source = DbCons.SOURCE_BAIDU
@@ -94,16 +100,10 @@ class SearchViewModel : BaseViewModel() {
     fun neteaseToSearchBean(bean: SearchNeteaseBean?): SearchBean? {
         val songs = bean?.result?.songs ?: return null
         val searchBean = SearchBean()
-        searchBean.songInfoTables = neteaseSongsFormat(songs)
+        searchBean.songInfoTables = neteaseSongsFormat(songs, searchBean)
         return searchBean
     }
 
-    fun search(keyword: String?) {
-        searchByNetease(keyword)
-        searchByBaidu(keyword)
-        searchByKugou(keyword)
-        searchByLocal(keyword)
-    }
     /******************************************百度*********************************************/
     /**
      * 搜索百度音乐
@@ -158,6 +158,9 @@ class SearchViewModel : BaseViewModel() {
 
     /****************************************/
     fun searchByLocal(keyword: String?) {
+        if (keyword.isNullOrBlank()) {
+            return
+        }
         val list = mutableListOf<SongInfoTable>()
         val bean = SearchBean()
         bean.songInfoTables = list
@@ -165,20 +168,21 @@ class SearchViewModel : BaseViewModel() {
             localSearchData.success(bean)
             return
         }
-        AppData.dbLocalAlbumData.data?.songInfoTables?.forEach {
-            if (it.name.contains(keyword) || it.des.contains(keyword) ||
-                keyword.contains(it.name) || keyword.contains(it.des)
-            ) {
-                list.add(it)
+        launchThread {
+            val dbList = DbHelper.queryAllSongByKeyword(keyword)
+            if (!dbList.isNullOrEmpty()) {
+                list.addAll(dbList)
             }
+            localSearchData.success(bean)
         }
-        localSearchData.success(bean)
     }
 
     /*********************************************酷狗*****************************************/
 
     fun searchByKugou(keyword: String?) {
-        keyword ?: return
+        if (keyword.isNullOrBlank()) {
+            return
+        }
         KUGOU_SEARCH.sendKugouHttp(
             mutableMapOf(
                 "keyword" to keyword,
@@ -190,8 +194,8 @@ class SearchViewModel : BaseViewModel() {
     }
 
     fun kugouToSearchBean(data: SearchKugouBean?): SearchBean? {
-        val searchBean=SearchBean()
-        searchBean.songInfoTables=data?.data?.info?.map {
+        val searchBean = SearchBean()
+        searchBean.songInfoTables = data?.data?.info?.map {
             SongInfoTable().apply {
                 name = it.songname
                 id = it.hash
@@ -199,7 +203,7 @@ class SearchViewModel : BaseViewModel() {
                 type = DbCons.TYPE_FREE
                 coverUrlPath = null
                 playUrlPath = null
-                des =it.singername
+                des = it.singername
             }
         }?.toMutableList()
         return searchBean

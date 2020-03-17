@@ -169,7 +169,9 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
 
     override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super.onPause(playStatus, playerModel)
-        notifyByReceiver(player.getCurrentModel())
+        if (!playStatus) {
+            notifyByReceiver(player.getCurrentModel())
+        }
     }
 
     override fun onError(throwable: Throwable, playerModel: SongModel?) {
@@ -216,16 +218,18 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
      * 发送通知栏
      */
     private fun notifyByReceiver(playerModel: PlayerModel?) {
-        playerModel.safeGet<SongModel>()?.song?.apply {
-            sendNotify(
-                notificationManager,
-                lastBigIconBitmap ?: defaultBigIcon,
-                name,
-                des,
-                NOTIFY_MUSIC_ID,
-                player.isPlaying(),
-                session
-            )
+        tryError {
+            playerModel.safeGet<SongModel>()?.song?.apply {
+                sendNotify(
+                    notificationManager,
+                    lastBigIconBitmap ?: defaultBigIcon,
+                    name,
+                    des,
+                    NOTIFY_MUSIC_ID,
+                    player.isPlaying(),
+                    session
+                )
+            }
         }
     }
 

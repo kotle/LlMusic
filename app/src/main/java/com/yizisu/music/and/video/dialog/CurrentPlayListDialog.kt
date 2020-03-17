@@ -44,6 +44,7 @@ class CurrentPlayListDialog : BottomSheetDialog {
                 window?.findViewById<View>(R.id.design_bottom_sheet)
                     ?.setBackgroundResource(android.R.color.transparent)
                 initUi(view)
+                setCanceledOnTouchOutside(true)
                 show()
             }
         }
@@ -94,6 +95,7 @@ class CurrentPlayListDialog : BottomSheetDialog {
                     )
                 )
             )
+            adapter.notifyDataSetChanged()
         }
     }
 //    override fun getContentResOrView(): Any? = R.layout.dialog_current_play_list
@@ -120,7 +122,6 @@ class CurrentPlayListDialog : BottomSheetDialog {
                 }.toMutableList(), position, false,
                 true
             )
-            adapter.notifyDataSetChanged()
         }
         parent.findViewById<View>(R.id.currentSongTv)?.setOnClickListener {
             scrollCurrent()

@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
 import com.yizisu.basemvvm.app
-import com.yizisu.basemvvm.mvvm.mvvm_helper.createLiveBean
-import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.basemvvm.widget.BaseImageView

@@ -30,11 +30,9 @@ public class SingerInfoTable {
     //歌曲来源，本地0，百度1，网易云2
     private Integer source;
 
-    //歌单类型，我喜欢，自建等等
-    //歌手类型，收费，免费等等
-    //歌曲类型，收费，免费等等
     private Integer type;
     private String name;
+    //暂时作为头像展示
     private String des;
     private Long createTime;
     private Long updateTime;

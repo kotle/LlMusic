@@ -3,23 +3,16 @@ package com.yizisu.music.and.video.module.fragment.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.TextView
-import com.yizisu.basemvvm.mvvm.MvvmDialog
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
-import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.basemvvm.utils.launchThread
-import com.yizisu.basemvvm.utils.runOnUi
-import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
-import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
-import com.yizisu.music.and.video.baselib.base.ListDialog
 import com.yizisu.music.and.video.bean.dongwo.SearchBean
 import com.yizisu.music.and.video.module.search.adapter.SearchAdapter
 import com.yizisu.music.and.video.utils.dbViewModel
@@ -69,6 +62,25 @@ class SearchFragment : BaseFragment() {
         )
     }
 
+    /**
+     * 处理加载成功
+     */
+    private fun <T> loadSuccess(data: LiveBean<T>, onSuccess: (LiveBean<T>) -> Unit) {
+        when (data.status) {
+            LiveBeanStatus.START -> {
+                showLoadingView()
+                searchAdapter.clearDatas()
+            }
+            LiveBeanStatus.SUCCESS -> {
+                showContentView()
+                onSuccess.invoke(data)
+            }
+            LiveBeanStatus.FAIL -> {
+                showOtherView(data.errorMsg)
+            }
+        }
+    }
+
     override fun initViewModel() {
         super.initViewModel()
         when (sourceType) {
@@ -105,21 +117,32 @@ class SearchFragment : BaseFragment() {
         }
     }
 
-    /**
-     * 处理加载成功
-     */
-    private fun <T> loadSuccess(data: LiveBean<T>, onSuccess: (LiveBean<T>) -> Unit) {
-        when (data.status) {
-            LiveBeanStatus.START -> {
-                showLoadingView()
-                searchAdapter.clearDatas()
+    private var keywords: String? = null
+    private var isResume = false
+    fun search(words: String?) {
+        keywords = words
+        if (isResume) {
+            onFirstVisible()
+        }
+    }
+
+    override fun onFirstVisible() {
+        super.onFirstVisible()
+        isResume = true
+        when (sourceType) {
+            //搜索网易云
+            DbCons.SOURCE_NETEASE -> {
+                searchViewModel?.searchByNetease(keywords)
             }
-            LiveBeanStatus.SUCCESS -> {
-                showContentView()
-                onSuccess.invoke(data)
+            //搜索百度
+            DbCons.SOURCE_BAIDU -> {
+                searchViewModel?.searchByBaidu(keywords)
             }
-            LiveBeanStatus.FAIL -> {
-                showOtherView(data.errorMsg)
+            DbCons.SOURCE_KUGOU -> {
+                searchViewModel?.searchByKugou(keywords)
+            }
+            DbCons.SOURCE_LOCAL -> {
+                searchViewModel?.searchByLocal(keywords)
             }
         }
     }

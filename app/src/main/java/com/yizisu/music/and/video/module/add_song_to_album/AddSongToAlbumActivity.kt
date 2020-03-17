@@ -3,7 +3,6 @@ package com.yizisu.music.and.video.module.add_song_to_album
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.utils.*
@@ -11,15 +10,11 @@ import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
-import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
-import com.yizisu.music.and.video.baselib.base.ListDialog
 import com.yizisu.music.and.video.cons.BusCode
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.fragment.edit_song.EditSongFragment
-import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
-import com.yizisu.music.and.video.module.search.adapter.SearchHolder
 import com.yizisu.music.and.video.utils.dbViewModel
 import kotlinx.android.synthetic.main.activity_add_song_to_album.*
 
@@ -107,7 +102,7 @@ class AddSongToAlbumActivity : BaseUiActivity() {
             if (album.dbId == DbCons.ALBUM_ID_RECENT) {
                 dbViewModel.queryRecentPlayList()
             }
-            runOnUi {
+            switchToUi {
                 MessageBus.post(
                     BusCode.REFRESH_PLAY_LIST_DETAIL, oldAlbumInfoTable, false
                 )
@@ -123,11 +118,11 @@ class AddSongToAlbumActivity : BaseUiActivity() {
     private fun addNewSongToAlbum(data: AlbumInfoTable) {
         showLoadingView()
         launchThread {
-            DbHelper.addSongToAlbum(fg.getSelectSongs(), data)
+            DbHelper.addSongToAlbum(fg.getSelectSongs().asReversed(), data)
             if (data.dbId == DbCons.ALBUM_ID_HEART) {
                 dbViewModel.queryHeartList()
             }
-            runOnUi {
+            switchToUi {
                 R.string.add_success.toast()
                 finish()
             }

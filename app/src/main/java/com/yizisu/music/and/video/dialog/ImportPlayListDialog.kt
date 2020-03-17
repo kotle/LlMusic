@@ -5,8 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.fail
 import com.yizisu.basemvvm.utils.launchThread
-import com.yizisu.basemvvm.utils.launchUi
-import com.yizisu.basemvvm.utils.runOnUi
+import com.yizisu.basemvvm.utils.switchToUi
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
@@ -18,7 +17,6 @@ import com.yizisu.music.and.video.utils.refreshAllAlbum
 import com.yizisu.music.and.video.viewmodel.PlayListViewModel
 import com.yizisu.music.and.video.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.dialog_import_play_list.*
-import kotlinx.coroutines.CoroutineScope
 
 class ImportPlayListDialog : BaseDialog() {
     companion object {
@@ -159,7 +157,7 @@ class ImportPlayListDialog : BaseDialog() {
                     System.currentTimeMillis()
                 )
             )
-            runOnUi {
+            switchToUi {
                 safeDismiss()
                 refreshAllAlbum()
                 "歌单导入成功\n本次共导入歌曲${songInfoTables?.count()}首".toast()

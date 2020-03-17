@@ -84,6 +84,7 @@ class MyLrcView : LrcView, MusicEventListener {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         MusicService.removeMusicEventListener(this)
+        reset()
     }
 
     override fun onPlayerModelChange(playerModel: SongModel) {

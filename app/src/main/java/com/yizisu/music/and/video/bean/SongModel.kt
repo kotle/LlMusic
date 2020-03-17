@@ -6,17 +6,15 @@ import com.yizisu.basemvvm.gson
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanValue
 import com.yizisu.basemvvm.mvvm.mvvm_helper.createLiveBean
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
-import com.yizisu.basemvvm.utils.asyncOnThread
-import com.yizisu.basemvvm.utils.launchThread
+import com.yizisu.basemvvm.utils.switchToThread
 import com.yizisu.basemvvm.utils.launchUi
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.SingerInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.bean.baidu.SongInfoBaiduBean
 import com.yizisu.music.and.video.bean.kugou.DownloadKugouBean
 import com.yizisu.music.and.video.bean.kugou.SongInfoKugouBean
-import com.yizisu.music.and.video.bean.netease.SongInfoNeteaseBean
 import com.yizisu.music.and.video.net.kugou.KUGOU_SONG_INFO
 import com.yizisu.music.and.video.net.kugou.sendKugouHttp
 import com.yizisu.music.and.video.viewmodel.SearchViewModel
@@ -26,7 +24,6 @@ import kotlinx.coroutines.Deferred
 import java.lang.IllegalArgumentException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.util.*
 
 class SongModel(val song: SongInfoTable) : PlayerModel() {
     override fun callMediaUri(uriCall: (Uri?, Throwable?, Boolean) -> Unit) {
@@ -109,8 +106,8 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
      */
     private fun queryKugouUrl(uriCall: (Uri?, Throwable?, Boolean) -> Unit, song: SongInfoTable) {
         launchUi {
-//            queryKugouSongDownload(this, song).await()
-            val bean = queryKugouSongInfo(this, song).await()
+            //            queryKugouSongDownload(this, song).await()
+            val bean = queryKugouSongInfo(this, song)
             val data = bean.data
             if (data == null) {
                 uriCall.invoke(null, Throwable("获取酷狗音乐信息失败"), false)
@@ -122,11 +119,11 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
         }
     }
 
-    private fun queryKugouSongInfo(
+    private suspend fun queryKugouSongInfo(
         scope: CoroutineScope,
         song: SongInfoTable
-    ): Deferred<SongInfoKugouBean> {
-        return scope.asyncOnThread {
+    ): SongInfoKugouBean {
+        return switchToThread {
             try {
                 //r=play/getdata&hash=CB7EE97F4CC11C4EA7A1FA4B516A5D97
                 val results = KUGOU_SONG_INFO.sendKugouHttp(
@@ -135,7 +132,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         "hash" to song.id
                     )
                 ).execute().body()?.string()
-                return@asyncOnThread if (results.isNullOrEmpty()) {
+                return@switchToThread if (results.isNullOrEmpty()) {
                     SongInfoKugouBean()
                 } else {
                     val bean = gson.fromJson(results, SongInfoKugouBean::class.java)
@@ -147,21 +144,32 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         song.playUrlPath = null
                     }
                     DbHelper.insetOrUpdateSong(song)
+                    val singers = mutableListOf<SingerInfoTable>()
+                    bean.data?.authors?.forEach {
+                        val time = System.currentTimeMillis()
+                        val singer = SingerInfoTable(
+                            null, it.authorId.toString(),
+                            DbCons.SOURCE_KUGOU, DbCons.TYPE_FREE,
+                            it.authorName, it.avatar, time, time
+                        )
+                        singers.add(singer)
+                    }
+                    DbHelper.withSongAndSinger(song, singers)
                     bean
                 }
             } catch (e: Throwable) {
                 e.printStackTrace()
-                return@asyncOnThread SongInfoKugouBean()
+                return@switchToThread SongInfoKugouBean()
             }
 
         }
     }
 
-    private fun queryKugouSongDownload(
+    private suspend fun queryKugouSongDownload(
         scope: CoroutineScope,
         song: SongInfoTable
-    ): Deferred<DownloadKugouBean> {
-        return scope.asyncOnThread {
+    ): DownloadKugouBean {
+        return switchToThread {
             try {
                 val results = "http://trackercdnbj.kugou.com/i/v2/".sendKugouHttp(
                     mutableMapOf(
@@ -173,7 +181,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         "hash" to song.id
                     )
                 ).execute().body()?.string()
-                return@asyncOnThread if (results.isNullOrEmpty()) {
+                return@switchToThread if (results.isNullOrEmpty()) {
                     DownloadKugouBean()
                 } else {
                     val bean = gson.fromJson(results, DownloadKugouBean::class.java)
@@ -182,13 +190,13 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                 }
             } catch (e: Throwable) {
                 e.printStackTrace()
-                return@asyncOnThread DownloadKugouBean()
+                return@switchToThread DownloadKugouBean()
             }
-
         }
     }
-  //md5 加密
-   private fun encode(password: String): String {
+
+    //md5 加密
+    private fun encode(password: String): String {
         try {
             val instance: MessageDigest = MessageDigest.getInstance("MD5")//获取md5加密对象
             val digest: ByteArray = instance.digest(password.toByteArray())//对字符串加密，返回字节数组

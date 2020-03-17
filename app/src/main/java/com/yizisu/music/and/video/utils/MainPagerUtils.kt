@@ -88,7 +88,7 @@ fun setIsHeart(iv: ImageView) {
         } else {
             R.drawable.heart_empty
         }
-        runOnUi {
+        switchToUi {
             iv.setImageGlide(
                 resId
                 , transition = DrawableTransitionOptions.withCrossFade(400)

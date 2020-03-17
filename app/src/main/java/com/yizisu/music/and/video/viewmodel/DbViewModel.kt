@@ -33,7 +33,8 @@ class DbViewModel : BaseViewModel() {
         launchThread {
             val result = DbHelper.queryAlbumByDbId(DbCons.ALBUM_ID_LOCAL)
             if (result != null) {
-                result.songInfoTables=LocalMusicUtil.getSongInfos(app)
+                result.resetSongInfoTables()
+                result.songInfoTables
                 AppData.dbLocalAlbumData.success(result)
             }
         }

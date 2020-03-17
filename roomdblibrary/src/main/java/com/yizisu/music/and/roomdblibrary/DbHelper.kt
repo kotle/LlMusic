@@ -113,6 +113,21 @@ object DbHelper {
     }
 
     /**
+     * 数据库查询歌曲
+     */
+    fun queryAllSongByKeyword(keywords: String): List<SongInfoTable>? {
+        val dao = songInfoTableDao ?: return null
+        //判断专辑是否存在
+        val qb = dao.queryBuilder()
+        return qb.where(
+            qb.or(
+                SongInfoTableDao.Properties.Name.like("%${keywords}%"),
+                SongInfoTableDao.Properties.Des.like("%${keywords}%")
+            )
+        ).list()
+    }
+
+    /**
      * 从歌单移除单个歌曲
      */
     @Synchronized
@@ -178,7 +193,7 @@ object DbHelper {
      * 通过dbId更新或者插入歌曲
      */
     @Synchronized
-    fun insetSong(song: SongInfoTable): Long? {
+    private fun insetSong(song: SongInfoTable): Long? {
         val dao = songInfoTableDao ?: return null
         //判断歌曲是否存在
         val old = if (song.dbId != null) {
@@ -214,6 +229,28 @@ object DbHelper {
         }
         return dao.insertOrReplace(song)
     }
+
+    /**
+     * 插入或者替换歌手
+     */
+    @Synchronized
+    private fun insetOrUpdateSinger(singer: SingerInfoTable): Long? {
+        val dao = singerInfoTableDao ?: return null
+        //判断歌曲是否存在
+        val old = if (singer.dbId != null) {
+            dao.loadByRowId(singer.dbId)
+        } else {
+            dao.queryBuilder().where(
+                SingerInfoTableDao.Properties.Id.eq(singer.id),
+                SingerInfoTableDao.Properties.Source.eq(singer.source)
+            ).unique()
+        }
+        if (old != null) {
+            singer.dbId = old.dbId
+        }
+        return dao.insertOrReplace(singer)
+    }
+
 
     /**
      * 通过dbId更新或者插入歌单
@@ -274,19 +311,27 @@ object DbHelper {
      * 如果存在不更新
      */
     @Synchronized
-    fun withSongAndSinger(song: SongInfoTable, singer: SingerInfoTable): Long? {
-        val dao = songWithSingerDao ?: return null
-        song.dbId ?: return null
-        singer.dbId ?: return null
-        //判断歌曲是否存在
-        val old = dao.queryBuilder().where(
-            SongWithSingerDao.Properties.SongId.eq(song.dbId),
-            SongWithSingerDao.Properties.SingerId.eq(singer.dbId)
-        ).unique()
-        if (old != null) {
-            return old.id
+    fun withSongAndSinger(song: SongInfoTable, singers: MutableList<SingerInfoTable>?) {
+        val dao = songWithSingerDao ?: return
+        song.dbId = insetOrUpdateSong(song)
+        val songAndSingerInfoTable = mutableListOf<SongWithSinger>()
+        singers?.forEach {
+            it.dbId = insetOrUpdateSinger(it)
+            //判断歌曲是否存在
+            val old = dao.queryBuilder().where(
+                SongWithSingerDao.Properties.SongId.eq(song.dbId),
+                SongWithSingerDao.Properties.SingerId.eq(it.dbId)
+            ).unique()
+            if (old != null) {
+                songAndSingerInfoTable.add(old)
+            } else {
+                val time = System.currentTimeMillis()
+
+                songAndSingerInfoTable.add(SongWithSinger(null, it.dbId, song.dbId, time, time))
+            }
         }
-        val time = System.currentTimeMillis()
-        return dao.insert(SongWithSinger(null, singer.dbId, song.dbId, time, time))
+        if (songAndSingerInfoTable.isNotEmpty()) {
+            dao.insertOrReplaceInTx(songAndSingerInfoTable)
+        }
     }
 }

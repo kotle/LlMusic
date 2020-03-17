@@ -2,7 +2,6 @@ package com.yizisu.music.and.video.module.search.adapter
 
 import android.content.ContextWrapper
 import android.graphics.Color
-import android.graphics.Point
 import android.text.TextUtils
 import android.view.ContextThemeWrapper
 import android.view.Gravity
@@ -12,7 +11,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
-import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.widget.BaseLinearLayout
 import com.yizisu.basemvvm.widget.BaseTextView
@@ -22,12 +20,8 @@ import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
-import com.yizisu.music.and.video.bean.SongModel
-import com.yizisu.music.and.video.cons.BusCode
-import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
-import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.view.MusicJumpView
 
@@ -157,7 +151,9 @@ class SearchHolder(
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
-            if (album != null && album.id != DbCons.ALBUM_ID_CURRENT.toString()) {
+            if (album != null && album.id != DbCons.ALBUM_ID_CURRENT.toString() &&
+                album.id != DbCons.ALBUM_ID_LOCAL.toString()
+            ) {
                 addView(BaseTextView(ctx).apply {
                     text = "删除"
                     gravity = Gravity.CENTER_VERTICAL
@@ -165,7 +161,7 @@ class SearchHolder(
                     setOnClickListener {
                         launchThread {
                             DbHelper.removeSongFromAlbum(song, album)
-                            runOnUi {
+                            switchToUi {
                                 if (album.dbId == DbCons.ALBUM_ID_HEART) {
                                     dbViewModel.queryHeartList()
                                 }

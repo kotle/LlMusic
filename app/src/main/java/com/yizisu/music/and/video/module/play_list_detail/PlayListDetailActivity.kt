@@ -23,6 +23,7 @@ import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.add_song_to_album.ImportSongActivity
 import com.yizisu.music.and.video.module.search.adapter.SearchAdapter
 import com.yizisu.music.and.video.utils.LocalMusicUtil
+import com.yizisu.music.and.video.utils.dbViewModel
 import kotlinx.android.synthetic.main.activity_play_list_detail.*
 
 class PlayListDetailActivity : BaseUiActivity() {
@@ -100,39 +101,32 @@ class PlayListDetailActivity : BaseUiActivity() {
     }
 
 
+    //查询本地音乐
+    private var localSongs: MutableList<SongInfoTable>? = null
+
     private fun refreshData() {
         val album = currentAlbumInfoTable ?: return
         showLoadingView()
         launchThread {
-            when (album.dbId) {
-                DbCons.ALBUM_ID_LOCAL -> {
-                    //查询本地音乐
-                    val songs = LocalMusicUtil.getSongInfos(this@PlayListDetailActivity)
-                    AppData.dbLocalAlbumData.apply {
-                        data?.songInfoTables = songs
-                        data?.let {
-                            success(it)
-                        }
-                    }
-                    refreshList(album, songs)
-                    return@launchThread
-                }
-                else -> {
-                    album.resetSongInfoTables()
-                    val songs = album.songInfoTables?.asReversed()
-                    if (!songs.isNullOrEmpty()) {
-                        val firstSong = songs[0]
-                        if (!firstSong.coverFilePath.isNullOrBlank()) {
-                            album.filePath = firstSong.coverFilePath
-                        }
-                        if (!firstSong.coverUrlPath.isNullOrBlank()) {
-                            album.urlPath = firstSong.coverUrlPath
-                        }
-                        DbHelper.insetOrUpdateAlbum(album)
-                    }
-                    refreshList(album, songs)
-                }
+            if (album.dbId == DbCons.ALBUM_ID_LOCAL && localSongs == null) {
+                localSongs = LocalMusicUtil.getSongInfos(this@PlayListDetailActivity).asReversed()
+                DbHelper.removeAllSongsFromAlbum(DbCons.ALBUM_ID_LOCAL)
+                DbHelper.addSongToAlbum(localSongs, album)
+                AppData.dbLocalAlbumData.success(album)
             }
+            album.resetSongInfoTables()
+            val songs = album.songInfoTables?.asReversed()
+            if (!songs.isNullOrEmpty()) {
+                val firstSong = songs[0]
+                if (!firstSong.coverFilePath.isNullOrBlank()) {
+                    album.filePath = firstSong.coverFilePath
+                }
+                if (!firstSong.coverUrlPath.isNullOrBlank()) {
+                    album.urlPath = firstSong.coverUrlPath
+                }
+                DbHelper.insetOrUpdateAlbum(album)
+            }
+            refreshList(album, songs)
         }
     }
 

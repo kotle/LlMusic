@@ -52,7 +52,7 @@ fun Service.sendNotify(
 //        .setColor(Color.BLUE)
         .setSubText(getResString(R.string.app_des))
         .setStyle(androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle().also {
-            it.setShowActionsInCompactView(0, 1, 2)
+            it.setShowActionsInCompactView(1, 3, 2)
             it.setMediaSession(session.sessionToken)
 //            it.setShowCancelButton(true)
         })
