@@ -6,17 +6,26 @@ import com.yizisu.basemvvm.gson
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanValue
 import com.yizisu.basemvvm.mvvm.mvvm_helper.createLiveBean
+import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.basemvvm.utils.switchToThread
 import com.yizisu.basemvvm.utils.launchUi
+import com.yizisu.basemvvm.utils.tryError
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SingerInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
+import com.yizisu.music.and.video.baselib.base.sendHttp
 import com.yizisu.music.and.video.bean.baidu.SongInfoBaiduBean
 import com.yizisu.music.and.video.bean.kugou.DownloadKugouBean
 import com.yizisu.music.and.video.bean.kugou.SongInfoKugouBean
+import com.yizisu.music.and.video.bean.migu.AlbumMiguBean
+import com.yizisu.music.and.video.bean.migu.SongInfoMiguBean
 import com.yizisu.music.and.video.net.kugou.KUGOU_SONG_INFO
 import com.yizisu.music.and.video.net.kugou.sendKugouHttp
+import com.yizisu.music.and.video.net.migu.getMiguAlbumId
+import com.yizisu.music.and.video.net.migu.getMiguCId
+import com.yizisu.music.and.video.net.migu.getMiguSongId
+import com.yizisu.music.and.video.net.migu.sendMiguHttp
 import com.yizisu.music.and.video.viewmodel.SearchViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.coroutines.CoroutineScope
@@ -51,11 +60,16 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
             DbCons.SOURCE_KUGOU -> {
                 queryKugouUrl(uriCall, song)
             }
+            DbCons.SOURCE_MIGU -> {
+                queryMiguUrl(uriCall, song)
+            }
             else -> {
                 throw IllegalArgumentException("没有可以播放的地址")
             }
         }
     }
+
+    /************************************************************************************/
 
     /**
      * 获取百度的歌曲信息
@@ -100,7 +114,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
         baiduSongInfoData.observeForever(observable)
         searchViewModel.songInfoByBaidu(modelSong.id.toString(), baiduSongInfoData)
     }
-
+    /**********************************************************************************/
     /**
      * 获取酷狗歌曲信息
      */
@@ -118,6 +132,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
             }
         }
     }
+
 
     private suspend fun queryKugouSongInfo(
         scope: CoroutineScope,
@@ -143,7 +158,8 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         bean.data?.playUrl = song.playUrlPath
                         song.playUrlPath = null
                     }
-                    DbHelper.insetOrUpdateSong(song)
+                    //存入歌手的时候会执行这行代码
+//                    DbHelper.insetOrUpdateSong(song)
                     val singers = mutableListOf<SingerInfoTable>()
                     bean.data?.authors?.forEach {
                         val time = System.currentTimeMillis()
@@ -215,6 +231,66 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
             e.printStackTrace()
         }
         return ""
+    }
+    /************************************************************************/
+    /**
+     * 获取咪咕歌曲信息
+     */
+    private fun queryMiguUrl(uriCall: (Uri?, Throwable?, Boolean) -> Unit, song: SongInfoTable) {
+        launchThread {
+            tryError {
+                val playBean = queryMiguPlayInfo(song).data
+                song.playUrlPath = playBean.flac ?: playBean.`$320k` ?: playBean.`$128k`
+                if (playBean.pic.isNullOrEmpty()) {
+                    val albumBean = queryMiguAlbumInfo(song)
+                    song.coverUrlPath = "http:" + albumBean.data?.picUrl
+                } else {
+                    song.coverUrlPath = "http:" + playBean.pic
+                    song.coverFilePath = "http:" + playBean.bgPic
+                }
+                DbHelper.insetOrUpdateSong(song)
+            }
+            if (song.playUrlPath.isNullOrEmpty()) {
+                uriCall.invoke(null, Throwable("获取咪咕播放链接失败"), false)
+            } else {
+                uriCall.invoke(Uri.parse(song.playUrlPath), null, true)
+            }
+        }
+    }
+
+    //查询播放的歌曲信息
+    private fun queryMiguPlayInfo(song: SongInfoTable): SongInfoMiguBean {
+        //第一个id，第二个cid，第三个albumid
+        val ids = song.id.split(",")
+        val result = "http://migu.w0ai1uo.org/song"
+            .sendMiguHttp(
+                mutableMapOf(
+                    "id" to getMiguSongId(song.id),
+                    "cid" to getMiguCId(song.id)
+                )
+            ).execute().body()?.string()
+        return if (result.isNullOrEmpty()) {
+            SongInfoMiguBean()
+        } else {
+            gson.fromJson(result, SongInfoMiguBean::class.java)
+        }
+    }
+
+    //查询专辑信息获取图片
+    private fun queryMiguAlbumInfo(song: SongInfoTable): AlbumMiguBean {
+        //第一个id，第二个cid，第三个albumid
+        val ids = song.id.split(",")
+        val result = "http://migu.w0ai1uo.org/album"
+            .sendMiguHttp(
+                mutableMapOf(
+                    "id" to getMiguAlbumId(song.id)
+                )
+            ).execute().body()?.string()
+        return if (result.isNullOrEmpty()) {
+            AlbumMiguBean()
+        } else {
+            gson.fromJson(result, AlbumMiguBean::class.java)
+        }
     }
 
 }

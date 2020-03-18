@@ -22,6 +22,15 @@ import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : BaseFragment() {
     companion object {
+         val titles by lazy {
+            mutableMapOf(
+                DbCons.SOURCE_LOCAL to getResString(R.string.local_music),
+                DbCons.SOURCE_NETEASE to getResString(R.string.netease_music),
+                DbCons.SOURCE_BAIDU to getResString(R.string.baidu_music),
+                DbCons.SOURCE_KUGOU to getResString(R.string.kugou_music),
+                DbCons.SOURCE_MIGU to getResString(R.string.migu_music)
+            )
+        }
         fun create(type: Int): SearchFragment {
             return SearchFragment().apply {
                 sourceType = type
@@ -53,14 +62,7 @@ class SearchFragment : BaseFragment() {
         }
     }
 
-    private val titles by lazy {
-        mutableMapOf(
-            DbCons.SOURCE_LOCAL to getResString(R.string.local_music),
-            DbCons.SOURCE_NETEASE to getResString(R.string.netease_music),
-            DbCons.SOURCE_BAIDU to getResString(R.string.baidu_music),
-            DbCons.SOURCE_KUGOU to getResString(R.string.kugou_music)
-        )
-    }
+
 
     /**
      * 处理加载成功
@@ -107,6 +109,13 @@ class SearchFragment : BaseFragment() {
                     }
                 }
             }
+            DbCons.SOURCE_MIGU -> {
+                searchViewModel?.miguSearchData?.register {
+                    loadSuccess(it) {
+                        refreshAdapter(searchViewModel?.miguToSearchBean(it.data))
+                    }
+                }
+            }
             DbCons.SOURCE_LOCAL -> {
                 searchViewModel?.localSearchData?.register {
                     loadSuccess(it) {
@@ -140,6 +149,9 @@ class SearchFragment : BaseFragment() {
             }
             DbCons.SOURCE_KUGOU -> {
                 searchViewModel?.searchByKugou(keywords)
+            }
+            DbCons.SOURCE_MIGU -> {
+                searchViewModel?.searchByMigu(keywords)
             }
             DbCons.SOURCE_LOCAL -> {
                 searchViewModel?.searchByLocal(keywords)

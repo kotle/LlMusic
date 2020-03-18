@@ -28,9 +28,10 @@ class SwitchView : SimpleSwitchView {
         return super.getDefaultOtherView(context)
     }
 
-    fun showLoadingView(message: String?, isHideContentView: Boolean = false) {
+    fun showLoadingView(message: String?, isHideContentView: Boolean = false,
+                        isEnableContentView: Boolean = false) {
         loadingTextView?.text = message
-        showLoadingView(isHideContentView)
+        showLoadingView(isHideContentView,isEnableContentView)
     }
 
     fun showOtherView(message: String?, @DrawableRes drawable: Int?) {

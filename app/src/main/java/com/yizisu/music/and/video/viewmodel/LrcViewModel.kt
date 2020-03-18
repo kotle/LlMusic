@@ -12,7 +12,10 @@ import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.baselib.base.BaseViewModel
 import com.yizisu.music.and.video.baselib.base.sendHttp
 import com.yizisu.music.and.video.bean.LrcBean
+import com.yizisu.music.and.video.bean.migu.LrcMiguBean
 import com.yizisu.music.and.video.bean.netease.LrcNeteaseBean
+import com.yizisu.music.and.video.net.migu.getMiguCId
+import com.yizisu.music.and.video.net.migu.sendMiguHttp
 import com.yizisu.music.and.video.net.netease.NETEAST_SONG_LRC
 import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
 import kotlinx.coroutines.Job
@@ -101,6 +104,33 @@ class LrcViewModel : BaseViewModel() {
                 if (!result.isNullOrEmpty()) {
                     val bean = gson.fromJson<LrcNeteaseBean>(result, LrcNeteaseBean::class.java)
                     val lrcString = bean.lyric
+                    if (!lrcString.isNullOrEmpty()) {
+                        successGetLrc(song, lrcString)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 从咪咕查询歌词文本
+     * 最后通过lrcStringData传递出去
+     */
+    fun queryLrcMigu() {
+        val song = currentSong ?: return
+        if (oldLrcJob?.isCancelled == false) {
+            oldLrcJob?.cancel()
+        }
+        oldLrcJob = launchThread {
+            tryError {
+                val result = "http://migu.w0ai1uo.org/lyric".sendMiguHttp(
+                    mutableMapOf(
+                        "cid" to getMiguCId(song.id)
+                    )
+                ).await().body()?.string()
+                if (!result.isNullOrEmpty()) {
+                    val bean = gson.fromJson<LrcMiguBean>(result, LrcMiguBean::class.java)
+                    val lrcString = bean.data
                     if (!lrcString.isNullOrEmpty()) {
                         successGetLrc(song, lrcString)
                     }

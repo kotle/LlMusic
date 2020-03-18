@@ -29,6 +29,7 @@ class SearchMusicActivity : BaseActivity() {
     private val searchFgList by lazy {
         mutableListOf(
             SearchFragment.create(DbCons.SOURCE_LOCAL),
+            SearchFragment.create(DbCons.SOURCE_MIGU),
             SearchFragment.create(DbCons.SOURCE_NETEASE),
             SearchFragment.create(DbCons.SOURCE_KUGOU),
             SearchFragment.create(DbCons.SOURCE_BAIDU)

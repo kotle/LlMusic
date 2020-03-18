@@ -243,7 +243,7 @@ class FullVideoActivity : BaseUiActivity() {
      * 缓冲状态
      */
     private fun showLoadingState() {
-        showLoadingView()
+        showLoadingView(isEnableContentView = true)
     }
 
     /**

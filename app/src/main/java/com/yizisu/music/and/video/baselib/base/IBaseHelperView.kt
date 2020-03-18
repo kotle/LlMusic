@@ -64,8 +64,9 @@ interface IBaseHelperView {
     /**
      * 显示loading
      */
-    fun showLoadingView(message: String? = null, isHideContentView: Boolean = false) {
-        getBaseHelperBean().switcherView?.showLoadingView(message, isHideContentView)
+    fun showLoadingView(message: String? = null, isHideContentView: Boolean = false,
+                        isEnableContentView:Boolean=false) {
+        getBaseHelperBean().switcherView?.showLoadingView(message, isHideContentView,isEnableContentView)
     }
 
     /**

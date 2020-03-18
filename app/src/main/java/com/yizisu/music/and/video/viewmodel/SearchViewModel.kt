@@ -1,20 +1,18 @@
 package com.yizisu.music.and.video.viewmodel
 
-import androidx.lifecycle.Observer
 import com.yizisu.basemvvm.mvvm.mvvm_helper.*
 import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SingerInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
-import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.baselib.base.BaseViewModel
 import com.yizisu.music.and.video.baselib.base.createOkHttpCall
-import com.yizisu.music.and.video.bean.LocalMusicBean
 import com.yizisu.music.and.video.bean.baidu.SearchBaiduBean
 import com.yizisu.music.and.video.bean.baidu.SongInfoBaiduBean
 import com.yizisu.music.and.video.bean.dongwo.SearchBean
 import com.yizisu.music.and.video.bean.kugou.SearchKugouBean
+import com.yizisu.music.and.video.bean.migu.SearchMiguBean
 import com.yizisu.music.and.video.bean.netease.SearchNeteaseBean
 import com.yizisu.music.and.video.bean.netease.SongInfoNeteaseBean
 import com.yizisu.music.and.video.net.baidu.BAIDU_SEARCH
@@ -22,6 +20,9 @@ import com.yizisu.music.and.video.net.baidu.BAIDU_SONG_INFO
 import com.yizisu.music.and.video.net.baidu.sendBaiduHttp
 import com.yizisu.music.and.video.net.kugou.KUGOU_SEARCH
 import com.yizisu.music.and.video.net.kugou.sendKugouHttp
+import com.yizisu.music.and.video.net.migu.MIGU_SEARCH
+import com.yizisu.music.and.video.net.migu.miguGenId
+import com.yizisu.music.and.video.net.migu.sendMiguHttp
 import com.yizisu.music.and.video.net.netease.NETEAST_SEARCH
 import com.yizisu.music.and.video.net.netease.NETEAST_SONG_INFO
 import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
@@ -42,7 +43,7 @@ class SearchViewModel : BaseViewModel() {
                     coverUrlPath = it.album.picUrl
                     playUrlPath = "http://music.163.com/song/media/outer/url?id=${id}"
                     val singers = StringBuilder()
-                    searchBean?.singerInfoTables = it.artists.map {
+                    it.artists.map {
                         SingerInfoTable().apply {
                             id = it.id.toString()
                             name = it.name
@@ -65,6 +66,7 @@ class SearchViewModel : BaseViewModel() {
     val neteaseSearchData = createLiveBean<SearchNeteaseBean>()
     val localSearchData = createLiveBean<SearchBean>()
     val kugouSearchData = createLiveBean<SearchKugouBean>()
+    val miguSearchData = createLiveBean<SearchMiguBean>()
 
     /**
      * 百度搜索结果转为自己的
@@ -161,18 +163,9 @@ class SearchViewModel : BaseViewModel() {
         if (keyword.isNullOrBlank()) {
             return
         }
-        val list = mutableListOf<SongInfoTable>()
         val bean = SearchBean()
-        bean.songInfoTables = list
-        if (keyword.isNullOrBlank()) {
-            localSearchData.success(bean)
-            return
-        }
         launchThread {
-            val dbList = DbHelper.queryAllSongByKeyword(keyword)
-            if (!dbList.isNullOrEmpty()) {
-                list.addAll(dbList)
-            }
+            bean.songInfoTables = DbHelper.queryAllSongByKeyword(keyword)?.asReversed()
             localSearchData.success(bean)
         }
     }
@@ -205,6 +198,48 @@ class SearchViewModel : BaseViewModel() {
                 playUrlPath = null
                 des = it.singername
             }
+        }?.toMutableList()
+        return searchBean
+    }
+
+    /**************************************咪咕********************************/
+
+    fun searchByMigu(keyword: String?) {
+        if (keyword.isNullOrBlank()) {
+            return
+        }
+        //text={周杰伦}&pageNo={1}&pageSize=10
+        MIGU_SEARCH.sendMiguHttp(
+            mutableMapOf(
+                "keyword" to keyword
+            ), true
+        )
+            .async(miguSearchData.createOkHttpCall())
+    }
+
+    fun miguToSearchBean(data: SearchMiguBean?): SearchBean? {
+        val searchBean = SearchBean()
+        searchBean.songInfoTables = data?.data?.list?.map {
+            val singers = StringBuilder()
+            it.artists.map {
+                SingerInfoTable().apply {
+                    id = it.id
+                    name = it.name
+                    des = ""
+                    source = DbCons.SOURCE_MIGU
+                    type = DbCons.TYPE_FREE
+                    singers.append("${it.name},")
+                }
+            }
+            //这里需要存储三个id，歌曲id，cid，歌单id,用逗号隔开
+            SongInfoTable(
+                null, miguGenId(it), DbCons.SOURCE_MIGU, DbCons.TYPE_FREE,
+                singers.toString().trimEnd(','),
+                it.name, System.currentTimeMillis(),
+                System.currentTimeMillis(),
+                null, null, null, null,
+                null, null, null, null, null
+            )
         }?.toMutableList()
         return searchBean
     }

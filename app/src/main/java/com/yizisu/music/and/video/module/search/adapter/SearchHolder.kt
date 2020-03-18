@@ -20,8 +20,10 @@ import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
+import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
+import com.yizisu.music.and.video.utils.DownloadSongHelper
 import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.view.MusicJumpView
 
@@ -151,6 +153,24 @@ class SearchHolder(
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
+            if (song.playFilePath.isNullOrBlank()) {
+                addView(BaseTextView(ctx).apply {
+                    text = "下载"
+                    gravity = Gravity.CENTER_VERTICAL
+                    setTextColor(Color.BLACK)
+                    setOnClickListener {
+                        SongModel(song).callMediaUri { uri, throwable, b ->
+                            if (uri != null) {
+                                song.playUrlPath = uri.toString()
+                                DownloadSongHelper(song).startDown()
+                            } else {
+                                "获取《${song.name}》下载地址出错".toast()
+                            }
+                        }
+                        popupWindow?.dismiss()
+                    }
+                }, LinearLayout.LayoutParams(dip(120), dip(40)))
+            }
             if (album != null && album.id != DbCons.ALBUM_ID_CURRENT.toString() &&
                 album.id != DbCons.ALBUM_ID_LOCAL.toString()
             ) {

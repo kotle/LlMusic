@@ -3,9 +3,10 @@
     <string name="app_des">执子之魂，与子共生</string>
     <string name="hello_blank_fragment">这里是刚刚创建的fragment</string>
     <string name="local_music">本地音乐</string>
-    <string name="netease_music">网易云音乐</string>
+    <string name="netease_music">网易音乐</string>
     <string name="baidu_music">百度音乐</string>
     <string name="kugou_music">酷狗音乐</string>
+    <string name="migu_music">咪咕音乐</string>
     <string name="local_video">本地视频</string>
     <string name="local_recent">最近播放</string>
     <string name="see_more">更多</string>
