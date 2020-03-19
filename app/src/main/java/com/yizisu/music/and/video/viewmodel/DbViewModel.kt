@@ -24,20 +24,24 @@ class DbViewModel : BaseViewModel() {
         loadDbMusic(DbCons.ALBUM_ID_CURRENT, AppData.dbCurrentAlbumData)
     }
 
+    fun queryDownloadList() {
+        launchThread {
+            DbHelper.removeAllSongsFromAlbum(DbCons.ALBUM_ID_DOWNLOADED)
+            val album = DbHelper.queryAlbumByDbId(DbCons.ALBUM_ID_DOWNLOADED) ?: return@launchThread
+            val songs = DbHelper.queryAllSongIfFilePathNotEmpty()?.toMutableList()
+            DbHelper.addSongToAlbum(songs, album)
+            album.resetSongInfoTables()
+            album.songInfoTables
+            AppData.dbDownloadAlbumData.success(album)
+        }
+    }
+
     fun queryRecentPlayList() {
         loadDbMusic(DbCons.ALBUM_ID_RECENT, AppData.dbRecentAlbumData)
     }
 
     fun queryLocalList() {
         loadDbMusic(DbCons.ALBUM_ID_LOCAL, AppData.dbLocalAlbumData)
-        launchThread {
-            val result = DbHelper.queryAlbumByDbId(DbCons.ALBUM_ID_LOCAL)
-            if (result != null) {
-                result.resetSongInfoTables()
-                result.songInfoTables
-                AppData.dbLocalAlbumData.success(result)
-            }
-        }
     }
 
     private fun loadDbMusic(id: Long, data: LiveBean<AlbumInfoTable>) {

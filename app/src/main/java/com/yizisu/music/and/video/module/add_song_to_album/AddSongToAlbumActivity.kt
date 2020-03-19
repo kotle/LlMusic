@@ -15,6 +15,7 @@ import com.yizisu.music.and.video.baselib.BaseUiActivity
 import com.yizisu.music.and.video.cons.BusCode
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.fragment.edit_song.EditSongFragment
+import com.yizisu.music.and.video.module.search.adapter.SearchHolder
 import com.yizisu.music.and.video.utils.dbViewModel
 import kotlinx.android.synthetic.main.activity_add_song_to_album.*
 
@@ -95,12 +96,19 @@ class AddSongToAlbumActivity : BaseUiActivity() {
         val album = oldAlbumInfoTable ?: return
         showLoadingView()
         launchThread {
-            DbHelper.removeSongsFromAlbum(fg.getSelectSongs(), album)
-            if (album.dbId == DbCons.ALBUM_ID_HEART) {
-                dbViewModel.queryHeartList()
-            }
-            if (album.dbId == DbCons.ALBUM_ID_RECENT) {
-                dbViewModel.queryRecentPlayList()
+            if (album.dbId == DbCons.ALBUM_ID_DOWNLOADED) {
+                fg.getSelectSongs().forEach {
+                    SearchHolder.deleteDownloadSong(it)
+                }
+                dbViewModel.queryDownloadList()
+            } else {
+                DbHelper.removeSongsFromAlbum(fg.getSelectSongs(), album)
+                if (album.dbId == DbCons.ALBUM_ID_HEART) {
+                    dbViewModel.queryHeartList()
+                }
+                if (album.dbId == DbCons.ALBUM_ID_RECENT) {
+                    dbViewModel.queryRecentPlayList()
+                }
             }
             switchToUi {
                 MessageBus.post(

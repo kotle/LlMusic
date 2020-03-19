@@ -45,6 +45,8 @@ object AppData {
 
     //我喜欢 歌单
     val dbHeartAlbumData by lazy { createLiveBean<AlbumInfoTable>() }
+    //已下载
+    val dbDownloadAlbumData by lazy { createLiveBean<AlbumInfoTable>() }
     //当前正在播放列表
     val dbCurrentAlbumData by lazy { createLiveBean<AlbumInfoTable>() }
     //播放记录列表

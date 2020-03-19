@@ -138,4 +138,24 @@ class LrcViewModel : BaseViewModel() {
             }
         }
     }
+
+    fun queryLrcMessapiMigu() {
+        val song = currentSong ?: return
+        val lrcPath = song.lrcUrlPath ?: return
+        if (oldLrcJob?.isCancelled == false) {
+            oldLrcJob?.cancel()
+        }
+        oldLrcJob = launchThread {
+            tryError {
+                val result = lrcPath.sendMiguHttp(
+                    mutableMapOf()
+                ).await().body()?.string()
+                if (!result.isNullOrEmpty() && !result.contains("暂无歌词")) {
+                    successGetLrc(song, result)
+                }else{
+                    queryLrc()
+                }
+            }
+        }
+    }
 }

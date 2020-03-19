@@ -10,7 +10,7 @@
     <com.yizisu.basemvvm.widget.BaseLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:text="@string/my_play_list"
             android:textColor="@color/colorText"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
@@ -37,7 +37,8 @@
             android:paddingEnd="8dp"
             android:text="@string/import_playlist"
             android:textColor="@color/colorText"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/createPlayListTv"
@@ -50,7 +51,22 @@
             android:paddingEnd="8dp"
             android:text="@string/create_play_list"
             android:textColor="@color/colorText"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <com.yizisu.basemvvm.widget.BaseImageView
+            android:id="@+id/morePlayListTv"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?selectableItemBackground"
+            android:drawablePadding="8dp"
+            android:gravity="bottom"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/colorText"
+            android:textSize="12sp"
+            android:tint="@color/colorText"
+            app:srcCompat="@drawable/icon_add" />
     </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
     <com.yizisu.basemvvm.widget.BaseFrameLayout

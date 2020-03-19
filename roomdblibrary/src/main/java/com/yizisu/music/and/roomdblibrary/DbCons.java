@@ -2,6 +2,7 @@ package com.yizisu.music.and.roomdblibrary;
 
 public class DbCons {
     /********************固定歌单id**********************/
+    public static final long ALBUM_ID_DOWNLOADED = 0;
     public static final long ALBUM_ID_HEART = 1;
     public static final long ALBUM_ID_CURRENT = 2;
     public static final long ALBUM_ID_LOCAL = 3;

@@ -18,12 +18,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.yizisu.music.and.video.view.AutoRotationImageView
-            android:id="@+id/coverIv"
+        <com.yizisu.basemvvm.widget.BaseFrameLayout
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp">
+
+            <com.yizisu.music.and.video.view.AutoRotationImageView
+                android:id="@+id/coverIv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+<!--            <de.hdodenhof.circleimageview.CircleImageView-->
+<!--               android:visibility="gone"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:src="@color/colorBlackTranslucent" />-->
+
+            <com.yizisu.basemvvm.widget.BaseImageView
+                android:id="@+id/downloadIv"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:visibility="gone"
+                android:background="?selectableItemBackground"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/icon_download" />
+        </com.yizisu.basemvvm.widget.BaseFrameLayout>
+
 
         <com.yizisu.basemvvm.widget.BaseFrameLayout
             android:layout_width="match_parent"
@@ -41,12 +63,13 @@
                     android:layout_weight="2" />
 
                 <com.yizisu.basemvvm.widget.BaseImageView
-                    android:id="@+id/heartIv"
+                    android:id="@+id/addIv"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="?selectableItemBackground"
                     android:padding="10dp"
-                    app:srcCompat="@drawable/heart_empty" />
+                    app:srcCompat="@drawable/icon_add" />
+
 
                 <Space
                     android:layout_width="0dp"
@@ -122,6 +145,7 @@
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
     </com.yizisu.basemvvm.widget.BaseLinearLayout>
+
 
     <com.yizisu.music.and.video.view.MyLrcView
         android:id="@+id/lrcView"

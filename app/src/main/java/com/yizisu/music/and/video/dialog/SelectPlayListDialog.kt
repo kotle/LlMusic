@@ -65,9 +65,15 @@ class SelectPlayListDialog : BaseDialog() {
                 } else {
                     it.id != DbCons.ALBUM_ID_CURRENT.toString()
                             && it.id != DbCons.ALBUM_ID_LOCAL.toString()
+                            && it.id != DbCons.ALBUM_ID_HEART.toString()
+                            && it.id != DbCons.ALBUM_ID_DOWNLOADED.toString()
                             && it.id != DbCons.ALBUM_ID_RECENT.toString()
                 }
-            }.toMutableList())
+            }.toMutableList().asReversed().apply {
+                AppData.dbHeartAlbumData.data?.let {
+                    add(0, it)
+                }
+            })
         }
     }
 

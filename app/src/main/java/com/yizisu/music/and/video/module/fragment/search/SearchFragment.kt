@@ -11,6 +11,7 @@ import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
+import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.bean.dongwo.SearchBean
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : BaseFragment() {
     companion object {
-         val titles by lazy {
+        val titles by lazy {
             mutableMapOf(
                 DbCons.SOURCE_LOCAL to getResString(R.string.local_music),
                 DbCons.SOURCE_NETEASE to getResString(R.string.netease_music),
@@ -31,6 +32,7 @@ class SearchFragment : BaseFragment() {
                 DbCons.SOURCE_MIGU to getResString(R.string.migu_music)
             )
         }
+
         fun create(type: Int): SearchFragment {
             return SearchFragment().apply {
                 sourceType = type
@@ -61,7 +63,6 @@ class SearchFragment : BaseFragment() {
             }
         }
     }
-
 
 
     /**
@@ -110,9 +111,9 @@ class SearchFragment : BaseFragment() {
                 }
             }
             DbCons.SOURCE_MIGU -> {
-                searchViewModel?.miguSearchData?.register {
+                searchViewModel?.messapiMiguSearchData?.register {
                     loadSuccess(it) {
-                        refreshAdapter(searchViewModel?.miguToSearchBean(it.data))
+                        refreshAdapter(searchViewModel?.messapiMiguToSearchBean(it.data))
                     }
                 }
             }
@@ -151,7 +152,7 @@ class SearchFragment : BaseFragment() {
                 searchViewModel?.searchByKugou(keywords)
             }
             DbCons.SOURCE_MIGU -> {
-                searchViewModel?.searchByMigu(keywords)
+                searchViewModel?.searchByMessapiMigu(keywords)
             }
             DbCons.SOURCE_LOCAL -> {
                 searchViewModel?.searchByLocal(keywords)
@@ -164,10 +165,21 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun refreshAdapter(bean: SearchBean?) {
-//        searchAdapter.loadMoreList(bean?.data)
         if (bean?.songInfoTables.isNullOrEmpty()) {
             showOtherView("什么都没搜到呢")
         } else {
+            if (sourceType != DbCons.SOURCE_LOCAL) {
+                bean?.songInfoTables?.forEach { search ->
+                    AppData.dbDownloadAlbumData.data?.songInfoTables?.forEach { down ->
+                        if (search.id == down.id &&
+                            search.source == down.source
+                        ) {
+                            search.playFilePath = down.playFilePath
+                            search.playUrlPath = down.playUrlPath
+                        }
+                    }
+                }
+            }
             searchAdapter.refreshList(bean?.songInfoTables)
         }
     }

@@ -105,7 +105,7 @@ class MyLrcView : LrcView, MusicEventListener {
         val model = AppData.currentPlaySong.data?.song ?: return
         if (lastParentViewVisibility == View.VISIBLE && isVisible()) {
             reset()
-            if (model.lrcString != null) {
+            if (model.lrcString != null && !model.lrcString.contains("暂无歌词")) {
                 loadLrc(model.lrcString)
                 return
             }
@@ -118,7 +118,7 @@ class MyLrcView : LrcView, MusicEventListener {
                     lrcViewModel?.queryLrcNetease()
                 }
                 DbCons.SOURCE_MIGU -> {
-                    lrcViewModel?.queryLrcMigu()
+                    lrcViewModel?.queryLrcMessapiMigu()
                 }
                 else -> {
                     lrcViewModel?.queryLrc()

@@ -19,6 +19,7 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/default_cover_icon" />
 
+
     <com.yizisu.basemvvm.widget.BaseImageView
         android:id="@+id/editEt"
         android:layout_width="48dp"
@@ -66,18 +67,36 @@
         app:layout_constraintEnd_toStartOf="@+id/musicJumpFl"
         tools:text="@string/app_name" />
 
-    <com.yizisu.basemvvm.widget.BaseTextView
-        android:id="@+id/songDesTv"
+
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="8dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="@color/colorTextLight"
-        android:textSize="12sp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
         app:layout_constraintEnd_toStartOf="@id/songSourceTv"
-        app:layout_constraintStart_toStartOf="@id/songNameTv"
-        tools:text="@string/app_name" />
+        app:layout_constraintStart_toStartOf="@id/songNameTv">
+
+        <com.yizisu.basemvvm.widget.BaseImageView
+            android:id="@+id/downloadedTagIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/songCoverIv"
+            app:layout_constraintEnd_toEndOf="@+id/songCoverIv"
+            app:srcCompat="@drawable/icon_tag_downloaded" />
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/songDesTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/colorTextLight"
+            android:textSize="12sp"
+            tools:text="@string/app_name" />
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
 </com.yizisu.basemvvm.widget.BaseConstraintLayout>

@@ -128,6 +128,18 @@ object DbHelper {
     }
 
     /**
+     * 查询所有已下载歌曲
+     */
+    @Synchronized
+    fun queryAllSongIfFilePathNotEmpty(): List<SongInfoTable>? {
+        val dao = songInfoTableDao ?: return null
+        //判断专辑是否存在
+        return dao.loadAll().filterNot {
+            it.playFilePath.isNullOrEmpty()
+        }
+    }
+
+    /**
      * 从歌单移除单个歌曲
      */
     @Synchronized

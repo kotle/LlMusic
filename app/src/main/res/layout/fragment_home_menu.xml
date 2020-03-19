@@ -5,94 +5,130 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="24dp"
     tools:context=".module.fragment.home.HomeMenuFragment">
 
-    <com.yizisu.basemvvm.widget.BaseFrameLayout
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
         android:id="@+id/headMusicFl"
-        android:layout_width="@dimen/home_item_image_size"
-        android:layout_height="@dimen/home_item_image_size"
-        android:background="?selectableItemBackground">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <com.yizisu.basemvvm.widget.BaseImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/icon_my_heart" />
+            android:src="@drawable/icon_my_heart" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/heartTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorLightTranslucent"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
             android:gravity="center"
-            android:padding="4dp"
+            android:lines="1"
             android:text="@string/my_heart"
             android:textColor="@color/colorText"
             android:textSize="12sp" />
-    </com.yizisu.basemvvm.widget.BaseFrameLayout>
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
 
-    <Space
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
+        android:id="@+id/localMusicFl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <com.yizisu.basemvvm.widget.BaseFrameLayout
-        android:id="@+id/localMusicFl"
-        android:layout_width="@dimen/home_item_image_size"
-        android:layout_height="@dimen/home_item_image_size"
-        android:background="?selectableItemBackground">
-
-        <com.yizisu.basemvvm.widget.BaseImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/icon_local_music" />
+            android:src="@drawable/icon_local_music" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/localTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorLightTranslucent"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
             android:gravity="center"
-            android:padding="4dp"
+            android:lines="1"
             android:text="@string/local_music"
             android:textColor="@color/colorText"
             android:textSize="12sp" />
-    </com.yizisu.basemvvm.widget.BaseFrameLayout>
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
 
-    <Space
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
+        android:id="@+id/recentAddMusicFl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <com.yizisu.basemvvm.widget.BaseFrameLayout
-        android:id="@+id/recentAddMusicFl"
-        android:layout_width="@dimen/home_item_image_size"
-        android:layout_height="@dimen/home_item_image_size"
-        android:background="?selectableItemBackground">
-
-        <com.yizisu.basemvvm.widget.BaseImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/icon_recent_play" />
+            android:src="@drawable/icon_recent_play" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/recentTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorLightTranslucent"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
             android:gravity="center"
-            android:padding="4dp"
+            android:lines="1"
             android:text="@string/recent_add"
             android:textColor="@color/colorText"
             android:textSize="12sp" />
-    </com.yizisu.basemvvm.widget.BaseFrameLayout>
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
+
+
+    <com.yizisu.basemvvm.widget.BaseLinearLayout
+        android:id="@+id/downloadedMusicFl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.yizisu.basemvvm.widget.BaseFrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_recent_play" />
+
+        </com.yizisu.basemvvm.widget.BaseFrameLayout>
+
+
+        <com.yizisu.basemvvm.widget.BaseTextView
+            android:id="@+id/downloadedMusicTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:text="@string/recent_add"
+            android:textColor="@color/colorText"
+            android:textSize="12sp" />
+    </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
 </com.yizisu.basemvvm.widget.BaseLinearLayout>

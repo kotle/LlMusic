@@ -183,6 +183,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
                 playFilePath = null
                 playUrlPath = null
                 DbHelper.insetOrUpdateSong(this)
+                AppData.currentPlaySong.success(playerModel)
             }
         }
 //        player.next()

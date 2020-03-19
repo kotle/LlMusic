@@ -24,7 +24,7 @@ class HomeMenuFragment : BaseFragment() {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(recentAddMusicFl, headMusicFl, localMusicFl)
+        return listOf(recentAddMusicFl, headMusicFl, localMusicFl, downloadedMusicFl)
     }
 
     private var isFirstCreate = true
@@ -32,6 +32,9 @@ class HomeMenuFragment : BaseFragment() {
         super.initViewModel()
         AppData.dbHeartAlbumData.registerOnSuccess {
             heartTv.textFrom("${it.title}(${it.songInfoTables.count()})")
+        }
+        AppData.dbDownloadAlbumData.registerOnSuccess {
+            downloadedMusicTv.textFrom("${it.title}(${it.songInfoTables.count()})")
         }
         AppData.dbLocalAlbumData.registerOnSuccess {
             localTv.textFrom("${it.title}(${it.songInfoTables.count()})")
@@ -60,6 +63,7 @@ class HomeMenuFragment : BaseFragment() {
         dbViewModel.apply {
             queryHeartList()
             queryLocalList()
+            queryDownloadList()
             queryRecentPlayList()
             queryCurrentList()
         }
@@ -73,6 +77,9 @@ class HomeMenuFragment : BaseFragment() {
             }
             headMusicFl -> {
                 PlayListDetailActivity.start(appCompatActivity, AppData.dbHeartAlbumData.data)
+            }
+            downloadedMusicFl -> {
+                PlayListDetailActivity.start(appCompatActivity, AppData.dbDownloadAlbumData.data)
             }
             localMusicFl -> {
                 getPermission(

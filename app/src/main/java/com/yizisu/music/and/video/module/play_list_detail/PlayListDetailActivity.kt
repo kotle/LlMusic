@@ -134,6 +134,8 @@ class PlayListDetailActivity : BaseUiActivity() {
         album: AlbumInfoTable,
         songs: MutableList<SongInfoTable>?
     ) {
+        //http://tyst.migu.cn/public/product8th/product38/2020/02/1020/2020年02月03日18点00分内容准入恒伟文化1首/歌曲下载/flac/6
+        //http://tyst.migu.cn/public/ringmaker01/n17/2017/07/无损/2009年06月26日博尔普斯/flac/搁浅-周杰伦.flac
         launchUi {
             if (songs.isNullOrEmpty()) {
                 showOtherView("真的忍心让我寂寞着嘛")
@@ -143,7 +145,6 @@ class PlayListDetailActivity : BaseUiActivity() {
             title = album.title
             getSwitchView()?.stopRefresh()
             adapter.refreshList(songs)
-
         }
     }
 }

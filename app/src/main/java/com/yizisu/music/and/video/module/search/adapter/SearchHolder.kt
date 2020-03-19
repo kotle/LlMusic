@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
+import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.widget.BaseLinearLayout
 import com.yizisu.basemvvm.widget.BaseTextView
@@ -21,11 +22,13 @@ import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
 import com.yizisu.music.and.video.utils.DownloadSongHelper
 import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.view.MusicJumpView
+import java.io.File
 
 class SearchHolder(
     itemView: View,
@@ -34,6 +37,27 @@ class SearchHolder(
 ) : RecyclerView.ViewHolder(itemView) {
     companion object {
         const val LAYOUT_RES = R.layout.rcv_item_search_music
+        fun deleteDownloadSong(song: SongInfoTable) {
+            if (!song.playFilePath.isNullOrBlank()) {
+                val file = File(song.playFilePath)
+                if (file.exists()) {
+                    if (file.delete()) {
+                        song.playFilePath = null
+                        DbHelper.insetOrUpdateSong(song)
+                    }
+                } else {
+                    song.playFilePath = null
+                    DbHelper.insetOrUpdateSong(song)
+                }
+                //如果删除的是当前正在播放的歌曲，刷新状态
+                if (song.dbId == AppData.currentPlaySong.data?.song?.dbId) {
+                    AppData.currentPlaySong.data?.apply {
+                        song.playFilePath = null
+                        AppData.currentPlaySong.success(this)
+                    }
+                }
+            }
+        }
     }
 
     private val songName = itemView.findViewById<TextView>(R.id.songNameTv)
@@ -42,6 +66,7 @@ class SearchHolder(
     private val songCover = itemView.findViewById<ImageView>(R.id.songCoverIv)
     private val editEt = itemView.findViewById<ImageView>(R.id.editEt)
     private val musicJumpFl = itemView.findViewById<FrameLayout>(R.id.musicJumpFl)
+    private val downloadedTagIv = itemView.findViewById<View>(R.id.downloadedTagIv)
 
     init {
         editEt.setOnClickListener {
@@ -51,11 +76,11 @@ class SearchHolder(
 
 
     fun setData(bean: SongInfoTable, keywords: String?, isNeedMusicJumpView: Boolean = false) {
-//        if (album?.id == DbCons.ALBUM_ID_CURRENT) {
-//            editEt.invisible()
-//        } else {
-//            editEt.visible()
-//        }
+        if (bean.playFilePath.isNullOrEmpty()) {
+            downloadedTagIv.gone()
+        } else {
+            downloadedTagIv.visible()
+        }
         //添加当前播放的跳动音符
         if (isNeedMusicJumpView
             && AppData.currentPlayIndex == adapterPosition
@@ -96,7 +121,11 @@ class SearchHolder(
             }
         }
 //        songSource.textFrom("${getResString(R.string.song_source)}：${bean.type}")
-        songCover.setImageGlide(bean.coverUrlPath, R.drawable.default_cover_icon, 4)
+        var coverPath = bean.coverUrlPath
+        if (!bean.coverFilePath.isNullOrEmpty()) {
+            coverPath = bean.coverFilePath
+        }
+        songCover.setImageGlide(coverPath, R.drawable.default_cover_icon, 4)
     }
 
 
@@ -124,7 +153,7 @@ class SearchHolder(
                 setLines(1)
                 ellipsize = TextUtils.TruncateAt.END
                 gravity = Gravity.CENTER_VERTICAL
-                setTextColor(Color.BLACK)
+                setTextColor(Color.GRAY)
                 textSize = 12f
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
             addView(BaseTextView(ctx).apply {
@@ -153,21 +182,22 @@ class SearchHolder(
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
-            if (song.playFilePath.isNullOrBlank()) {
+            if (song.playFilePath.isNullOrBlank() && ctx is AppCompatActivity) {
                 addView(BaseTextView(ctx).apply {
                     text = "下载"
                     gravity = Gravity.CENTER_VERTICAL
                     setTextColor(Color.BLACK)
                     setOnClickListener {
-                        SongModel(song).callMediaUri { uri, throwable, b ->
-                            if (uri != null) {
-                                song.playUrlPath = uri.toString()
-                                DownloadSongHelper(song).startDown()
-                            } else {
-                                "获取《${song.name}》下载地址出错".toast()
+                        if (album == null ||
+                            album.id == DbCons.ALBUM_ID_CURRENT.toString() ||
+                            album.id == DbCons.ALBUM_ID_RECENT.toString()
+                        ) {
+                            SelectPlayListDialog.show(ctx, null) {
+                                startDownload(popupWindow, song, it)
                             }
+                        } else {
+                            startDownload(popupWindow, song, album)
                         }
-                        popupWindow?.dismiss()
                     }
                 }, LinearLayout.LayoutParams(dip(120), dip(40)))
             }
@@ -181,12 +211,19 @@ class SearchHolder(
                     setOnClickListener {
                         launchThread {
                             DbHelper.removeSongFromAlbum(song, album)
+                            //删除本地下载
+                            if (album.dbId == DbCons.ALBUM_ID_DOWNLOADED) {
+                                deleteDownloadSong(song)
+                            }
                             switchToUi {
                                 if (album.dbId == DbCons.ALBUM_ID_HEART) {
                                     dbViewModel.queryHeartList()
                                 }
                                 if (album.dbId == DbCons.ALBUM_ID_RECENT) {
                                     dbViewModel.queryRecentPlayList()
+                                }
+                                if (album.dbId == DbCons.ALBUM_ID_DOWNLOADED) {
+                                    dbViewModel.queryDownloadList()
                                 }
                                 adapter.datas.removeAt(layoutPosition)
                                 adapter.notifyItemRemoved(layoutPosition)
@@ -201,10 +238,26 @@ class SearchHolder(
             rootView, ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply {
-            showAsDropTopOrBottom(it, dip(16), true)
+            showAsDropTopOrBottom(it, true, dip(16))
         }
     }
 
+
+    /**
+     * 开始下载
+     */
+    private fun startDownload(popupWindow: PopupWindow?, song: SongInfoTable, it: AlbumInfoTable) {
+        DbHelper.addSongToAlbum(song, it)
+        DownloadSongHelper(SongModel(song)).startDown()
+        popupWindow?.dismiss()
+        if (it.dbId == DbCons.ALBUM_ID_HEART) {
+            dbViewModel.queryHeartList()
+        }
+    }
+
+    /**
+     * 跳转到批量操作界面
+     */
     private fun toAllSongPage(itemView: View, datas: MutableList<SongInfoTable>) {
         var ctx = itemView.context
         if (ctx !is AppCompatActivity) {
