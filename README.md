@@ -29,17 +29,12 @@
 - [圆形ImageView](https://github.com/hdodenhof/CircleImageView)
 - [Glide](https://github.com/bumptech/glide)
 - [OkHttp](https://github.com/square/okhttp)
-- [Gson](https://github.com/google/gson)[图片上传失败...(image-d60fa7-1584705923485)]
-
+- [Gson](https://github.com/google/gson)
 - [歌词view](https://github.com/wangchenyan/lrcview)(基于此库修改)
 
 项目部分截图
 
-![主界面](https://upload-images.jianshu.io/upload_images/2686533-9a6721fc426f3d75.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-![播放界面歌词](https://upload-images.jianshu.io/upload_images/2686533-ad9f4a35103bae97.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-![播放界面-封面](https://upload-images.jianshu.io/upload_images/2686533-7e57f3231bad369f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![splice_220202628.png](https://upload-images.jianshu.io/upload_images/2686533-1827c44ef3da21da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 
