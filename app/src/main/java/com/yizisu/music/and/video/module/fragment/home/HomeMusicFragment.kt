@@ -38,8 +38,8 @@ import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.fragment_home_music.*
 
 class HomeMusicFragment : BaseFragment(), MusicEventListener {
-    companion object{
-         fun startDownload(appCompatActivity: AppCompatActivity?,songModel: SongModel) {
+    companion object {
+        fun startDownload(appCompatActivity: AppCompatActivity?, songModel: SongModel) {
             if (songModel.song.playFilePath.isNullOrEmpty()) {
                 DownloadSongHelper(
                     appCompatActivity, songModel,
@@ -50,6 +50,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
             }
         }
     }
+
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.fragment_home_music
     }
@@ -124,13 +125,11 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
             }
             downloadIv -> {
                 val songModel = AppData.currentPlaySong.data ?: return
-                startDownload(appCompatActivity,songModel)
+                startDownload(appCompatActivity, songModel)
             }
 
         }
     }
-
-
 
 
     override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
@@ -217,7 +216,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
                     setIcon(R.drawable.icon_tag_downloaded, drawablePaddingDip = 4)
                 }
                 setOnClickListener {
-                    startDownload(appCompatActivity,songModel)
+                    startDownload(appCompatActivity, songModel)
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
@@ -245,5 +244,12 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
             datas,
             AppData.dbCurrentAlbumData.data
         )
+    }
+
+    override fun onTick(playerModel: SongModel) {
+        super.onTick(playerModel)
+        playerModel.apply {
+            ringView.ringProgressRatio = currentDuration.toFloat() / totalDuration
+        }
     }
 }

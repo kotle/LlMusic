@@ -191,7 +191,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
         "播放出错:${playerModel.safeGet<SongModel>()?.song?.name}".toast()
         playerModel?.song?.apply {
             //播放出错，清空播放链接
-            if (!playFilePath.isNullOrEmpty()) {
+            if (!playFilePath.isNullOrEmpty() && source != DbCons.SOURCE_LOCAL) {
                 launchThread {
                     SearchHolder.deleteDownloadSong(this@apply)
                     playFilePath = null

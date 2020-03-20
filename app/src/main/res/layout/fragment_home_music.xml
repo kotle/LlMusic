@@ -24,25 +24,33 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp">
 
-            <com.yizisu.music.and.video.view.AutoRotationImageView
-                android:id="@+id/coverIv"
+            <com.yizisu.basemvvm.widget.BaseRingView
+                android:id="@+id/ringView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-<!--            <de.hdodenhof.circleimageview.CircleImageView-->
-<!--               android:visibility="gone"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:src="@color/colorBlackTranslucent" />-->
+            <com.yizisu.music.and.video.view.AutoRotationImageView
+                android:id="@+id/coverIv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                tools:src="@color/colorAccent" />
+
+
+            <!--            <de.hdodenhof.circleimageview.CircleImageView-->
+            <!--               android:visibility="gone"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:src="@color/colorBlackTranslucent" />-->
 
             <com.yizisu.basemvvm.widget.BaseImageView
                 android:id="@+id/downloadIv"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:visibility="gone"
                 android:background="?selectableItemBackground"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
+                android:visibility="gone"
                 app:srcCompat="@drawable/icon_download" />
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
