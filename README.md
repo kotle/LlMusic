@@ -10,7 +10,8 @@
 
 项目地址
 =
-**[MusicAndVideo](https://github.com/kotle/MusicAndVideo)** [简书](https://www.jianshu.com/p/032d41f167a2)是一个本地音视频播放器。
+**[MusicAndVideo](https://github.com/kotle/MusicAndVideo)** 是一个本地音视频播放器。
+ [简书地址](https://www.jianshu.com/p/032d41f167a2)
 - 支持播放歌曲和视频
 - 支持歌词
 - 支持歌单管理
