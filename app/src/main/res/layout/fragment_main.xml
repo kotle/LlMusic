@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/icon_my_heart" />
+            app:srcCompat="@drawable/icon_my_heart_old_old" />
 
         <com.github.mmin18.widget.RealtimeBlurView
             android:layout_width="match_parent"

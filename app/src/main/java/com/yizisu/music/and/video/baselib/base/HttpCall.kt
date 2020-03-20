@@ -9,41 +9,27 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.okHttpClient
 import com.yizisu.basemvvm.utils.createFormBody
 import com.yizisu.basemvvm.utils.toast
-import com.yizisu.music.and.video.viewmodel.LrcViewModel
 import okhttp3.Request
 import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
 
-/*private const val API_BASE_URL = ""
-*/
+private const val API_BASE_URL = ""
 /**
  * 发送网络请求
- *//*
-private fun String.sendHttp(
+ *  post请求 只支持formBody
+ */
+fun String.sendHttp(
     params: MutableMap<String, String>,
-    isGet: Boolean = false
+    isGet: Boolean = false,
+    isNeedBaseUrl: Boolean = false
 ): okhttp3.Call {
     val request = Request.Builder()
-    var url = API_BASE_URL.trimEnd('/') + "/" + this.trimStart('/')
-    if (isGet) {
-        url += "?"
-        for ((key, value) in params) {
-            url += "${key}=${value}&"
-        }
+    var url = if (isNeedBaseUrl) {
+        API_BASE_URL.trimEnd('/') + "/" + this.trimStart('/')
     } else {
-        request.post(params.createFormBody())
+        this
     }
-    request.url(url.trimEnd('&'))
-    return okHttpClient.newCall(request.build())
-}*/
-
-/**
- * 发送网络请求
- */
-fun String.sendHttp(params: MutableMap<String, String>, isGet: Boolean = false): okhttp3.Call {
-    val request = Request.Builder()
-    var url = this
     if (isGet) {
         url += "?"
         for ((key, value) in params) {

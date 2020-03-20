@@ -59,6 +59,24 @@ object DbHelper {
         }
     }
 
+    @Synchronized
+    fun addDownloadSongToAlbum(song: SongInfoTable, albumDbId: Long?) {
+        albumDbId ?: return
+        val songId = insetSong(song)
+        //歌曲和歌单做关联
+        if (!isSongInAlbum(song, albumDbId)) {
+            withSongAndAlbum(songId, albumDbId)
+        }
+    }
+
+    @Synchronized
+    fun addSongToAlbum(song: SongInfoTable, albumId: Long?) {
+        albumId ?: return
+        addSongToAlbum(
+            song, albumInfoTableDao?.load(albumId)
+        )
+    }
+
     /**
      * 批量的将歌曲插入歌单
      */
@@ -88,13 +106,18 @@ object DbHelper {
      * 查询某个歌曲是否在歌单
      */
     fun isSongInAlbum(song: SongInfoTable, album: AlbumInfoTable): Boolean {
+        song.dbId ?: return false
+        return isSongInAlbum(song, album.dbId)
+    }
+
+    fun isSongInAlbum(song: SongInfoTable, albumId: Long?): Boolean {
         val dao = songWithAlbumDao ?: return false
         song.dbId ?: return false
-        album.dbId ?: return false
+        albumId ?: return false
         //判断歌曲是否存在
         val old = dao.queryBuilder().where(
             SongWithAlbumDao.Properties.SongId.eq(song.dbId),
-            SongWithAlbumDao.Properties.AlbumId.eq(album.dbId)
+            SongWithAlbumDao.Properties.AlbumId.eq(albumId)
         ).unique()
         return old != null
     }
@@ -135,7 +158,7 @@ object DbHelper {
         val dao = songInfoTableDao ?: return null
         //判断专辑是否存在
         return dao.loadAll().filterNot {
-            it.playFilePath.isNullOrEmpty()
+            it.playFilePath.isNullOrEmpty() || it.source == DbCons.SOURCE_LOCAL
         }
     }
 

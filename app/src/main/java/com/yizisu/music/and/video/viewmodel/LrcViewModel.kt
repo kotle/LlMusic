@@ -14,6 +14,7 @@ import com.yizisu.music.and.video.baselib.base.sendHttp
 import com.yizisu.music.and.video.bean.LrcBean
 import com.yizisu.music.and.video.bean.migu.LrcMiguBean
 import com.yizisu.music.and.video.bean.netease.LrcNeteaseBean
+import com.yizisu.music.and.video.net.messapi.sendMessapiHttp
 import com.yizisu.music.and.video.net.migu.getMiguCId
 import com.yizisu.music.and.video.net.migu.sendMiguHttp
 import com.yizisu.music.and.video.net.netease.NETEAST_SONG_LRC
@@ -147,8 +148,8 @@ class LrcViewModel : BaseViewModel() {
         }
         oldLrcJob = launchThread {
             tryError {
-                val result = lrcPath.sendMiguHttp(
-                    mutableMapOf()
+                val result = lrcPath.sendHttp(
+                    mutableMapOf(),true
                 ).await().body()?.string()
                 if (!result.isNullOrEmpty() && !result.contains("暂无歌词")) {
                     successGetLrc(song, result)

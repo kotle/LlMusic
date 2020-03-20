@@ -2,28 +2,94 @@ package com.yizisu.music.and.video.module.lrc
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.SeekBar
+import android.widget.Toast
+import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.utils.*
+import com.yizisu.music.and.roomdblibrary.DbCons
+import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
+import com.yizisu.music.and.video.dialog.SelectPlayListDialog
+import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
+import com.yizisu.music.and.video.module.fragment.home.HomeMusicFragment
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
+import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.utils.heartIvClick
 import com.yizisu.music.and.video.utils.setIsHeart
 import com.yizisu.music.and.video.utils.updateCover
+import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.activity_lrc.*
 
 class LrcActivity : BaseActivity(), MusicEventListener {
     companion object {
+        var currentRepeatModel: Int? = null
+            get() {
+                return field ?: app.spGet("currentRepeatModel", SimplePlayer.LOOP_MODO_NONE)
+            }
+            set(value) {
+                field = value
+                app.spSet("currentRepeatModel", value)
+            }
+
         fun start(appCompatActivity: AppCompatActivity?) {
             appCompatActivity?.navigateTo(LrcActivity::class.java)
+        }
+    }
+
+
+    private fun switchRepeatMode(isToast: Boolean) {
+        val message = when (currentRepeatModel) {
+            SimplePlayer.LOOP_MODO_NONE -> {
+                repeatModeIv.setImageResource(R.drawable.icon_loop_null)
+                "顺序播放"
+            }
+            SimplePlayer.LOOP_MODO_LIST -> {
+                repeatModeIv.setImageResource(R.drawable.icon_loop_list)
+                "列表循环"
+            }
+            SimplePlayer.LOOP_MODO_SHUFF -> {
+                repeatModeIv.setImageResource(R.drawable.icon_loop_shuffle)
+                "随机播放"
+            }
+            SimplePlayer.LOOP_MODO_SINGLE -> {
+                repeatModeIv.setImageResource(R.drawable.icon_loop_single)
+                "单曲循环"
+            }
+            else -> {
+                "顺序播放"
+            }
+        }
+        if (isToast) {
+            MusicService.setRepeatMode(currentRepeatModel)
+            message.toast()
+        }
+    }
+
+    private fun getNextRepeatMode() {
+        when (currentRepeatModel) {
+            SimplePlayer.LOOP_MODO_NONE -> {
+                currentRepeatModel = SimplePlayer.LOOP_MODO_LIST
+            }
+            SimplePlayer.LOOP_MODO_LIST -> {
+                currentRepeatModel = SimplePlayer.LOOP_MODO_SHUFF
+            }
+            SimplePlayer.LOOP_MODO_SHUFF -> {
+                currentRepeatModel = SimplePlayer.LOOP_MODO_SINGLE
+            }
+            SimplePlayer.LOOP_MODO_SINGLE -> {
+                currentRepeatModel = SimplePlayer.LOOP_MODO_NONE
+            }
         }
     }
 
@@ -42,6 +108,11 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                 setIsHeart(heartIv)
                 titleTv.textFrom(name)
                 desTv.textFrom(des)
+                if (playFilePath.isNullOrEmpty()) {
+                    downloadIv.setImageGlide(R.drawable.icon_download)
+                } else {
+                    downloadIv.setImageGlide(R.drawable.icon_downloaded)
+                }
             }
         }
         AppData.dbHeartAlbumData.registerOnSuccess {
@@ -57,6 +128,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         lrcToolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        switchRepeatMode(false)
         progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
@@ -84,7 +156,19 @@ class LrcActivity : BaseActivity(), MusicEventListener {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(preIv, playOrPauseIv, nextIv, playListIv, lrcFl, lrcView, heartIv)
+        return listOf(
+            preIv,
+            playOrPauseIv,
+            nextIv,
+            playListIv,
+            lrcFl,
+            lrcView,
+            heartIv,
+            downloadIv,
+            repeatModeIv,
+            addToPlayList,
+            iconMoreListTv
+        )
     }
 
 
@@ -117,6 +201,30 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                     coverIv.visible()
                     lrcView.invisible()
                 }
+            }
+            downloadIv -> {
+                val songModel = AppData.currentPlaySong.data ?: return
+                HomeMusicFragment.startDownload(this, songModel)
+            }
+            repeatModeIv -> {
+                getNextRepeatMode()
+                switchRepeatMode(true)
+            }
+            addToPlayList -> {
+                val song = AppData.currentPlaySong.data?.song ?: return
+                SelectPlayListDialog.show(this, null) {
+                    launchThread {
+                        DbHelper.addSongToAlbum(song, it)
+                        if (it.dbId == DbCons.ALBUM_ID_HEART) {
+                            dbViewModel.queryHeartList()
+                        }
+                        "${song.name} 已经添加到 ${it.title}".toast(Toast.LENGTH_LONG)
+                    }
+                }
+            }
+            iconMoreListTv -> {
+                val songs = AppData.dbCurrentAlbumData.data?.songInfoTables ?: return
+                toAllSongPage(songs)
             }
         }
     }
@@ -167,5 +275,16 @@ class LrcActivity : BaseActivity(), MusicEventListener {
             progressBar.secondaryProgress = (bufferProgress * max / allProgress).toInt()
         }
         totalProgressTv.text = getCountTimeByLong(allProgress)
+    }
+
+    /**
+     * 跳转到批量操作界面
+     */
+    private fun toAllSongPage(datas: MutableList<SongInfoTable>) {
+        AddSongToAlbumActivity.start(
+            this,
+            datas,
+            AppData.dbCurrentAlbumData.data
+        )
     }
 }

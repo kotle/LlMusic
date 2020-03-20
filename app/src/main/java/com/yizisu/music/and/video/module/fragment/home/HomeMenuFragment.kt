@@ -50,6 +50,7 @@ class HomeMenuFragment : BaseFragment() {
                     it.songInfoTables.map {
                         SongModel(it)
                     }.toMutableList(),
+                    AppData.currentPlayListByAlbumId,
                     AppData.currentPlayIndex,
                     true,
                     false

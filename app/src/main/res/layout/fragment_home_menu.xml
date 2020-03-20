@@ -21,7 +21,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_my_heart" />
+            android:src="@drawable/icon_my_heart"
+            android:tint="@color/colorAccent" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/heartTv"
@@ -50,7 +51,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_local_music" />
+            android:padding="4dp"
+            android:src="@drawable/icon_local_music"
+            android:tint="@color/colorAccent" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/localTv"
@@ -79,7 +82,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_recent_play" />
+            android:src="@drawable/icon_recent_play"
+            android:tint="@color/colorAccent" />
 
         <com.yizisu.basemvvm.widget.BaseTextView
             android:id="@+id/recentTv"
@@ -112,7 +116,9 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icon_recent_play" />
+                android:padding="2dp"
+                android:src="@drawable/icon_downloader"
+                android:tint="@color/colorAccent" />
 
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 

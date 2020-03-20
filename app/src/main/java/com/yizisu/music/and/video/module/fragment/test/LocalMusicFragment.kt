@@ -36,11 +36,11 @@ class LocalMusicFragment : BaseFragment() {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        adapter.setOnItemClickListener { itemView, position, itemData ->
-            MusicService.startPlay(adapter.datas.map {
-                SongModel(it)
-            }.toMutableList(), position, true)
-        }
+//        adapter.setOnItemClickListener { itemView, position, itemData ->
+//            MusicService.startPlay(adapter.datas.map {
+//                SongModel(it)
+//            }.toMutableList(), position, true)
+//        }
         localMusicRcv.adapter = adapter
     }
 

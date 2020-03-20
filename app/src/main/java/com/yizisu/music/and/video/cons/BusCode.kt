@@ -31,5 +31,9 @@ object BusCode {
     /**
      * 需要刷新歌单
      */
-    const val REFRESH_PLAY_LIST_DETAIL=6
+    const val REFRESH_PLAY_LIST_DETAIL = 6
+    /**
+     * 设置循环模式
+     */
+    const val SET_LOOP_REPEAT_MODE = 7
 }

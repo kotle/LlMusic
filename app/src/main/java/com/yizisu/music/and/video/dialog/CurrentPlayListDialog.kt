@@ -119,7 +119,8 @@ class CurrentPlayListDialog : BottomSheetDialog {
             MusicService.startPlay(
                 adapter.datas.map {
                     SongModel(it)
-                }.toMutableList(), position, false,
+                }.toMutableList(), AppData.currentPlayListByAlbumId,
+                position, false,
                 true
             )
         }

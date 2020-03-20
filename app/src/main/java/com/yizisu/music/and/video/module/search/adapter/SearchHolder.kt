@@ -1,5 +1,6 @@
 package com.yizisu.music.and.video.module.search.adapter
 
+import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color
 import android.text.TextUtils
@@ -188,16 +189,8 @@ class SearchHolder(
                     gravity = Gravity.CENTER_VERTICAL
                     setTextColor(Color.BLACK)
                     setOnClickListener {
-                        if (album == null ||
-                            album.id == DbCons.ALBUM_ID_CURRENT.toString() ||
-                            album.id == DbCons.ALBUM_ID_RECENT.toString()
-                        ) {
-                            SelectPlayListDialog.show(ctx, null) {
-                                startDownload(popupWindow, song, it)
-                            }
-                        } else {
-                            startDownload(popupWindow, song, album)
-                        }
+                        popupWindow?.dismiss()
+                        startDownload(ctx, song, album)
                     }
                 }, LinearLayout.LayoutParams(dip(120), dip(40)))
             }
@@ -246,12 +239,9 @@ class SearchHolder(
     /**
      * 开始下载
      */
-    private fun startDownload(popupWindow: PopupWindow?, song: SongInfoTable, it: AlbumInfoTable) {
-        DbHelper.addSongToAlbum(song, it)
-        DownloadSongHelper(SongModel(song)).startDown()
-        popupWindow?.dismiss()
-        if (it.dbId == DbCons.ALBUM_ID_HEART) {
-            dbViewModel.queryHeartList()
+    private fun startDownload(ctx: Context, song: SongInfoTable, it: AlbumInfoTable?) {
+        if (ctx is AppCompatActivity) {
+            DownloadSongHelper(ctx, SongModel(song), it?.dbId).startDown()
         }
     }
 

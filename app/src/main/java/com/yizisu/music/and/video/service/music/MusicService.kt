@@ -35,6 +35,9 @@ import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.SEEK_MUSIC_EVENT
 import com.yizisu.music.and.video.cons.BusCode.SERVICE_PLAY_LIST
+import com.yizisu.music.and.video.cons.BusCode.SET_LOOP_REPEAT_MODE
+import com.yizisu.music.and.video.module.lrc.LrcActivity
+import com.yizisu.music.and.video.module.search.adapter.SearchHolder
 import com.yizisu.music.and.video.utils.*
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
@@ -81,11 +84,13 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
 
         //开始播放
         fun startPlay(
-            models: MutableList<SongModel>,
+            models: MutableList<SongModel>/*当前播放列表*/,
+            albumDbId: Long?/*当前播放列表数从哪来的*/,
             index: Int = 0,
             isNewList: Boolean,
             isPlayWhenReady: Boolean? = true
         ) {
+            AppData.currentPlayListByAlbumId = albumDbId
             //判断服务是否启动
             MessageBus.post(
                 SERVICE_PLAY_LIST, PlayModelBean(
@@ -127,6 +132,13 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
                 SEEK_MUSIC_EVENT, float, false, MusicService::class.java
             )
         }
+
+        //移动进度条
+        fun setRepeatMode(model: Int?) {
+            MessageBus.post(
+                SET_LOOP_REPEAT_MODE, model, false, MusicService::class.java
+            )
+        }
     }
 
     //MediaSessionCompat
@@ -138,7 +150,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
     //播放器对象
     private val player by lazy {
         SimplePlayer<SongModel>(this).apply {
-            setRepeatMode(SimplePlayer.LOOP_MODO_LIST)
+            setRepeatMode(LrcActivity.currentRepeatModel ?: SimplePlayer.LOOP_MODO_LIST)
             setHandleWakeLock(true)
             setAudioForceEnable(true)
         }
@@ -179,11 +191,13 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
         "播放出错:${playerModel.safeGet<SongModel>()?.song?.name}".toast()
         playerModel?.song?.apply {
             //播放出错，清空播放链接
-            if (!playUrlPath.isNullOrEmpty() || !playFilePath.isNullOrEmpty()) {
-                playFilePath = null
-                playUrlPath = null
-                DbHelper.insetOrUpdateSong(this)
-                AppData.currentPlaySong.success(playerModel)
+            if (!playFilePath.isNullOrEmpty()) {
+                launchThread {
+                    SearchHolder.deleteDownloadSong(this@apply)
+                    playFilePath = null
+                    DbHelper.insetOrUpdateSong(this@apply)
+                    AppData.currentPlaySong.success(playerModel)
+                }
             }
         }
 //        player.next()
@@ -353,6 +367,11 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
                     player.seekTo(this)
                 }
             }
+            SET_LOOP_REPEAT_MODE -> {
+                event.safeGet<Int>()?.let {
+                    player.setRepeatMode(it)
+                }
+            }
             //歌单发生了增删改查
             /*       BusCode.REFRESH_PLAY_LIST_DETAIL -> {
                        event.safeGet<AlbumInfoTable>()?.apply {
@@ -408,7 +427,9 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
                                 Bitmap.Config.RGB_565
                             )
                         }
-                        notifyByReceiver(playerModel)
+                        runOnUiThread {
+                            notifyByReceiver(playerModel)
+                        }
                     })
                     .submit(BITMAP_WIDTH_HEIGHT, BITMAP_WIDTH_HEIGHT)
             }

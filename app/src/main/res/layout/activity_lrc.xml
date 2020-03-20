@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/icon_my_heart" />
+        app:srcCompat="@drawable/icon_my_heart_old_old" />
 
     <com.github.mmin18.widget.RealtimeBlurView
         android:layout_width="match_parent"
@@ -77,9 +77,9 @@
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
         <com.yizisu.basemvvm.widget.BaseFrameLayout
+            android:id="@+id/lrcFl"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@+id/lrcFl"
             android:layout_weight="1"
             android:padding="16dp">
 
@@ -87,8 +87,8 @@
                 android:id="@+id/coverIv"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                tools:src="@drawable/default_cover_icon"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                tools:src="@drawable/default_cover_icon" />
 
             <com.yizisu.music.and.video.view.MyLrcView
                 android:id="@+id/lrcView"
@@ -99,13 +99,80 @@
                 app:lrcTextSize="14sp" />
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
+        <com.yizisu.basemvvm.widget.BaseLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.yizisu.basemvvm.widget.BaseImageView
+                android:id="@+id/downloadIv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?selectableItemBackground"
+                android:padding="8dp"
+                app:srcCompat="@drawable/icon_download" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.yizisu.basemvvm.widget.BaseImageView
+                android:id="@+id/addToPlayList"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?selectableItemBackground"
+                android:padding="8dp"
+                app:srcCompat="@drawable/add_to_play_list" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.yizisu.basemvvm.widget.BaseImageView
+                android:id="@+id/iconMoreListTv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?selectableItemBackground"
+                android:padding="8dp"
+                app:srcCompat="@drawable/icon_more_list_lrc" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.yizisu.basemvvm.widget.BaseImageView
+                android:id="@+id/repeatModeIv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?selectableItemBackground"
+                android:padding="9dp"
+                app:srcCompat="@drawable/icon_loop_null" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </com.yizisu.basemvvm.widget.BaseLinearLayout>
+
         <LinearLayout
             android:id="@+id/progressLl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/currentProgressTv"
@@ -141,11 +208,12 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
+
         <com.yizisu.basemvvm.widget.BaseLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="40dp"
             android:orientation="horizontal">
 
             <Space

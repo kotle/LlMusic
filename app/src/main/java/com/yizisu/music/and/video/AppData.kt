@@ -55,4 +55,18 @@ object AppData {
     val dbLocalAlbumData by lazy { createLiveBean<AlbumInfoTable>() }
     //我的所有歌单
     val allAlbumData by lazy { createLiveBean<MutableList<AlbumInfoTable>>() }
+
+    //当前正在播放的歌单是属于哪个歌单来的
+    var currentPlayListByAlbumId: Long? = null
+        get() {
+            return if (field == null) {
+                app.spGet("currentPlayListByAlbumId", -1L)
+            } else {
+                field
+            }
+        }
+        set(value) {
+            field = value
+            app.spSet("currentPlayListByAlbumId", value)
+        }
 }

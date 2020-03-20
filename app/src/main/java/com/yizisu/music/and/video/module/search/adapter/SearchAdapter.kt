@@ -31,7 +31,7 @@ class SearchAdapter(val album: AlbumInfoTable?) : BaseRcvAdapter<SongInfoTable, 
     private fun startPlaySearchMusic(position: Int) {
         MusicService.startPlay(datas.map {
             SongModel(it)
-        }.toMutableList(), position, true)
+        }.toMutableList(), album?.dbId, position, true)
     }
 
     override fun getItemLayoutRes(): Int = SearchHolder.LAYOUT_RES

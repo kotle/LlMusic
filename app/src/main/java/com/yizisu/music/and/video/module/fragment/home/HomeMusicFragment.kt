@@ -38,7 +38,18 @@ import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.fragment_home_music.*
 
 class HomeMusicFragment : BaseFragment(), MusicEventListener {
-
+    companion object{
+         fun startDownload(appCompatActivity: AppCompatActivity?,songModel: SongModel) {
+            if (songModel.song.playFilePath.isNullOrEmpty()) {
+                DownloadSongHelper(
+                    appCompatActivity, songModel,
+                    DbCons.ALBUM_ID_CURRENT
+                ).startDown()
+            } else {
+                "${songModel.song.name}已下载".toast()
+            }
+        }
+    }
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
         return R.layout.fragment_home_music
     }
@@ -113,19 +124,13 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
             }
             downloadIv -> {
                 val songModel = AppData.currentPlaySong.data ?: return
-                startDownload(songModel)
+                startDownload(appCompatActivity,songModel)
             }
 
         }
     }
 
-    private fun startDownload(songModel: SongModel) {
-        if (songModel.song.playFilePath.isNullOrEmpty()) {
-            DownloadSongHelper(songModel).startDown()
-        } else {
-            "${songModel.song.name}已下载".toast()
-        }
-    }
+
 
 
     override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
@@ -212,7 +217,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
                     setIcon(R.drawable.icon_tag_downloaded, drawablePaddingDip = 4)
                 }
                 setOnClickListener {
-                    startDownload(songModel)
+                    startDownload(appCompatActivity,songModel)
                     popupWindow?.dismiss()
                 }
             }, LinearLayout.LayoutParams(dip(120), dip(40)))
