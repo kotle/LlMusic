@@ -1,5 +1,5 @@
 # MusicAndVideo
-一款自研自用本地音乐播放器，不希望其他播放器记录我播放本地歌曲习惯。
+一款自研自用本地音乐播放器，听听本地歌曲或者不想被其他的播放器记录听歌习惯的时候使用。
 
 免责声明
 =
@@ -10,7 +10,7 @@
 
 项目地址
 =
-**[MusicAndVideo](https://github.com/kotle/MusicAndVideo)**是一个本地音视频播放器。
+**[MusicAndVideo](https://github.com/kotle/MusicAndVideo)** [简书](https://www.jianshu.com/p/032d41f167a2)是一个本地音视频播放器。
 - 支持播放歌曲和视频
 - 支持歌词
 - 支持歌单管理
