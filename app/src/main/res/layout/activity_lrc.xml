@@ -88,6 +88,7 @@
                 android:layout_width="180dp"
                 android:layout_height="180dp"
                 android:layout_gravity="center"
+                android:transitionName="coverIv"
                 tools:src="@drawable/default_cover_icon" />
 
             <com.yizisu.music.and.video.view.MyLrcView

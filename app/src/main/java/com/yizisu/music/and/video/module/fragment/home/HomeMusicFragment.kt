@@ -41,10 +41,14 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     companion object {
         fun startDownload(appCompatActivity: AppCompatActivity?, songModel: SongModel) {
             if (songModel.song.playFilePath.isNullOrEmpty()) {
-                DownloadSongHelper(
-                    appCompatActivity, songModel,
-                    DbCons.ALBUM_ID_CURRENT
-                ).startDown()
+//                DownloadSongHelper(
+//                    appCompatActivity, songModel,
+//                    DbCons.ALBUM_ID_CURRENT
+//                ).startDown()
+                DownSongWithNotification.startDown(
+                    appCompatActivity,
+                    songModel, DbCons.ALBUM_ID_CURRENT
+                )
             } else {
                 "${songModel.song.name}已下载".toast()
             }

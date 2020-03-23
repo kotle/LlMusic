@@ -18,7 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".module.add_song_to_album.ImportSongActivity"></activity>
+        <activity
+            android:name=".module.down_task.DownLoadTaskActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".module.add_song_to_album.ImportSongActivity" />
         <activity android:name=".module.add_song_to_album.AddSongToAlbumActivity" />
         <activity android:name=".module.play_list_detail.PlayListDetailActivity" />
         <activity android:name=".TestDbActivity">

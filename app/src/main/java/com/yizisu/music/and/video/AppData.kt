@@ -67,6 +67,6 @@ object AppData {
         }
         set(value) {
             field = value
-            app.spSet("currentPlayListByAlbumId", value)
+            app.spSet("currentPlayListByAlbumId", value ?: -1L)
         }
 }

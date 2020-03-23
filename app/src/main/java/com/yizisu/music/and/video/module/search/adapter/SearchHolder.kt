@@ -26,6 +26,7 @@ import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
+import com.yizisu.music.and.video.utils.DownSongWithNotification
 import com.yizisu.music.and.video.utils.DownloadSongHelper
 import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.view.MusicJumpView
@@ -241,7 +242,11 @@ class SearchHolder(
      */
     private fun startDownload(ctx: Context, song: SongInfoTable, it: AlbumInfoTable?) {
         if (ctx is AppCompatActivity) {
-            DownloadSongHelper(ctx, SongModel(song), it?.dbId).startDown()
+//            DownloadSongHelper(ctx, SongModel(song), it?.dbId).startDown()
+            DownSongWithNotification.startDown(
+                ctx,
+                SongModel(song), it?.dbId
+            )
         }
     }
 

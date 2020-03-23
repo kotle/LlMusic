@@ -8,6 +8,7 @@ import com.yizisu.basemvvm.utils.DownFileWithNotification
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
+import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
@@ -28,6 +29,13 @@ class DownloadSongHelper(
 
     private val downHelper = DownFileWithNotification()
     private var downloadAlbumId = albumId
+    private val downloadAlbum by lazy {
+        var album: AlbumInfoTable? = null
+        downloadAlbumId?.let {
+            album = DbHelper.queryAlbumByDbId(it)
+        }
+        album
+    }
 
     init {
         downHelper.apply {
@@ -55,9 +63,9 @@ class DownloadSongHelper(
                         }
                     }
                     if (it?.isNewDownloadFile == true) {
-                        "${song.name}-${song.des} 已经下载完成".toast()
+                        "${song.name}-${song.des} 已经在《${downloadAlbum?.title}》下载完成".toast()
                     } else {
-                        "${song.name}-${song.des} 已经下载，无需重复下载".toast()
+                        "${song.name}-${song.des} 已经在《${downloadAlbum?.title}》下载，无需重复下载".toast()
                     }
                 }
             }
@@ -116,7 +124,7 @@ class DownloadSongHelper(
                     Environment.DIRECTORY_MUSIC,
                     SearchFragment.titles[song.source]?.toString()
                 )
-                "开始下载 《${song.name}》".toast()
+                "开始下载 《${song.name}》到《${downloadAlbum?.title}》".toast()
             } else {
                 "获取《${song.name}》下载地址出错".toast()
             }
