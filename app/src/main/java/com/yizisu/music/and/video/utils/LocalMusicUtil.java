@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import com.yizisu.basemvvm.utils.ViewExtFunKt;
 import com.yizisu.basemvvm.utils.permission.PermissionUtil;
@@ -37,7 +38,7 @@ public class LocalMusicUtil {
             SongInfoTable table = new SongInfoTable();
             table.setName(bean.title);
             table.setDes(bean.singer);
-            table.setId(bean.id+"");
+            table.setId(bean.id + "");
             table.setType(DbCons.TYPE_FREE);
             table.setSource(DbCons.SOURCE_LOCAL);
             table.setPlayFilePath(bean.path);
@@ -140,13 +141,18 @@ public class LocalMusicUtil {
 
     public static Bitmap loadingMusicCover(String mediaUri) {
         try {
+            if (TextUtils.isEmpty(mediaUri)) {
+                return null;
+            }
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(mediaUri);
             byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
             if (picture == null) {
                 return defaultBitmap();
             }
-            Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+            BitmapFactory.Options option = new BitmapFactory.Options();
+            option.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length, option);
             mediaMetadataRetriever.release();
             if (bitmap == null) {
                 return defaultBitmap();

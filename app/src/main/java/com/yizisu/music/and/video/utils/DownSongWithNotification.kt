@@ -53,7 +53,7 @@ object DownSongWithNotification {
     ) {
         val song = songModel?.song ?: return
         selectPlayList(appCompatActivity, song, albumId) {
-            getDownloadUrl(songModel, song, albumId)
+            getDownloadUrl(songModel, song, it)
         }
     }
 
@@ -187,7 +187,7 @@ object DownSongWithNotification {
         appCompatActivity: AppCompatActivity?,
         song: SongInfoTable,
         albumId: Long?,
-        start: Function0<Unit>
+        start: Function1<Long?, Unit>
     ) {
         var downloadAlbumId = albumId
         if (downloadAlbumId == DbCons.ALBUM_ID_CURRENT) {
@@ -207,12 +207,12 @@ object DownSongWithNotification {
                 if (downloadAlbumId == DbCons.ALBUM_ID_HEART) {
                     dbViewModel.queryHeartList()
                 }
-                start.invoke()
+                start.invoke(downloadAlbumId)
             }
         } else {
             downloadAlbumId = id
             DbHelper.addDownloadSongToAlbum(song, downloadAlbumId)
-            start.invoke()
+            start.invoke(downloadAlbumId)
         }
     }
 

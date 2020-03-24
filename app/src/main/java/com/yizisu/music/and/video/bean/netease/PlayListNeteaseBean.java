@@ -7,7 +7,6 @@ import java.util.List;
 public class PlayListNeteaseBean {
 
     /**
-     * result : {"subscribers":[],"subscribed":false,"creator":{"defaultAvatar":false,"province":1000000,"authStatus":0,"followed":false,"avatarUrl":"http://p1.music.126.net/805YQrfgtyJzjDNCUY8pFw==/109951164742050082.jpg","accountStatus":0,"gender":1,"city":1010000,"birthday":-2209017600000,"userId":116887224,"userType":0,"nickname":"高冷的小书生","signature":"我辞江湖去，谢却当年花。","description":"","detailDescription":"","avatarImgId":109951164742050082,"backgroundImgId":109951164742043774,"backgroundUrl":"http://p1.music.126.net/UQ0danFMNw9iEDXtYFAZrA==/109951164742043774.jpg","authority":0,"mutual":false,"expertTags":null,"experts":null,"djStatus":0,"vipType":0,"remarkName":null,"backgroundImgIdStr":"109951164742043774","avatarImgIdStr":"109951164742050082","avatarImgId_str":"109951164742050082"},"artists":null,"tracks":null,"updateFrequency":null,"backgroundCoverId":0,"backgroundCoverUrl":null,"titleImage":0,"titleImageUrl":null,"englishTitle":null,"opRecommend":false,"recommendInfo":null,"ordered":false,"status":0,"highQuality":false,"createTime":1474603414382,"totalDuration":0,"coverImgUrl":"http://p2.music.126.net/OM6prM7Fg07e9oLHY2HsTQ==/18823639069522222.jpg","trackCount":157,"playCount":691,"trackNumberUpdateTime":1583162729153,"trackUpdateTime":1584147746858,"updateTime":1583162729153,"newImported":false,"anonimous":false,"coverImgId":18823639069522222,"specialType":0,"commentThreadId":"A_PL_0_470171780","privacy":0,"userId":116887224,"tags":["古风"],"description":"一曲古风，一个故事，一生江湖。","subscribedCount":1,"cloudTrackCount":0,"adType":0,"name":"若红楼梦空、宠古风不终","id":470171780,"shareCount":0,"coverImgId_str":"18823639069522222","commentCount":0}
      * code : 200
      */
 
@@ -36,7 +35,6 @@ public class PlayListNeteaseBean {
         /**
          * subscribers : []
          * subscribed : false
-         * creator : {"defaultAvatar":false,"province":1000000,"authStatus":0,"followed":false,"avatarUrl":"http://p1.music.126.net/805YQrfgtyJzjDNCUY8pFw==/109951164742050082.jpg","accountStatus":0,"gender":1,"city":1010000,"birthday":-2209017600000,"userId":116887224,"userType":0,"nickname":"高冷的小书生","signature":"我辞江湖去，谢却当年花。","description":"","detailDescription":"","avatarImgId":109951164742050082,"backgroundImgId":109951164742043774,"backgroundUrl":"http://p1.music.126.net/UQ0danFMNw9iEDXtYFAZrA==/109951164742043774.jpg","authority":0,"mutual":false,"expertTags":null,"experts":null,"djStatus":0,"vipType":0,"remarkName":null,"backgroundImgIdStr":"109951164742043774","avatarImgIdStr":"109951164742050082","avatarImgId_str":"109951164742050082"}
          * artists : null
          * tracks : null
          * updateFrequency : null
@@ -88,11 +86,11 @@ public class PlayListNeteaseBean {
         @SerializedName("updateFrequency")
         private Object updateFrequency;
         @SerializedName("backgroundCoverId")
-        private int backgroundCoverId;
+        private long backgroundCoverId;
         @SerializedName("backgroundCoverUrl")
         private Object backgroundCoverUrl;
         @SerializedName("titleImage")
-        private int titleImage;
+        private long titleImage;
         @SerializedName("titleImageUrl")
         private Object titleImageUrl;
         @SerializedName("englishTitle")
@@ -104,19 +102,19 @@ public class PlayListNeteaseBean {
         @SerializedName("ordered")
         private boolean ordered;
         @SerializedName("status")
-        private int status;
+        private long status;
         @SerializedName("highQuality")
         private boolean highQuality;
         @SerializedName("createTime")
         private long createTime;
         @SerializedName("totalDuration")
-        private int totalDuration;
+        private long totalDuration;
         @SerializedName("coverImgUrl")
         private String coverImgUrl;
         @SerializedName("trackCount")
-        private int trackCount;
+        private long trackCount;
         @SerializedName("playCount")
-        private int playCount;
+        private long playCount;
         @SerializedName("trackNumberUpdateTime")
         private long trackNumberUpdateTime;
         @SerializedName("trackUpdateTime")
@@ -130,31 +128,31 @@ public class PlayListNeteaseBean {
         @SerializedName("coverImgId")
         private long coverImgId;
         @SerializedName("specialType")
-        private int specialType;
+        private long specialType;
         @SerializedName("commentThreadId")
         private String commentThreadId;
         @SerializedName("privacy")
-        private int privacy;
+        private long privacy;
         @SerializedName("userId")
         private long userId;
         @SerializedName("description")
         private String description;
         @SerializedName("subscribedCount")
-        private int subscribedCount;
+        private long subscribedCount;
         @SerializedName("cloudTrackCount")
-        private int cloudTrackCount;
+        private long cloudTrackCount;
         @SerializedName("adType")
-        private int adType;
+        private long adType;
         @SerializedName("name")
         private String name;
         @SerializedName("id")
         private long id;
         @SerializedName("shareCount")
-        private int shareCount;
+        private long shareCount;
         @SerializedName("coverImgId_str")
         private String coverImgIdStr;
         @SerializedName("commentCount")
-        private int commentCount;
+        private long commentCount;
         @SerializedName("subscribers")
         private List<?> subscribers;
         @SerializedName("tags")
@@ -200,11 +198,11 @@ public class PlayListNeteaseBean {
             this.updateFrequency = updateFrequency;
         }
 
-        public int getBackgroundCoverId() {
+        public long getBackgroundCoverId() {
             return backgroundCoverId;
         }
 
-        public void setBackgroundCoverId(int backgroundCoverId) {
+        public void setBackgroundCoverId(long backgroundCoverId) {
             this.backgroundCoverId = backgroundCoverId;
         }
 
@@ -216,11 +214,11 @@ public class PlayListNeteaseBean {
             this.backgroundCoverUrl = backgroundCoverUrl;
         }
 
-        public int getTitleImage() {
+        public long getTitleImage() {
             return titleImage;
         }
 
-        public void setTitleImage(int titleImage) {
+        public void setTitleImage(long titleImage) {
             this.titleImage = titleImage;
         }
 
@@ -264,11 +262,11 @@ public class PlayListNeteaseBean {
             this.ordered = ordered;
         }
 
-        public int getStatus() {
+        public long getStatus() {
             return status;
         }
 
-        public void setStatus(int status) {
+        public void setStatus(long status) {
             this.status = status;
         }
 
@@ -288,11 +286,11 @@ public class PlayListNeteaseBean {
             this.createTime = createTime;
         }
 
-        public int getTotalDuration() {
+        public long getTotalDuration() {
             return totalDuration;
         }
 
-        public void setTotalDuration(int totalDuration) {
+        public void setTotalDuration(long totalDuration) {
             this.totalDuration = totalDuration;
         }
 
@@ -304,19 +302,19 @@ public class PlayListNeteaseBean {
             this.coverImgUrl = coverImgUrl;
         }
 
-        public int getTrackCount() {
+        public long getTrackCount() {
             return trackCount;
         }
 
-        public void setTrackCount(int trackCount) {
+        public void setTrackCount(long trackCount) {
             this.trackCount = trackCount;
         }
 
-        public int getPlayCount() {
+        public long getPlayCount() {
             return playCount;
         }
 
-        public void setPlayCount(int playCount) {
+        public void setPlayCount(long playCount) {
             this.playCount = playCount;
         }
 
@@ -368,11 +366,11 @@ public class PlayListNeteaseBean {
             this.coverImgId = coverImgId;
         }
 
-        public int getSpecialType() {
+        public long getSpecialType() {
             return specialType;
         }
 
-        public void setSpecialType(int specialType) {
+        public void setSpecialType(long specialType) {
             this.specialType = specialType;
         }
 
@@ -384,11 +382,11 @@ public class PlayListNeteaseBean {
             this.commentThreadId = commentThreadId;
         }
 
-        public int getPrivacy() {
+        public long getPrivacy() {
             return privacy;
         }
 
-        public void setPrivacy(int privacy) {
+        public void setPrivacy(long privacy) {
             this.privacy = privacy;
         }
 
@@ -408,27 +406,27 @@ public class PlayListNeteaseBean {
             this.description = description;
         }
 
-        public int getSubscribedCount() {
+        public long getSubscribedCount() {
             return subscribedCount;
         }
 
-        public void setSubscribedCount(int subscribedCount) {
+        public void setSubscribedCount(long subscribedCount) {
             this.subscribedCount = subscribedCount;
         }
 
-        public int getCloudTrackCount() {
+        public long getCloudTrackCount() {
             return cloudTrackCount;
         }
 
-        public void setCloudTrackCount(int cloudTrackCount) {
+        public void setCloudTrackCount(long cloudTrackCount) {
             this.cloudTrackCount = cloudTrackCount;
         }
 
-        public int getAdType() {
+        public long getAdType() {
             return adType;
         }
 
-        public void setAdType(int adType) {
+        public void setAdType(long adType) {
             this.adType = adType;
         }
 
@@ -448,11 +446,11 @@ public class PlayListNeteaseBean {
             this.id = id;
         }
 
-        public int getShareCount() {
+        public long getShareCount() {
             return shareCount;
         }
 
-        public void setShareCount(int shareCount) {
+        public void setShareCount(long shareCount) {
             this.shareCount = shareCount;
         }
 
@@ -464,11 +462,11 @@ public class PlayListNeteaseBean {
             this.coverImgIdStr = coverImgIdStr;
         }
 
-        public int getCommentCount() {
+        public long getCommentCount() {
             return commentCount;
         }
 
-        public void setCommentCount(int commentCount) {
+        public void setCommentCount(long commentCount) {
             this.commentCount = commentCount;
         }
 
@@ -539,7 +537,7 @@ public class PlayListNeteaseBean {
             @SerializedName("birthday")
             private long birthday;
             @SerializedName("userId")
-            private int userId;
+            private long userId;
             @SerializedName("userType")
             private int userType;
             @SerializedName("nickname")
@@ -649,11 +647,11 @@ public class PlayListNeteaseBean {
                 this.birthday = birthday;
             }
 
-            public int getUserId() {
+            public long getUserId() {
                 return userId;
             }
 
-            public void setUserId(int userId) {
+            public void setUserId(long userId) {
                 this.userId = userId;
             }
 

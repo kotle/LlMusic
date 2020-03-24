@@ -6,8 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import com.billy.android.swipe.SmartSwipe
+import com.billy.android.swipe.SmartSwipeRefresh
+import com.billy.android.swipe.consumer.StretchConsumer
+import com.billy.android.swipe.consumer.TranslucentSlidingConsumer
 import com.yizisu.basemvvm.app
-import com.yizisu.basemvvm.utils.*
+import com.yizisu.basemvvm.utils.goHome
+import com.yizisu.basemvvm.utils.gone
+import com.yizisu.basemvvm.utils.transparentStatusBar
 import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.basemvvm.widget.BaseImageView
 import com.yizisu.music.and.video.R
