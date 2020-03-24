@@ -1,6 +1,8 @@
 package com.yizisu.music.and.video.view
 
+import android.animation.Keyframe
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -102,10 +104,13 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
             animIsRun = true
             if (anim == null) {
                 anim =
-                    ObjectAnimator.ofFloat(this, View.ROTATION, rotation, rotation + 360f).apply {
+                    ObjectAnimator.ofPropertyValuesHolder(
+                        this, PropertyValuesHolder.ofFloat(View.ROTATION, rotation, rotation + 360f)
+                    ).apply {
                         interpolator = LinearInterpolator()
                         repeatCount = -1
                         duration = 7000
+                        setAutoCancel(true)
                     }
                 anim?.start()
             }
