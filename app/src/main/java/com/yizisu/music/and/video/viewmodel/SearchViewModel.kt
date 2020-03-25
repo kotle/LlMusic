@@ -54,10 +54,10 @@ class SearchViewModel : BaseViewModel() {
                             des = it.picUrl
                             source = DbCons.SOURCE_NETEASE
                             type = DbCons.TYPE_FREE
-                            singers.append("${it.name},")
+                            singers.append("${it.name}/")
                         }
                     }
-                    des = singers.toString().trimEnd(',')
+                    des = singers.toString().trimEnd('/')
                 }
             }.toMutableList()
         }

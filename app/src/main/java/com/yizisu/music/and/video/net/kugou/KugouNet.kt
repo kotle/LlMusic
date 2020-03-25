@@ -28,6 +28,6 @@ fun String.sendKugouHttp(
         request.post(params.createFormBody())
     }
     request.url(url.trimEnd('&'))
-    request.addHeader("Cookie", "kg_mid=1234")
+    request.addHeader("Cookie", "kg_mid=fd73d6fda1b05522b9a34754c90a3185")
     return okHttpClient.newCall(request.build())
 }

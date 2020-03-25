@@ -189,6 +189,9 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
     override fun onError(throwable: Throwable, playerModel: SongModel?) {
         super.onError(throwable, playerModel)
         "播放出错:${playerModel.safeGet<SongModel>()?.song?.name}".toast()
+        if (!playerModel?.song?.playFilePath.isNullOrEmpty()) {
+            player.next()
+        }
         playerModel?.song?.apply {
             //播放出错，清空播放链接
             if (!playFilePath.isNullOrEmpty() && source != DbCons.SOURCE_LOCAL) {

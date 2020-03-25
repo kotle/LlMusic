@@ -31,7 +31,7 @@ class HomeItemImageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             lp.marginStart = 0
         }
         val url = bean.filePath ?: bean.urlPath
-        coverIv.setImageGlide(url, R.drawable.icon_my_heart, radius = dip(1))
+        coverIv.setImageGlide(url, R.drawable.default_cover_icon, radius = dip(1))
         titleTv.textFrom(bean.title)
         desTv.textFrom(bean.des)
     }

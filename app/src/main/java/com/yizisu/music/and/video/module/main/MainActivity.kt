@@ -4,6 +4,7 @@ package com.yizisu.music.and.video.module.main
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.billy.android.swipe.SmartSwipe
@@ -48,6 +49,7 @@ class MainActivity : BaseUiActivity() {
         )
         windowCoverIv.post {
             windowCoverIv.animate().alpha(0f)
+                .setInterpolator(AccelerateInterpolator())
                 .withEndAction {
                     windowCoverIv.gone()
                 }

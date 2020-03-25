@@ -38,7 +38,18 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
     }
 
     private var animIsRun = false
-    private var anim: ObjectAnimator? = null
+    private val anim by lazy {
+        ObjectAnimator.ofPropertyValuesHolder(
+            this, PropertyValuesHolder.ofFloat(View.ROTATION, 0f, 180f)
+        ).apply {
+            setInterpolator {
+                2f * it
+            }
+            repeatCount = -1
+            duration = 20000
+            setAutoCancel(true)
+        }
+    }
     private val lastPlayerModel: PlayerModel?
         get() = AppData.currentPlaySong.data
 
@@ -74,12 +85,14 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
 
     override fun onStart() {
         super.onStart()
-        anim?.resume()
+        if (animIsRun) {
+            anim.resume()
+        }
     }
 
     override fun onStop() {
         super<NoParamsLifecycleObserver>.onStop()
-        anim?.pause()
+        anim.pause()
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
@@ -88,35 +101,32 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
         if (animIsRun) {
             if (changedView == this) {
                 if (visibility == View.VISIBLE) {
-                    anim?.resume()
+                    anim.resume()
                 } else {
-                    anim?.pause()
+                    anim.pause()
                 }
             }
         }
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        anim.pause()
+        anim.cancel()
+    }
+
     private fun startAnim(isPlay: Boolean) {
         if (isPlay) {
             animIsRun = true
-            if (anim == null) {
-                anim =
-                    ObjectAnimator.ofPropertyValuesHolder(
-                        this, PropertyValuesHolder.ofFloat(View.ROTATION, rotation, rotation + 360f)
-                    ).apply {
-                        interpolator = LinearInterpolator()
-                        repeatCount = -1
-                        duration = 10000
-                        setAutoCancel(true)
-                    }
-                anim?.start()
+            if (!anim.isStarted) {
+                anim.start()
+            } else {
+                anim.resume()
             }
         } else {
             animIsRun = false
-            anim?.cancel()
-            anim = null
+            anim.pause()
         }
     }
-
 }
