@@ -40,11 +40,9 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
     private var animIsRun = false
     private val anim by lazy {
         ObjectAnimator.ofPropertyValuesHolder(
-            this, PropertyValuesHolder.ofFloat(View.ROTATION, 0f, 180f)
+            this, PropertyValuesHolder.ofFloat(View.ROTATION, rotation, rotation+360f)
         ).apply {
-            setInterpolator {
-                2f * it
-            }
+            interpolator = LinearInterpolator()
             repeatCount = -1
             duration = 20000
             setAutoCancel(true)
@@ -73,7 +71,7 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
 
     override fun onError(throwable: Throwable, playerModel: SongModel?) {
         super.onError(throwable, playerModel)
-        anim?.pause()
+        anim.pause()
     }
 
     override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
