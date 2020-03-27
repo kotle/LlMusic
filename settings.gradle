@@ -2,7 +2,7 @@ include ':app',':mvvmlib',':playerlib', ':lrclibrary', ':roomdblibrary'
 rootProject.name='MusicAndVideo'
 
 //项目地址（https://gitee.com/kotle/MvvmLib/tree/mvvm2）
-project(':mvvmlib').projectDir = new File("D:\\1_20190404\\mvvm2\\MvvmLib\\basemvvm")
+project(':mvvmlib').projectDir = new File("D:\\20190701\\mvvm2\\basemvvm")
 
 //项目地址（https://github.com/kotle/VideoLibrary）
-project(':playerlib').projectDir = new File("D:\\1_20190404\\shared\\VideoLibrary\\playerlibrary")
+project(':playerlib').projectDir = new File("D:\\20190701\\VideoLibrary\\playerlibrary")
