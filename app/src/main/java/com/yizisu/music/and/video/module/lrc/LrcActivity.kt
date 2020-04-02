@@ -1,14 +1,18 @@
 package com.yizisu.music.and.video.module.lrc
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import com.yizisu.basemvvm.app
+import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
@@ -30,9 +34,11 @@ import com.yizisu.music.and.video.utils.updateCover
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.activity_lrc.*
+import kotlinx.android.synthetic.main.activity_lrc.currentProgressTv
 
 class LrcActivity : BaseActivity(), MusicEventListener {
     companion object {
+        private var currentSpeedIndex = 2
         var currentRepeatModel: Int? = null
             get() {
                 return field ?: app.spGet("currentRepeatModel", SimplePlayer.LOOP_MODO_NONE)
@@ -47,6 +53,9 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         }
     }
 
+    private val speedList = mutableListOf(
+        0.5f, 0.75f, 1f, 1.25f, 1.5f, 2.0f
+    )
 
     private fun switchRepeatMode(isToast: Boolean) {
         val message = when (currentRepeatModel) {
@@ -148,6 +157,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                 }
             }
         })
+        setSpeed(currentSpeedIndex)
     }
 
     override fun onDestroy() {
@@ -167,7 +177,8 @@ class LrcActivity : BaseActivity(), MusicEventListener {
             downloadIv,
             repeatModeIv,
             addToPlayList,
-            iconMoreListTv
+            iconMoreListTv,
+            speedTv
         )
     }
 
@@ -226,9 +237,26 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                 val songs = AppData.dbCurrentAlbumData.data?.songInfoTables ?: return
                 toAllSongPage(songs)
             }
+            speedTv -> {
+                setSpeed(++currentSpeedIndex)
+//                MvvmPopupWindow(
+//                    FrameLayout(this).apply {
+//                        setBackgroundColor(Color.WHITE)
+//                    },
+//                    this.dip(100),
+//                    this.dip(200)
+//                ).showAsDropTopOrBottom(view,true)
+            }
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun setSpeed(index: Int) {
+        val i = index % speedList.count()
+        val speed = speedList[i]
+        speedTv.text = "X$speed"
+        MusicService.setSpeed(speed)
+    }
 
     override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super<MusicEventListener>.onPause(playStatus, playerModel)

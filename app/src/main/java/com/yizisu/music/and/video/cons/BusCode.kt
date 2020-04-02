@@ -36,4 +36,8 @@ object BusCode {
      * 设置循环模式
      */
     const val SET_LOOP_REPEAT_MODE = 7
+    /**
+     * 设置倍速
+     */
+    const val SET_MUSIC_SPEED= 8
 }

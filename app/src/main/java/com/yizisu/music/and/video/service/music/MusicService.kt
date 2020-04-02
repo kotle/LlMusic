@@ -36,6 +36,7 @@ import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.SEEK_MUSIC_EVENT
 import com.yizisu.music.and.video.cons.BusCode.SERVICE_PLAY_LIST
 import com.yizisu.music.and.video.cons.BusCode.SET_LOOP_REPEAT_MODE
+import com.yizisu.music.and.video.cons.BusCode.SET_MUSIC_SPEED
 import com.yizisu.music.and.video.module.lrc.LrcActivity
 import com.yizisu.music.and.video.module.search.adapter.SearchHolder
 import com.yizisu.music.and.video.utils.*
@@ -64,6 +65,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
         const val ACTION_CLOSE = "ACTION_CLOSE"
         private const val NOTIFY_MUSIC_ID = 19
         private const val BITMAP_WIDTH_HEIGHT = 300
+
         //启动服务
         fun start(context: Context) {
             context.startService(Intent(context, MusicService::class.java))
@@ -133,10 +135,17 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
             )
         }
 
-        //移动进度条
+        //设置重复模式
         fun setRepeatMode(model: Int?) {
             MessageBus.post(
                 SET_LOOP_REPEAT_MODE, model, false, MusicService::class.java
+            )
+        }
+
+        //设置倍速
+        fun setSpeed(model: Float) {
+            MessageBus.post(
+                SET_MUSIC_SPEED, model, true, MusicService::class.java
             )
         }
     }
@@ -155,6 +164,7 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
             setAudioForceEnable(true)
         }
     }
+
     //默认通知栏图标
     private val defaultBigIcon by lazy {
         getResDrawable(R.drawable.default_cover_icon)?.toBitmap(
@@ -373,6 +383,11 @@ class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongMo
             SET_LOOP_REPEAT_MODE -> {
                 event.safeGet<Int>()?.let {
                     player.setRepeatMode(it)
+                }
+            }
+            SET_MUSIC_SPEED -> {
+                event.safeGet<Float>()?.let {
+                    player.setVideoSpeed(it)
                 }
             }
             //歌单发生了增删改查

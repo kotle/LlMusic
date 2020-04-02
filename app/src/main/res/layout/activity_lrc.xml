@@ -74,6 +74,15 @@
                     android:textColor="@color/colorTextDeepBackground"
                     android:textSize="12sp" />
             </com.yizisu.basemvvm.widget.BaseLinearLayout>
+            <com.yizisu.basemvvm.widget.BaseTextView
+                android:layout_width="56dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:id="@+id/speedTv"
+                android:background="?selectableItemBackground"
+                android:textColor="@color/colorTextDeepBackground"
+                android:layout_gravity="end|center_vertical"
+                android:layout_height="56dp"/>
         </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
         <com.yizisu.basemvvm.widget.BaseFrameLayout
@@ -214,7 +223,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="56dp"
             android:orientation="horizontal">
 
             <Space

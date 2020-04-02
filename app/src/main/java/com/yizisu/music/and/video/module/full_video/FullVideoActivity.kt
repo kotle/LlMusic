@@ -168,10 +168,15 @@ class FullVideoActivity : BaseUiActivity() {
 
         override fun onError(throwable: Throwable, playerModel: PlayerModel?) {
             super.onError(throwable, playerModel)
-            startPlayVideo()
             AlertDialog.Builder(this@FullVideoActivity)
                 .setMessage(throwable.message)
-//                 .setCancelable(false)
+                .setCancelable(false)
+                .setNegativeButton("结束播放") { dialog, which ->
+                    finish()
+                }
+                .setPositiveButton("重试") { dialog, which ->
+                    startPlayVideo()
+                }
                 .show()
         }
 
