@@ -272,8 +272,6 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
 
     //查询专辑信息获取图片
     private fun queryMiguAlbumInfo(song: SongInfoTable): AlbumMiguBean {
-        //第一个id，第二个cid，第三个albumid
-        val ids = song.id.split(",")
         val result = NODEJS_MIGU_ALBUM_INFO
             .sendNodeJsMiguHttp(
                 mutableMapOf(

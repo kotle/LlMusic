@@ -15,7 +15,6 @@
         android:id="@+id/songCoverIv"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="?selectableItemBackground"
         android:scaleType="centerCrop"
         tools:src="@drawable/default_cover_icon" />
 
@@ -25,11 +24,10 @@
         android:layout_height="40dp"
         android:gravity="center"
         android:textColor="@color/colorTextHint"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold|italic"
         tools:background="@color/colorBackground"
         tools:text="1234" />
-
 
     <com.yizisu.basemvvm.widget.BaseImageView
         android:id="@+id/editEt"

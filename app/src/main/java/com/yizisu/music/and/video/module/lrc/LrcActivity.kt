@@ -4,16 +4,17 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.FrameLayout
+import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.Toast
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
 import com.yizisu.basemvvm.utils.*
+import com.yizisu.basemvvm.view.simpleRcvAdapter
+import com.yizisu.basemvvm.view.simpleTextRcvAdater
+import com.yizisu.basemvvm.widget.BaseRecyclerView
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
@@ -38,7 +39,7 @@ import kotlinx.android.synthetic.main.activity_lrc.currentProgressTv
 
 class LrcActivity : BaseActivity(), MusicEventListener {
     companion object {
-        private var currentSpeedIndex = 2
+        private var currentSpeed = "X1.0"
         var currentRepeatModel: Int? = null
             get() {
                 return field ?: app.spGet("currentRepeatModel", SimplePlayer.LOOP_MODO_NONE)
@@ -53,9 +54,6 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         }
     }
 
-    private val speedList = mutableListOf(
-        0.5f, 0.75f, 1f, 1.25f, 1.5f, 2.0f
-    )
 
     private fun switchRepeatMode(isToast: Boolean) {
         val message = when (currentRepeatModel) {
@@ -157,7 +155,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                 }
             }
         })
-        setSpeed(currentSpeedIndex)
+        speedTv.text = currentSpeed
     }
 
     override fun onDestroy() {
@@ -238,25 +236,31 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                 toAllSongPage(songs)
             }
             speedTv -> {
-                setSpeed(++currentSpeedIndex)
-//                MvvmPopupWindow(
-//                    FrameLayout(this).apply {
-//                        setBackgroundColor(Color.WHITE)
-//                    },
-//                    this.dip(100),
-//                    this.dip(200)
-//                ).showAsDropTopOrBottom(view,true)
+                showSpeedPopup()
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setSpeed(index: Int) {
-        val i = index % speedList.count()
-        val speed = speedList[i]
-        speedTv.text = "X$speed"
-        MusicService.setSpeed(speed)
+    private fun showSpeedPopup() {
+        var popup: PopupWindow? = null
+        popup = MvvmPopupWindow(
+            BaseRecyclerView(this).apply {
+                setBackgroundResource(R.drawable.bg_dialog_play_list_8_r)
+                simpleTextRcvAdater(
+                    this, mutableListOf(
+                        "0.5", "1.0", "1.25", "1.5", "2.0"
+                    )
+                ).setOnItemClickListener { itemView, position, itemData ->
+                    currentSpeed = "X$itemData"
+                    speedTv.text = currentSpeed
+                    popup?.dismiss()
+                    MusicService.setSpeed(itemData.toFloat())
+                }
+            }, dip(80), ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popup.showAsDropTopOrBottom(speedTv, true, dip(16))
     }
+
 
     override fun onPause(playStatus: Boolean, playerModel: SongModel?) {
         super<MusicEventListener>.onPause(playStatus, playerModel)
