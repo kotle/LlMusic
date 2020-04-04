@@ -14,11 +14,11 @@ import com.yizisu.music.and.video.baselib.base.sendHttp
 import com.yizisu.music.and.video.bean.LrcBean
 import com.yizisu.music.and.video.bean.migu.LrcMiguBean
 import com.yizisu.music.and.video.bean.netease.LrcNeteaseBean
-import com.yizisu.music.and.video.net.messapi.sendMessapiHttp
-import com.yizisu.music.and.video.net.migu.getMiguCId
-import com.yizisu.music.and.video.net.migu.sendMiguHttp
 import com.yizisu.music.and.video.net.netease.NETEAST_SONG_LRC
 import com.yizisu.music.and.video.net.netease.sendNeteaseHttp
+import com.yizisu.music.and.video.net.nodejs.NODEJS_MIGU_LYRIC
+import com.yizisu.music.and.video.net.nodejs.getMiguCId
+import com.yizisu.music.and.video.net.nodejs.sendNodeJsMiguHttp
 import kotlinx.coroutines.Job
 
 class LrcViewModel : BaseViewModel() {
@@ -29,6 +29,7 @@ class LrcViewModel : BaseViewModel() {
          * 文本歌词
          */
         val lrcStringData by lazy { createLiveBean<String?>() }
+
         /**
          *
          */
@@ -37,6 +38,7 @@ class LrcViewModel : BaseViewModel() {
 
     val currentSong: SongInfoTable?
         get() = AppData.currentPlaySong.data?.song
+
     /**
      * 从歌词迷查询歌词链接
      * 最后通过lrcStringData传递出去
@@ -124,7 +126,7 @@ class LrcViewModel : BaseViewModel() {
         }
         oldLrcJob = launchThread {
             tryError {
-                val result = "http://migu.w0ai1uo.org/lyric".sendMiguHttp(
+                val result = NODEJS_MIGU_LYRIC.sendNodeJsMiguHttp(
                     mutableMapOf(
                         "cid" to getMiguCId(song.id)
                     )
@@ -135,26 +137,6 @@ class LrcViewModel : BaseViewModel() {
                     if (!lrcString.isNullOrEmpty()) {
                         successGetLrc(song, lrcString)
                     }
-                }
-            }
-        }
-    }
-
-    fun queryLrcMessapiMigu() {
-        val song = currentSong ?: return
-        val lrcPath = song.lrcUrlPath ?: return
-        if (oldLrcJob?.isCancelled == false) {
-            oldLrcJob?.cancel()
-        }
-        oldLrcJob = launchThread {
-            tryError {
-                val result = lrcPath.sendHttp(
-                    mutableMapOf(),true
-                ).await().body()?.string()
-                if (!result.isNullOrEmpty() && !result.contains("暂无歌词")) {
-                    successGetLrc(song, result)
-                }else{
-                    queryLrc()
                 }
             }
         }

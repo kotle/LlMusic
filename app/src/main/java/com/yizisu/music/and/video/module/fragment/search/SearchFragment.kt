@@ -111,9 +111,9 @@ class SearchFragment : BaseFragment() {
                 }
             }
             DbCons.SOURCE_MIGU -> {
-                searchViewModel?.messapiMiguSearchData?.register {
+                searchViewModel?.nodeJsMiguSearchData?.register {
                     loadSuccess(it) {
-                        refreshAdapter(searchViewModel?.messapiMiguToSearchBean(it.data))
+                        refreshAdapter(searchViewModel?.nodeJsMiguToSearchBean(it.data))
                     }
                 }
             }

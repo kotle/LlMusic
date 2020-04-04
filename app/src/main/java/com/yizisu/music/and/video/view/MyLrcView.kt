@@ -118,7 +118,7 @@ class MyLrcView : LrcView, MusicEventListener {
                     lrcViewModel?.queryLrcNetease()
                 }
                 DbCons.SOURCE_MIGU -> {
-                    lrcViewModel?.queryLrcMessapiMigu()
+                    lrcViewModel?.queryLrcMigu()
                 }
                 else -> {
                     lrcViewModel?.queryLrc()

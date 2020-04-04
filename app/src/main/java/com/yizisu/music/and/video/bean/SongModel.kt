@@ -22,14 +22,10 @@ import com.yizisu.music.and.video.bean.migu.AlbumMiguBean
 import com.yizisu.music.and.video.bean.migu.SongInfoMiguBean
 import com.yizisu.music.and.video.net.kugou.KUGOU_SONG_INFO
 import com.yizisu.music.and.video.net.kugou.sendKugouHttp
-import com.yizisu.music.and.video.net.migu.getMiguAlbumId
-import com.yizisu.music.and.video.net.migu.getMiguCId
-import com.yizisu.music.and.video.net.migu.getMiguSongId
-import com.yizisu.music.and.video.net.migu.sendMiguHttp
+import com.yizisu.music.and.video.net.nodejs.*
 import com.yizisu.music.and.video.viewmodel.SearchViewModel
 import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import java.lang.IllegalArgumentException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -260,10 +256,8 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
 
     //查询播放的歌曲信息
     private fun queryMiguPlayInfo(song: SongInfoTable): SongInfoMiguBean {
-        //第一个id，第二个cid，第三个albumid
-        val ids = song.id.split(",")
-        val result = "http://migu.w0ai1uo.org/song"
-            .sendMiguHttp(
+        val result = NODEJS_MIGU_SONG_INFO
+            .sendNodeJsMiguHttp(
                 mutableMapOf(
                     "id" to getMiguSongId(song.id),
                     "cid" to getMiguCId(song.id)
@@ -280,8 +274,8 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
     private fun queryMiguAlbumInfo(song: SongInfoTable): AlbumMiguBean {
         //第一个id，第二个cid，第三个albumid
         val ids = song.id.split(",")
-        val result = "http://migu.w0ai1uo.org/album"
-            .sendMiguHttp(
+        val result = NODEJS_MIGU_ALBUM_INFO
+            .sendNodeJsMiguHttp(
                 mutableMapOf(
                     "id" to getMiguAlbumId(song.id)
                 )

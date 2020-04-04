@@ -66,6 +66,7 @@ class SearchHolder(
     private val songDes = itemView.findViewById<TextView>(R.id.songDesTv)
     private val songSource = itemView.findViewById<TextView>(R.id.songSourceTv)
     private val songCover = itemView.findViewById<ImageView>(R.id.songCoverIv)
+    private val songCoverTv = itemView.findViewById<TextView>(R.id.songCoverTv)
     private val editEt = itemView.findViewById<ImageView>(R.id.editEt)
     private val musicJumpFl = itemView.findViewById<FrameLayout>(R.id.musicJumpFl)
     private val downloadedTagIv = itemView.findViewById<View>(R.id.downloadedTagIv)
@@ -127,7 +128,8 @@ class SearchHolder(
         if (!bean.coverFilePath.isNullOrEmpty()) {
             coverPath = bean.coverFilePath
         }
-        songCover.setImageGlide(coverPath, R.drawable.default_cover_icon, 4)
+//        songCover.setImageGlide(coverPath, R.drawable.default_cover_icon, 4)
+        songCoverTv.textFrom("${adapterPosition + 1}")
     }
 
 
