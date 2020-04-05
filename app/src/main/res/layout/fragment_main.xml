@@ -7,31 +7,12 @@
     android:orientation="vertical"
     tools:context=".module.main.MainFragment">
 
-    <FrameLayout
+    <fragment
+        android:id="@+id/homeMusicFg"
+        android:name="com.yizisu.music.and.video.module.fragment.home.HomeMusicFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <com.yizisu.basemvvm.widget.BaseImageView
-            android:id="@+id/bottomBlurIv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/default_cover_icon" />
-
-        <com.github.mmin18.widget.RealtimeBlurView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:realtimeBlurRadius="40dp"
-            app:realtimeOverlayColor="@color/colorBlackTranslucent" />
-
-        <fragment
-            android:id="@+id/homeMusicFg"
-            android:name="com.yizisu.music.and.video.module.fragment.home.HomeMusicFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="80dp" />
-    </FrameLayout>
+        android:layout_weight="1" />
 
     <fragment
         android:id="@+id/homeMenuFg"

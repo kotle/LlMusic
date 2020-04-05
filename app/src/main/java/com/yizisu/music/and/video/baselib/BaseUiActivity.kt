@@ -2,11 +2,14 @@ package com.yizisu.music.and.video.baselib
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.ViewGroup
 import com.yizisu.basemvvm.activityList
 import com.yizisu.basemvvm.utils.isStatusBarBlackTextColor
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.module.main.MainActivity
+import eightbitlab.com.blurview.BlurView
+import eightbitlab.com.blurview.RenderScriptBlur
 
 /**
  * 可以处理一些主题切换等操作

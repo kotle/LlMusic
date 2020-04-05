@@ -1,18 +1,17 @@
 package com.yizisu.music.and.video.module.lrc
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.*
-import android.widget.FrameLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
 import com.yizisu.basemvvm.utils.*
-import com.yizisu.basemvvm.view.simpleRcvAdapter
 import com.yizisu.basemvvm.view.simpleTextRcvAdater
 import com.yizisu.basemvvm.widget.BaseRecyclerView
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -20,6 +19,7 @@ import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
+import com.yizisu.music.and.video.baselib.BaseUiActivity
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
@@ -28,14 +28,11 @@ import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivit
 import com.yizisu.music.and.video.module.fragment.home.HomeMusicFragment
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
-import com.yizisu.music.and.video.utils.dbViewModel
-import com.yizisu.music.and.video.utils.heartIvClick
-import com.yizisu.music.and.video.utils.setIsHeart
-import com.yizisu.music.and.video.utils.updateCover
+import com.yizisu.music.and.video.utils.*
 import com.yizisu.playerlibrary.SimplePlayer
 import com.yizisu.playerlibrary.helper.PlayerModel
+import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_lrc.*
-import kotlinx.android.synthetic.main.activity_lrc.currentProgressTv
 
 class LrcActivity : BaseActivity(), MusicEventListener {
     companion object {
@@ -100,6 +97,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         }
     }
 
+
     private val currentPlayMode: PlayerModel?
         get() = AppData.currentPlaySong.data
 
@@ -135,6 +133,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         lrcToolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        setBlurView(blurView)
         switchRepeatMode(false)
         progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

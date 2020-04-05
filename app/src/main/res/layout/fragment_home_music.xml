@@ -1,167 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.yizisu.basemvvm.widget.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/headMusicLl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingStart="16dp"
-    android:paddingTop="4dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="16dp"
     tools:background="#f0f"
     tools:context=".module.fragment.home.HomeMusicFragment">
 
-    <com.yizisu.basemvvm.widget.BaseLinearLayout
+    <com.yizisu.basemvvm.widget.BaseImageView
+        android:id="@+id/bottomBlurIv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/default_cover_icon" />
 
-        <com.yizisu.basemvvm.widget.BaseFrameLayout
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp">
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:blurOverlayColor="@color/colorBlackTranslucent">
 
-            <com.yizisu.basemvvm.widget.BaseRingView
-                android:id="@+id/ringView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <com.yizisu.music.and.video.view.AutoRotationImageView
-                android:id="@+id/coverIv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="3dp"
-                android:transitionName="coverIv"
-                tools:src="@color/colorAccent" />
-
-
-            <!--            <de.hdodenhof.circleimageview.CircleImageView-->
-            <!--               android:visibility="gone"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:src="@color/colorBlackTranslucent" />-->
-
-            <com.yizisu.basemvvm.widget.BaseImageView
-                android:id="@+id/downloadIv"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?selectableItemBackground"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                app:srcCompat="@drawable/icon_download" />
-        </com.yizisu.basemvvm.widget.BaseFrameLayout>
-
-
-        <com.yizisu.basemvvm.widget.BaseFrameLayout
+        <com.yizisu.basemvvm.widget.BaseLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
 
             <com.yizisu.basemvvm.widget.BaseLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:orientation="horizontal">
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-
-                <com.yizisu.basemvvm.widget.BaseImageView
-                    android:id="@+id/addIv"
+                <com.yizisu.basemvvm.widget.BaseFrameLayout
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="?selectableItemBackground"
-                    android:padding="10dp"
-                    app:srcCompat="@drawable/icon_add" />
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp">
+
+                    <com.yizisu.basemvvm.widget.BaseRingView
+                        android:id="@+id/ringView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <com.yizisu.music.and.video.view.AutoRotationImageView
+                        android:id="@+id/coverIv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="3dp"
+                        android:transitionName="coverIv"
+                        tools:src="@color/colorAccent" />
 
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    <!--            <de.hdodenhof.circleimageview.CircleImageView-->
+                    <!--               android:visibility="gone"-->
+                    <!--                android:layout_width="match_parent"-->
+                    <!--                android:layout_height="match_parent"-->
+                    <!--                android:src="@color/colorBlackTranslucent" />-->
 
-                <com.yizisu.basemvvm.widget.BaseImageView
-                    android:id="@+id/preIv"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?selectableItemBackground"
-                    android:padding="8dp"
-                    app:srcCompat="@drawable/icon_pre" />
+                    <com.yizisu.basemvvm.widget.BaseImageView
+                        android:id="@+id/downloadIv"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?selectableItemBackground"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/icon_download" />
+                </com.yizisu.basemvvm.widget.BaseFrameLayout>
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
-                <com.yizisu.basemvvm.widget.BaseImageView
-                    android:id="@+id/playOrPauseIv"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?selectableItemBackground"
-                    android:padding="8dp"
-                    app:srcCompat="@drawable/icon_play" />
+                <com.yizisu.basemvvm.widget.BaseFrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    <com.yizisu.basemvvm.widget.BaseLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal">
 
-                <com.yizisu.basemvvm.widget.BaseImageView
-                    android:id="@+id/nextIv"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?selectableItemBackground"
-                    android:padding="8dp"
-                    app:srcCompat="@drawable/icon_next" />
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                        <com.yizisu.basemvvm.widget.BaseImageView
+                            android:id="@+id/addIv"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?selectableItemBackground"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/icon_add" />
 
-                <com.yizisu.basemvvm.widget.BaseImageView
-                    android:id="@+id/playListIv"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?selectableItemBackground"
-                    android:padding="10dp"
-                    app:srcCompat="@drawable/icon_play_list" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <com.yizisu.basemvvm.widget.BaseImageView
+                            android:id="@+id/preIv"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?selectableItemBackground"
+                            android:padding="8dp"
+                            app:srcCompat="@drawable/icon_pre" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <com.yizisu.basemvvm.widget.BaseImageView
+                            android:id="@+id/playOrPauseIv"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?selectableItemBackground"
+                            android:padding="8dp"
+                            app:srcCompat="@drawable/icon_play" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <com.yizisu.basemvvm.widget.BaseImageView
+                            android:id="@+id/nextIv"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?selectableItemBackground"
+                            android:padding="8dp"
+                            app:srcCompat="@drawable/icon_next" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <com.yizisu.basemvvm.widget.BaseImageView
+                            android:id="@+id/playListIv"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?selectableItemBackground"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/icon_play_list" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2" />
+                    </com.yizisu.basemvvm.widget.BaseLinearLayout>
+
+                    <com.yizisu.basemvvm.widget.MarqueeTextView
+                        android:id="@+id/titleTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:gravity="center"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:singleLine="true"
+                        android:text="@string/app_des"
+                        android:textColor="@color/colorTextDeepBackground"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </com.yizisu.basemvvm.widget.BaseFrameLayout>
+
             </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
-            <com.yizisu.basemvvm.widget.MarqueeTextView
-                android:id="@+id/titleTv"
+
+            <com.yizisu.music.and.video.view.MyLrcView
+                android:id="@+id/lrcView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:singleLine="true"
-                android:text="@string/app_des"
-                android:textColor="@color/colorTextDeepBackground"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-        </com.yizisu.basemvvm.widget.BaseFrameLayout>
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:lrcNormalTextSize="13sp"
+                app:lrcTextSize="14sp" />
+        </com.yizisu.basemvvm.widget.BaseLinearLayout>
+    </eightbitlab.com.blurview.BlurView>
 
-    </com.yizisu.basemvvm.widget.BaseLinearLayout>
-
-
-    <com.yizisu.music.and.video.view.MyLrcView
-        android:id="@+id/lrcView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:lrcNormalTextSize="13sp"
-        app:lrcTextSize="14sp" />
-</com.yizisu.basemvvm.widget.BaseLinearLayout>
+</com.yizisu.basemvvm.widget.BaseFrameLayout>

@@ -22,7 +22,6 @@ import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
-
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.bean.SongModel
@@ -30,21 +29,15 @@ import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.add_song_to_album.AddSongToAlbumActivity
 import com.yizisu.music.and.video.module.lrc.LrcActivity
-import com.yizisu.music.and.video.module.main.MainActivity
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.*
-import com.yizisu.playerlibrary.helper.PlayerModel
 import kotlinx.android.synthetic.main.fragment_home_music.*
 
 class HomeMusicFragment : BaseFragment(), MusicEventListener {
     companion object {
         fun startDownload(appCompatActivity: AppCompatActivity?, songModel: SongModel) {
             if (songModel.song.playFilePath.isNullOrEmpty()) {
-//                DownloadSongHelper(
-//                    appCompatActivity, songModel,
-//                    DbCons.ALBUM_ID_CURRENT
-//                ).startDown()
                 DownSongWithNotification.startDown(
                     appCompatActivity,
                     songModel, DbCons.ALBUM_ID_CURRENT
@@ -62,18 +55,15 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
     override fun initViewModel() {
         super.initViewModel()
         AppData.currentPlaySong.registerOnSuccess {
+            bottomBlurIv.updateCover(it)
             it?.song?.apply {
                 titleTv.textFrom(name)
-//                setIsHeart(heartIv)
                 if (playFilePath.isNullOrEmpty()) {
                     downloadIv.setImageGlide(R.drawable.icon_download)
                 } else {
                     downloadIv.setImageGlide(R.drawable.icon_downloaded)
                 }
             }
-        }
-        AppData.dbHeartAlbumData.registerOnSuccess {
-            //            setIsHeart(heartIv)
         }
     }
 
@@ -89,6 +79,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
                 onSingleClick(headMusicLl)
             }
         }
+        appCompatActivity?.setBlurView(blurView)
     }
 
 
@@ -124,7 +115,6 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
                 LrcActivity.start(appCompatActivity)
             }
             addIv -> {
-//                heartIvClick()
                 showPopup(view)
             }
             downloadIv -> {
@@ -169,7 +159,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
         }
         val songModel = AppData.currentPlaySong.data ?: return
         val song = songModel.song
-        var isDownload = !song.playFilePath.isNullOrBlank()
+        val isDownload = !song.playFilePath.isNullOrBlank()
         val songs = AppData.dbCurrentAlbumData.data?.songInfoTables ?: return
         var popupWindow: PopupWindow? = null
         val rootView = BaseLinearLayout(

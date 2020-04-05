@@ -25,7 +25,7 @@ fun ImageView.updateCover(
     setImageGlide(
         coverUrl,
         R.drawable.default_cover_icon,
-        transition = transition
+        transition = null
     )
 }
 
