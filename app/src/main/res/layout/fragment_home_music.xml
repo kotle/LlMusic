@@ -157,7 +157,7 @@
                             android:layout_weight="2" />
                     </com.yizisu.basemvvm.widget.BaseLinearLayout>
 
-                    <com.yizisu.basemvvm.widget.MarqueeTextView
+                    <com.yizisu.basemvvm.widget.BaseTextView
                         android:id="@+id/titleTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

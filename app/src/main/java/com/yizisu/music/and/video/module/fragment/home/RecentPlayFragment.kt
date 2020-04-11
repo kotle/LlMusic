@@ -14,6 +14,7 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.widget.BaseLinearLayout
 import com.yizisu.basemvvm.widget.BaseTextView
@@ -57,7 +58,7 @@ class RecentPlayFragment : BaseFragment() {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.allAlbumData.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.allAlbumData) {
             val playLists = it.filter {
                 it.id != DbCons.ALBUM_ID_LOCAL.toString()
                         && it.id != DbCons.ALBUM_ID_RECENT.toString()

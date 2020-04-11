@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.basemvvm.view.simpleRcvAdapter
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -58,7 +59,7 @@ class SelectPlayListDialog : BaseDialog() {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.allAlbumData.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.allAlbumData){
             adapter.refreshList(it.filter {
                 if (fifltAlbumInfoTable?.dbId == it.dbId) {
                     false

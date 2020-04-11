@@ -45,7 +45,7 @@
                     android:gravity="bottom"
                     android:orientation="vertical">
 
-                    <com.yizisu.basemvvm.widget.MarqueeTextView
+                    <com.yizisu.basemvvm.widget.BaseTextView
                         android:id="@+id/titleTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                         android:textStyle="bold"
                         android:transitionName="titleTv" />
 
-                    <com.yizisu.basemvvm.widget.MarqueeTextView
+                    <com.yizisu.basemvvm.widget.BaseTextView
                         android:id="@+id/desTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

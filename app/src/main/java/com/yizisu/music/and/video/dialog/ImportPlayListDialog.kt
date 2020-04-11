@@ -4,6 +4,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.fail
+import com.yizisu.basemvvm.mvvm.mvvm_helper.getViewModel
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.basemvvm.utils.switchToUi
 import com.yizisu.basemvvm.utils.toast
@@ -30,7 +32,7 @@ class ImportPlayListDialog : BaseDialog() {
 
     override fun initViewModel() {
         super.initViewModel()
-        viewModel.neteasePlayListData?.register {
+        registerLiveBean(viewModel.neteasePlayListData) {
             when (it.status) {
                 LiveBeanStatus.START -> {
                     showLoadingView()

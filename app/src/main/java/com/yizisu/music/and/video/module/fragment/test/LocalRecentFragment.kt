@@ -4,6 +4,7 @@ package com.yizisu.music.and.video.module.fragment.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.utils.getCountTimeByLong
 import com.yizisu.basemvvm.utils.onSearch
 import com.yizisu.basemvvm.utils.visible
@@ -36,7 +37,10 @@ class LocalRecentFragment : BaseFragment() {
 
     override fun initViewModel() {
         super.initViewModel()
-        getActivityViewModel<LocalMusicViewModel>()?.testVideoData?.register {
+        getActivityViewModel<LocalMusicViewModel>()?.testVideoData?.let {bean->
+            registerLiveBean(bean){
+
+            }
 //            when (it.status) {
 //                LiveBeanStatus.START -> {
 //                    showLoadingView()

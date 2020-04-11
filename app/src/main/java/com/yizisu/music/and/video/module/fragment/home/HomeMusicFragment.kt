@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.Pair
 import com.google.android.exoplayer2.offline.Download
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.GestureDetectorHelper
 import com.yizisu.basemvvm.widget.BaseLinearLayout
@@ -54,7 +55,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.currentPlaySong.registerOnSuccess {
+       registerOnSuccessLiveBean( AppData.currentPlaySong) {
             bottomBlurIv.updateCover(it)
             it?.song?.apply {
                 titleTv.textFrom(name)
@@ -69,6 +70,7 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
+        titleTv.isMarqueeText=true
         MusicService.addMusicEventListener(this)
         lrcView.setDraggable(false, null)
         GestureDetectorHelper(lrcView, true).apply {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -89,38 +90,49 @@ class SearchFragment : BaseFragment() {
         when (sourceType) {
             //搜索网易云
             DbCons.SOURCE_NETEASE -> {
-                searchViewModel?.neteaseSearchData?.register {
-                    loadSuccess(it) {
-                        refreshAdapter(searchViewModel?.neteaseToSearchBean(it.data))
+                searchViewModel?.neteaseSearchData?.let { bean ->
+                    registerLiveBean(bean) {
+                        loadSuccess(it) {
+                            refreshAdapter(searchViewModel?.neteaseToSearchBean(it.data))
+                        }
                     }
                 }
+
             }
             //搜索百度
             DbCons.SOURCE_BAIDU -> {
-                searchViewModel?.baiduSearchData?.register {
-                    loadSuccess(it) {
-                        refreshAdapter(searchViewModel?.baiduToSearchBean(it.data))
+                searchViewModel?.baiduSearchData?.let {
+                    registerLiveBean(it) {
+                        loadSuccess(it) {
+                            refreshAdapter(searchViewModel?.baiduToSearchBean(it.data))
+                        }
                     }
                 }
             }
             DbCons.SOURCE_KUGOU -> {
-                searchViewModel?.kugouSearchData?.register {
-                    loadSuccess(it) {
-                        refreshAdapter(searchViewModel?.kugouToSearchBean(it.data))
+                searchViewModel?.kugouSearchData?.let { bean ->
+                    registerLiveBean(bean) {
+                        loadSuccess(it) {
+                            refreshAdapter(searchViewModel?.kugouToSearchBean(it.data))
+                        }
                     }
                 }
             }
             DbCons.SOURCE_MIGU -> {
-                searchViewModel?.nodeJsMiguSearchData?.register {
-                    loadSuccess(it) {
-                        refreshAdapter(searchViewModel?.nodeJsMiguToSearchBean(it.data))
+                searchViewModel?.nodeJsMiguSearchData?.let { bean ->
+                    registerLiveBean(bean) {
+                        loadSuccess(it) {
+                            refreshAdapter(searchViewModel?.nodeJsMiguToSearchBean(it.data))
+                        }
                     }
                 }
             }
             DbCons.SOURCE_LOCAL -> {
-                searchViewModel?.localSearchData?.register {
-                    loadSuccess(it) {
-                        refreshAdapter(it.data)
+                searchViewModel?.localSearchData?.let { bean ->
+                    registerLiveBean(bean) {
+                        loadSuccess(it) {
+                            refreshAdapter(it.data)
+                        }
                     }
                 }
             }

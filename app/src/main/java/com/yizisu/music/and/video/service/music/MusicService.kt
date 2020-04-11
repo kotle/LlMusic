@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide
 import com.yizisu.basemvvm.activityList
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
-import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBusInterface
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -45,7 +44,7 @@ import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
 import kotlin.system.exitProcess
 
-class MusicService : Service(), MessageBusInterface, SimplePlayerListener<SongModel> {
+class MusicService : Service(), MessageBus.MessageBusInterface, SimplePlayerListener<SongModel> {
     /**
      * messageBus数据类型
      */

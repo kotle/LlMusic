@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleTextRcvAdater
 import com.yizisu.basemvvm.widget.BaseRecyclerView
@@ -107,7 +108,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
 
     override fun initViewModel() {
         super.initViewModel()
-        AppData.currentPlaySong.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.currentPlaySong) {
             it?.song?.apply {
                 fullImageIv.updateCover(it)
                 setIsHeart(heartIv)
@@ -120,13 +121,15 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                 }
             }
         }
-        AppData.dbHeartAlbumData.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.dbHeartAlbumData) {
             setIsHeart(heartIv)
         }
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
+        titleTv.isMarqueeText = true
+        desTv.isMarqueeText = true
         transparentStatusBar()
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         MusicService.addMusicEventListener(this)

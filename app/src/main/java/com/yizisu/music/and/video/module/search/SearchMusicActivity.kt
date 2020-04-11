@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.yizisu.basemvvm.mvvm.mvvm_helper.getViewModel
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.music.and.roomdblibrary.DbCons

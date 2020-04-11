@@ -3,6 +3,7 @@ package com.yizisu.music.and.video.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import com.yizisu.basemvvm.mvvm.mvvm_helper.getViewModel
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*

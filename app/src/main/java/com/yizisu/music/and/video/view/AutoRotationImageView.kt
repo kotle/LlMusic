@@ -7,6 +7,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import com.yizisu.basemvvm.mvvm.MvvmActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.NoParamsLifecycleObserver
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.bean.SongModel
@@ -31,7 +32,7 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
         }
         context.safeGet<MvvmActivity>()?.apply {
             lifecycle.addObserver(this@AutoRotationImageView)
-            AppData.currentPlaySong.registerOnSuccess {
+           registerOnSuccessLiveBean( AppData.currentPlaySong) {
                 updateCover(it, null)
             }
         }

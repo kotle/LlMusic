@@ -4,6 +4,8 @@ package com.yizisu.music.and.video.module.fragment.home
 import android.Manifest
 import android.view.LayoutInflater
 import android.view.View
+import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.utils.permission.PermissionUtil
 import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.video.AppData
@@ -30,19 +32,19 @@ class HomeMenuFragment : BaseFragment() {
     private var isFirstCreate = true
     override fun initViewModel() {
         super.initViewModel()
-        AppData.dbHeartAlbumData.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.dbHeartAlbumData) {
             heartTv.textFrom("${it.title}(${it.songInfoTables.count()})")
         }
-        AppData.dbDownloadAlbumData.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.dbDownloadAlbumData) {
             downloadedMusicTv.textFrom("${it.title}(${it.songInfoTables.count()})")
         }
-        AppData.dbLocalAlbumData.registerOnSuccess {
+      registerOnSuccessLiveBean(  AppData.dbLocalAlbumData) {
             localTv.textFrom("${it.title}(${it.songInfoTables.count()})")
         }
-        AppData.dbRecentAlbumData.registerOnSuccess {
+       registerOnSuccessLiveBean( AppData.dbRecentAlbumData) {
             recentTv.textFrom("${it.title}(${it.songInfoTables.count()})")
         }
-        AppData.dbCurrentAlbumData.registerOnSuccess {
+        registerOnSuccessLiveBean(AppData.dbCurrentAlbumData) {
             //这里会多次调用，只需要初始化调用一次
             if (isFirstCreate) {
                 isFirstCreate = false
@@ -83,13 +85,13 @@ class HomeMenuFragment : BaseFragment() {
                 PlayListDetailActivity.start(appCompatActivity, AppData.dbDownloadAlbumData.data)
             }
             localMusicFl -> {
-                getPermission(
+                PermissionUtil.request(
                     mutableListOf(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                     )
                 ) {
-                    if (it) {
+                    if (it.isEmpty()) {
                         PlayListDetailActivity.start(
                             appCompatActivity,
                             AppData.dbLocalAlbumData.data

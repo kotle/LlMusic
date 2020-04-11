@@ -68,13 +68,6 @@ abstract class BaseFragment : MvvmFragment(), IBaseHelper, IBaseHelperView by Ba
     }
 
     /**
-     * MessageBus发送的消息会在这里回调
-     */
-    override fun onMessageBus(event: Any?, code: Int) {
-        super.onMessageBus(event, code)
-    }
-
-    /**
      * 获取两次view的是点击时间间隔
      * 少于这个时间多次点击只相应一次
      * 默认300毫秒

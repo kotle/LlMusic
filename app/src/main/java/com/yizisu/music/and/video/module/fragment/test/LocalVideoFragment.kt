@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.basemvvm.utils.permission.PermissionUtil
 import com.yizisu.music.and.video.AppData
 
 
@@ -50,13 +51,13 @@ class LocalVideoFragment : BaseFragment() {
 
     override fun initData() {
         super.initData()
-        getPermission(
+        PermissionUtil.request(
             mutableListOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         ) {
-            if (it) {
+            if (it.isEmpty()) {
                 getActivityViewModel<LocalMusicViewModel>()?.queryLocalVideo()
             }
         }

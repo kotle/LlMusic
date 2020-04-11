@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import com.yizisu.basemvvm.mvvm.MvvmActivity
+import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 
-abstract class BaseActivity : MvvmActivity(), IBaseHelper, IBaseHelperView by BaseHelperImpl() {
+abstract class BaseActivity : MvvmActivity(), IBaseHelper,MessageBus.MessageBusInterface, IBaseHelperView by BaseHelperImpl() {
     abstract fun getContentResOrView(inflater: LayoutInflater): Any?
 
     final override fun getLayoutResOrView(inflater: LayoutInflater): Any? = getContentView(this,
@@ -29,6 +30,15 @@ abstract class BaseActivity : MvvmActivity(), IBaseHelper, IBaseHelperView by Ba
         return super.isNeedToolbar()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MessageBus.register(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MessageBus.unRegister(this)
+    }
     /**
      * 菜单创建的时候回调
      */
