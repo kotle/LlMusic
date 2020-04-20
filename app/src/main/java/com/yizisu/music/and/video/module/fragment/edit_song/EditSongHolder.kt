@@ -54,7 +54,7 @@ class EditSongHolder(itemView: View,private val adapter: EditSongAdapter) : Recy
             }
         }
 //        songSource.textFrom("${getResString(R.string.song_source)}：${bean.type}")
-        songCover.setImageGlide(bean.coverUrlPath, R.drawable.default_cover_icon, 4)
+        songCover.setImageGlide(bean.coverUrlPath, R.drawable.default_cover_icon, radius = 4)
     }
 
 }

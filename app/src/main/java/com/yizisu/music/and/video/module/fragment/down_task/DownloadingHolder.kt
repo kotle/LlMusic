@@ -52,7 +52,7 @@ class DownloadingHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         bean.song.apply {
             songName.textFrom(name)
             songDes.textFrom(des)
-            songCover.setImageGlide(coverFilePath ?: coverUrlPath, R.drawable.default_cover_icon, 4)
+            songCover.setImageGlide(coverFilePath ?: coverUrlPath, R.drawable.default_cover_icon, radius = 4)
         }
         checkBox.setOnClickListener {
             bean.downloadHelper.cancel()

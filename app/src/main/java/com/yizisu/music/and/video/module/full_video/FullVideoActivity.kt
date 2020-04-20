@@ -15,10 +15,10 @@ import com.yizisu.basemvvm.utils.navigateTo
 import com.yizisu.basemvvm.utils.toast
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
-import com.yizisu.playerlibrary.SimplePlayer
+import com.yizisu.playerlibrary.IYzsPlayer
+import com.yizisu.playerlibrary.PlayerFactory
 import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
-import com.yizisu.playerlibrary.helper.createLifecycleSimplePlayer
 import kotlinx.android.synthetic.main.activity_full_video.*
 import java.io.Serializable
 
@@ -37,7 +37,7 @@ class FullVideoActivity : BaseUiActivity() {
         val title: String?
     ) : Serializable
 
-    private var player: SimplePlayer<PlayerModel>? = null
+    private var player: IYzsPlayer<PlayerModel>? = null
 
     private var videoData: FullVideoData? = null
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
@@ -79,7 +79,7 @@ class FullVideoActivity : BaseUiActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         showLoadingState()
-        player = createLifecycleSimplePlayer(this)
+        player = PlayerFactory.createLifecyclePlayer(this,PlayerFactory.PLAYER_IMPL_EXO)
         player?.attachView(playerView.textureView)
         player?.setAudioForceEnable(true)
         player?.addPlayerListener(listener)

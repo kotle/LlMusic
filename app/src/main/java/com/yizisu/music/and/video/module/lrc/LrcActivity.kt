@@ -30,9 +30,8 @@ import com.yizisu.music.and.video.module.fragment.home.HomeMusicFragment
 import com.yizisu.music.and.video.service.music.MusicEventListener
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.*
-import com.yizisu.playerlibrary.SimplePlayer
+import com.yizisu.playerlibrary.PlayerFactory
 import com.yizisu.playerlibrary.helper.PlayerModel
-import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.android.synthetic.main.activity_lrc.*
 
 class LrcActivity : BaseActivity(), MusicEventListener {
@@ -40,7 +39,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         private var currentSpeed = "X1.0"
         var currentRepeatModel: Int? = null
             get() {
-                return field ?: app.spGet("currentRepeatModel", SimplePlayer.LOOP_MODO_NONE)
+                return field ?: app.spGet("currentRepeatModel", PlayerFactory.LOOP_MODO_NONE)
             }
             set(value) {
                 field = value
@@ -55,19 +54,19 @@ class LrcActivity : BaseActivity(), MusicEventListener {
 
     private fun switchRepeatMode(isToast: Boolean) {
         val message = when (currentRepeatModel) {
-            SimplePlayer.LOOP_MODO_NONE -> {
+            PlayerFactory.LOOP_MODO_NONE -> {
                 repeatModeIv.setImageResource(R.drawable.icon_loop_null)
                 "顺序播放"
             }
-            SimplePlayer.LOOP_MODO_LIST -> {
+            PlayerFactory.LOOP_MODO_LIST -> {
                 repeatModeIv.setImageResource(R.drawable.icon_loop_list)
                 "列表循环"
             }
-            SimplePlayer.LOOP_MODO_SHUFF -> {
+            PlayerFactory.LOOP_MODO_SHUFF -> {
                 repeatModeIv.setImageResource(R.drawable.icon_loop_shuffle)
                 "随机播放"
             }
-            SimplePlayer.LOOP_MODO_SINGLE -> {
+            PlayerFactory.LOOP_MODO_SINGLE -> {
                 repeatModeIv.setImageResource(R.drawable.icon_loop_single)
                 "单曲循环"
             }
@@ -83,17 +82,17 @@ class LrcActivity : BaseActivity(), MusicEventListener {
 
     private fun getNextRepeatMode() {
         when (currentRepeatModel) {
-            SimplePlayer.LOOP_MODO_NONE -> {
-                currentRepeatModel = SimplePlayer.LOOP_MODO_LIST
+            PlayerFactory.LOOP_MODO_NONE -> {
+                currentRepeatModel = PlayerFactory.LOOP_MODO_LIST
             }
-            SimplePlayer.LOOP_MODO_LIST -> {
-                currentRepeatModel = SimplePlayer.LOOP_MODO_SHUFF
+            PlayerFactory.LOOP_MODO_LIST -> {
+                currentRepeatModel = PlayerFactory.LOOP_MODO_SHUFF
             }
-            SimplePlayer.LOOP_MODO_SHUFF -> {
-                currentRepeatModel = SimplePlayer.LOOP_MODO_SINGLE
+            PlayerFactory.LOOP_MODO_SHUFF -> {
+                currentRepeatModel = PlayerFactory.LOOP_MODO_SINGLE
             }
-            SimplePlayer.LOOP_MODO_SINGLE -> {
-                currentRepeatModel = SimplePlayer.LOOP_MODO_NONE
+            PlayerFactory.LOOP_MODO_SINGLE -> {
+                currentRepeatModel = PlayerFactory.LOOP_MODO_NONE
             }
         }
     }

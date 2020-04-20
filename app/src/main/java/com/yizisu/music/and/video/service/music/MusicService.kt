@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.*
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.Binder
@@ -15,21 +14,17 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
-import com.yizisu.basemvvm.activityList
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.success
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.roomdblibrary.DbHelper
-import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.bean.SongModel
-import com.yizisu.music.and.video.cons.BusCode
 import com.yizisu.music.and.video.cons.BusCode.ADD_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.REMOVE_MUSIC_EVENT_LISTENER
 import com.yizisu.music.and.video.cons.BusCode.SEEK_MUSIC_EVENT
@@ -39,10 +34,9 @@ import com.yizisu.music.and.video.cons.BusCode.SET_MUSIC_SPEED
 import com.yizisu.music.and.video.module.lrc.LrcActivity
 import com.yizisu.music.and.video.module.search.adapter.SearchHolder
 import com.yizisu.music.and.video.utils.*
-import com.yizisu.playerlibrary.SimplePlayer
+import com.yizisu.playerlibrary.PlayerFactory
 import com.yizisu.playerlibrary.helper.PlayerModel
 import com.yizisu.playerlibrary.helper.SimplePlayerListener
-import kotlin.system.exitProcess
 
 class MusicService : Service(), MessageBus.MessageBusInterface, SimplePlayerListener<SongModel> {
     /**
@@ -157,8 +151,8 @@ class MusicService : Service(), MessageBus.MessageBusInterface, SimplePlayerList
 
     //播放器对象
     private val player by lazy {
-        SimplePlayer<SongModel>(this).apply {
-            setRepeatMode(LrcActivity.currentRepeatModel ?: SimplePlayer.LOOP_MODO_LIST)
+        PlayerFactory.createPlayer<SongModel>(this,PlayerFactory.PLAYER_IMPL_EXO).apply {
+            setRepeatMode(LrcActivity.currentRepeatModel ?: PlayerFactory.LOOP_MODO_LIST)
             setHandleWakeLock(true)
             setAudioForceEnable(true)
         }
