@@ -173,7 +173,6 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                 e.printStackTrace()
                 return@switchToThread SongInfoKugouBean()
             }
-
         }
     }
 

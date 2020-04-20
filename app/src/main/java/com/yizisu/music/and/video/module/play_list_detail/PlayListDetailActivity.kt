@@ -35,6 +35,8 @@ class PlayListDetailActivity : BaseUiActivity() {
         }
     }
 
+    private var currentAlbumInfoTable: AlbumInfoTable? = null
+
     private val adapter by lazy { SearchAdapter(currentAlbumInfoTable) }
 
     override fun getContentResOrView(inflater: LayoutInflater): Any? {
@@ -49,7 +51,6 @@ class PlayListDetailActivity : BaseUiActivity() {
         return true
     }
 
-    private var currentAlbumInfoTable: AlbumInfoTable? = null
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         getSwitchView()?.apply {
