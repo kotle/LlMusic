@@ -118,7 +118,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
         launchUi {
             //            queryKugouSongDownload(this, song).await()
             val bean = queryKugouSongInfo(this, song)
-            val playUrl = bean.data.playUrl
+            val playUrl = bean.data?.playUrl
             if (playUrl == null) {
                 uriCall.invoke(null, Throwable("获取酷狗音乐信息失败"), false)
             } else {
