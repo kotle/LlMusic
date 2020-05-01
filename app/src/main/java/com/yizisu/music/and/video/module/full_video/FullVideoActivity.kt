@@ -34,7 +34,9 @@ class FullVideoActivity : BaseUiActivity() {
 
     data class FullVideoData(
         val path: String,
-        val title: String?
+        val title: String?,
+        val width: Int = 0,
+        val height: Int = 0
     ) : Serializable
 
     private var player: IYzsPlayer<PlayerModel>? = null
@@ -79,7 +81,7 @@ class FullVideoActivity : BaseUiActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         showLoadingState()
-        player = PlayerFactory.createLifecyclePlayer(this,PlayerFactory.PLAYER_IMPL_EXO)
+        player = PlayerFactory.createLifecyclePlayer(this, PlayerFactory.PLAYER_IMPL_EXO)
         player?.attachView(playerView.textureView)
         player?.setAudioForceEnable(true)
         player?.addPlayerListener(listener)
@@ -137,7 +139,6 @@ class FullVideoActivity : BaseUiActivity() {
     }
 
     private var isHadGetPlayerSize = false
-    private var videoSize = Point()
     private val listener = object : SimplePlayerListener<PlayerModel> {
         override fun onTick(playerModel: PlayerModel) {
             playerModel.apply {
@@ -187,19 +188,7 @@ class FullVideoActivity : BaseUiActivity() {
             pixelWidthHeightRatio: Float,
             playerModel: PlayerModel?
         ) {
-            videoSize.x = width
-            videoSize.y = height
-            if (!isHadGetPlayerSize) {
-                isHadGetPlayerSize = true
-                requestedOrientation = if (width < height) {
-                    playerView.setVideoSize(width, height, true)
-                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                } else {
-                    playerView.setVideoSize(width, height, false)
-                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-
-                }
-            }
+            setScreenByVideoSize(width, height)
         }
 
         override fun onPlay(playStatus: Boolean, playerModel: PlayerModel?) {
@@ -217,6 +206,22 @@ class FullVideoActivity : BaseUiActivity() {
         override fun onStop(playStatus: Boolean, playerModel: PlayerModel?) {
             super.onStop(playStatus, playerModel)
             isHadGetPlayerSize = false
+        }
+    }
+
+    /**
+     * 根据宽高设置屏幕方向
+     */
+    private fun setScreenByVideoSize(width: Int, height: Int) {
+        if (!isHadGetPlayerSize) {
+            isHadGetPlayerSize = true
+            requestedOrientation = if (width < height) {
+                playerView.setVideoSize(width, height, true)
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            } else {
+                playerView.setVideoSize(width, height, false)
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            }
         }
     }
 
@@ -258,9 +263,6 @@ class FullVideoActivity : BaseUiActivity() {
         playerView.setPlay(false)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
 
     override fun onDestroy() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

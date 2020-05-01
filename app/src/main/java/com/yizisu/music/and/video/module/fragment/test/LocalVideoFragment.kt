@@ -47,7 +47,9 @@ class LocalVideoFragment : BaseFragment() {
             FullVideoActivity.start(
                 appCompatActivity, FullVideoActivity.FullVideoData(
                     itemData.path,
-                    itemData.title
+                    itemData.title,
+                    itemData.width,
+                    itemData.height
                 )
             )
         }
