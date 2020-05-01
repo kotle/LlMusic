@@ -97,7 +97,6 @@ class HomeMenuFragment : BaseFragment() {
                             appCompatActivity,
                             AppData.dbLocalAlbumData.data
                         )
-//                        LocalMusicActivity.start(appCompatActivity)
                     }
                 }
             }

@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yizisu.basemvvm.widget.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.yizisu.basemvvm.widget.BaseConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:orientation="vertical"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:paddingTop="8dp"
+    android:paddingEnd="16dp"
     android:paddingBottom="8dp">
 
-    <com.yizisu.basemvvm.widget.BaseTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:lines="1"
-        android:id="@+id/songNameTv"
-        android:textColor="@color/colorText"
-        android:textSize="14sp"
-        tools:text="@string/app_name" />
+    <com.yizisu.basemvvm.widget.BaseImageView
+        android:id="@+id/coverIv"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@color/colorAccent" />
 
     <com.yizisu.basemvvm.widget.BaseTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:id="@+id/songNameTv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:ellipsize="end"
-        android:lines="1"
-        android:id="@+id/songDesTv"
-        android:textColor="@color/colorTextLight"
-        android:textSize="11sp"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/coverIv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/coverIv"
+        app:layout_constraintTop_toTopOf="@+id/coverIv"
         tools:text="@string/app_name" />
-</com.yizisu.basemvvm.widget.BaseLinearLayout>
+</com.yizisu.basemvvm.widget.BaseConstraintLayout>

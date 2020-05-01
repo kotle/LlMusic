@@ -28,6 +28,7 @@ import com.yizisu.music.and.video.dialog.CreatePlayListDialog
 import com.yizisu.music.and.video.dialog.ImportPlayListDialog
 import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.fragment.home.adapter.HomeItemImageAdapter
+import com.yizisu.music.and.video.module.local_music.LocalMusicActivity
 import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
 import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.utils.refreshAllAlbum
@@ -76,7 +77,7 @@ class RecentPlayFragment : BaseFragment() {
     }
 
     override fun getClickView(): List<View?>? {
-        return listOf(createPlayListTv, importPlayListTv, morePlayListTv)
+        return listOf(createPlayListTv, importPlayListTv, morePlayListTv, localVideoTv)
     }
 
     override fun onSingleClick(view: View) {
@@ -90,6 +91,9 @@ class RecentPlayFragment : BaseFragment() {
             }
             morePlayListTv -> {
                 showPopup(view)
+            }
+            localVideoTv -> {
+                LocalMusicActivity.start(appCompatActivity)
             }
         }
     }

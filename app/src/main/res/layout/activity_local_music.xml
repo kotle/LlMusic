@@ -1,42 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.yizisu.basemvvm.widget.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".module.local_music.LocalMusicActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.yizisu.music.and.video.module.fragment.test.LocalVideoFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.yizisu.basemvvm.widget.BaseLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-            <com.yizisu.basemvvm.widget.BaseToolBar
-                android:id="@+id/localMusicToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary" />
-
-            <com.yizisu.basemvvm.widget.BaseTabLayout
-                android:id="@+id/localMusicTab"
-                app:tabUnboundedRipple="true"
-                app:tabSelectedTextColor="@color/colorAccent"
-                app:tabIndicatorFullWidth="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.yizisu.basemvvm.widget.BaseLinearLayout>
-
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <com.yizisu.basemvvm.widget.BaseViewPager
-        android:id="@+id/localMusicVp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="match_parent" />
+</com.yizisu.basemvvm.widget.BaseFrameLayout>

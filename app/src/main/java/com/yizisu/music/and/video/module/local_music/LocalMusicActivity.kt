@@ -24,25 +24,16 @@ class LocalMusicActivity : BaseUiActivity() {
     }
 
     override fun isNeedToolbar(): Boolean {
-        return false
+        return true
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        localMusicToolbar?.apply {
-            setSupportActionBar(this)
-            setNavigationIcon(R.drawable.app_icon)
-            setTitleTextAppearance(this@LocalMusicActivity, R.style.ToolBarTitle)
-            setBackgroundResource(R.color.colorPrimary)
-        }
-        setTitle(R.string.app_des)
-        localMusicVp.adapter = LocalPagerAdapter(supportFragmentManager)
-        localMusicTab.setupWithViewPager(localMusicVp)
+        setTitle(R.string.local_video)
     }
 
-
     override fun isNeedBackIcon(): Boolean {
-        return false
+        return true
     }
 
 }

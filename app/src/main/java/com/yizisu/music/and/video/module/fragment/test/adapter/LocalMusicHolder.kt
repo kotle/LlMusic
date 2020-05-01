@@ -1,8 +1,10 @@
 package com.yizisu.music.and.video.module.fragment.test.adapter
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.yizisu.basemvvm.utils.setImageGlide
 import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.R
@@ -14,10 +16,10 @@ class LocalMusicHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private val songName = itemView.findViewById<TextView>(R.id.songNameTv)
-    private val songDes = itemView.findViewById<TextView>(R.id.songDesTv)
+    private val coverIv = itemView.findViewById<ImageView>(R.id.coverIv)
 
-    fun setData(bean: SongInfoTable) {
-        songName.textFrom(bean.name)
-        songDes.textFrom((bean.des))
+    fun setData(bean: LocalMusicBean) {
+        songName.textFrom(bean.title)
+        coverIv.setImageGlide(bean.path)
     }
 }

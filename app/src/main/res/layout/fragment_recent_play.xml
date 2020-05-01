@@ -7,6 +7,23 @@
     android:orientation="vertical"
     tools:context=".module.fragment.home.RecentPlayFragment">
 
+    <com.yizisu.basemvvm.widget.BaseTextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:id="@+id/localVideoTv"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="4dp"
+        android:text="@string/local_video"
+        android:textColor="@color/colorText"
+        android:textSize="16sp"
+        android:textStyle="bold">
+
+    </com.yizisu.basemvvm.widget.BaseTextView>
+
     <com.yizisu.basemvvm.widget.BaseLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

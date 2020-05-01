@@ -42,16 +42,15 @@ class LocalVideoFragment : BaseFragment() {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-
-        adapter.setOnItemClickListener { itemView, position, itemData ->
-//            FullVideoActivity.start(
-//                appCompatActivity, FullVideoActivity.FullVideoData(
-//                    itemData.path,
-//                    itemData.title
-//                )
-//            )
-        }
         localMusicRcv.adapter = adapter
+        adapter.setOnItemClickListener { itemView, position, itemData ->
+            FullVideoActivity.start(
+                appCompatActivity, FullVideoActivity.FullVideoData(
+                    itemData.path,
+                    itemData.title
+                )
+            )
+        }
     }
 
     override fun initData() {
@@ -78,7 +77,7 @@ class LocalVideoFragment : BaseFragment() {
             }
             LiveBeanStatus.SUCCESS -> {
                 val musics = bean.data
-//                adapter.refreshList(musics)
+                adapter.refreshList(musics)
             }
             LiveBeanStatus.FAIL -> {
 
