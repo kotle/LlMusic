@@ -4,6 +4,7 @@ package com.yizisu.music.and.video.module.fragment.test
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
+import com.yizisu.basemvvm.mvvm.mvvm_helper.getActivityViewModel
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
 import com.yizisu.basemvvm.utils.getCountTimeByLong
 import com.yizisu.basemvvm.utils.onSearch

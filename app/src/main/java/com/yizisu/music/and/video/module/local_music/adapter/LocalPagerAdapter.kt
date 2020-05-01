@@ -18,9 +18,9 @@ class LocalPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(
     )
 
     private val pagers = mutableListOf<PagerData>(
-        PagerData(LocalMusicFragment.create(), getResString(R.string.local_music)),
-        PagerData(LocalVideoFragment.create(), getResString(R.string.local_video)),
-        PagerData(LocalRecentFragment.create(), getResString(R.string.local_recent))
+//        PagerData(LocalMusicFragment.create(), getResString(R.string.local_music)),
+        PagerData(LocalVideoFragment.create(), getResString(R.string.local_video))
+//        PagerData(LocalRecentFragment.create(), getResString(R.string.local_recent))
     )
 
     override fun getItem(position: Int): Fragment {

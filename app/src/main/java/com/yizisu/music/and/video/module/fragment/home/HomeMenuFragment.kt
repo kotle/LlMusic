@@ -13,6 +13,7 @@ import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.bean.SongModel
+import com.yizisu.music.and.video.module.local_music.LocalMusicActivity
 import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.dbViewModel
@@ -96,6 +97,7 @@ class HomeMenuFragment : BaseFragment() {
                             appCompatActivity,
                             AppData.dbLocalAlbumData.data
                         )
+//                        LocalMusicActivity.start(appCompatActivity)
                     }
                 }
             }

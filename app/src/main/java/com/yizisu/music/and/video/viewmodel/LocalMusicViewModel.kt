@@ -19,6 +19,7 @@ class LocalMusicViewModel : BaseViewModel() {
      * 查询本地音乐
      */
     val localMusicData by lazy { createLiveBean<MutableList<LocalMusicBean>>() }
+    val localVideoData by lazy { createLiveBean<MutableList<LocalMusicBean>>() }
 
     fun queryLocalMusic() {
         localMusicData.start()
@@ -30,7 +31,7 @@ class LocalMusicViewModel : BaseViewModel() {
     fun queryLocalVideo() {
         localMusicData.start()
         launchThread {
-            //            localVideoData.success(LocalMusicUtil.getVideoInfo(app))
+            localVideoData.success(LocalMusicUtil.getVideoInfo(app))
         }
     }
 
