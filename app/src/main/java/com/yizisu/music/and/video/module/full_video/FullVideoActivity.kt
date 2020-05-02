@@ -22,7 +22,7 @@ import com.yizisu.playerlibrary.helper.SimplePlayerListener
 import kotlinx.android.synthetic.main.activity_full_video.*
 import java.io.Serializable
 
-class FullVideoActivity : BaseUiActivity() {
+open class FullVideoActivity : BaseUiActivity() {
     companion object {
         private const val KEY_VIDEO_DATA = "KEY_VIDEO_DATA"
         fun start(appCompatActivity: AppCompatActivity?, bean: FullVideoData) {
@@ -36,7 +36,8 @@ class FullVideoActivity : BaseUiActivity() {
         val path: String,
         val title: String?,
         val width: Int = 0,
-        val height: Int = 0
+        val height: Int = 0,
+        val duration: Long = 0
     ) : Serializable
 
     private var player: IYzsPlayer<PlayerModel>? = null
@@ -108,6 +109,10 @@ class FullVideoActivity : BaseUiActivity() {
             }
         }
         startPlayVideo()
+        //设置默认进度
+        videoData?.let {
+            setVideoProgress(0, 0, it.duration)
+        }
     }
 
     /**
@@ -138,15 +143,12 @@ class FullVideoActivity : BaseUiActivity() {
         return true
     }
 
+
     private var isHadGetPlayerSize = false
     private val listener = object : SimplePlayerListener<PlayerModel> {
         override fun onTick(playerModel: PlayerModel) {
             playerModel.apply {
-                playerView.setProgress(
-                    currentDuration,
-                    currentBufferDuration,
-                    totalDuration
-                )
+                setVideoProgress(currentDuration, currentBufferDuration, totalDuration)
             }
         }
 
@@ -215,16 +217,24 @@ class FullVideoActivity : BaseUiActivity() {
     private fun setScreenByVideoSize(width: Int, height: Int) {
         if (!isHadGetPlayerSize) {
             isHadGetPlayerSize = true
-            requestedOrientation = if (width < height) {
+            if (width < height) {
                 playerView.setVideoSize(width, height, true)
-                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                if (requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                }
+
             } else {
                 playerView.setVideoSize(width, height, false)
-                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                if (requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                }
             }
         }
     }
 
+    /**
+     * 开始播放视频
+     */
     private fun startPlayVideo() {
         player?.apply {
             prepareAndPlay(
@@ -234,6 +244,21 @@ class FullVideoActivity : BaseUiActivity() {
             )
             playerView.setPlay(isPlaying())
         }
+    }
+
+    /**
+     * 设置进度条
+     */
+    private fun setVideoProgress(
+        currentDuration: Long?,
+        currentBufferDuration: Long?,
+        totalDuration: Long
+    ) {
+        playerView.setProgress(
+            currentDuration,
+            currentBufferDuration,
+            totalDuration
+        )
     }
 
 

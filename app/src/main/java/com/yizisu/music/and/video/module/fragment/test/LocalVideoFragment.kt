@@ -17,6 +17,7 @@ import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.bean.LocalMusicBean
 import com.yizisu.music.and.video.module.fragment.test.adapter.LocalMusicAdapter
 import com.yizisu.music.and.video.module.full_video.FullVideoActivity
+import com.yizisu.music.and.video.module.full_video.FullVideoPortraitActivity
 import com.yizisu.music.and.video.viewmodel.LocalMusicViewModel
 import kotlinx.android.synthetic.main.fragment_local_music.*
 
@@ -44,14 +45,28 @@ class LocalVideoFragment : BaseFragment() {
         super.initUi(savedInstanceState)
         localMusicRcv.adapter = adapter
         adapter.setOnItemClickListener { itemView, position, itemData ->
-            FullVideoActivity.start(
-                appCompatActivity, FullVideoActivity.FullVideoData(
-                    itemData.path,
-                    itemData.title,
-                    itemData.width,
-                    itemData.height
-                )
+            val width = itemData.width
+            val height = itemData.height
+            val data = FullVideoActivity.FullVideoData(
+                itemData.path,
+                itemData.title,
+                width,
+                height,
+                itemData.duration.toLong()
             )
+            //如果有视频宽高，直接判断使用横屏还是竖屏
+            //实际进去之后还会根据实际的视频宽高进行判断使用横屏还是竖屏
+            //提前判断可以优化用户体验
+            if (width < height) {
+                FullVideoPortraitActivity.start(
+                    appCompatActivity, data
+                )
+            } else {
+                FullVideoActivity.start(
+                    appCompatActivity, data
+                )
+            }
+
         }
     }
 

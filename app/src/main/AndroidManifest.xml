@@ -44,6 +44,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".module.full_video.FullVideoPortraitActivity"
+            android:configChanges="screenSize|orientation|uiMode|keyboard|keyboardHidden|density|screenLayout"
+            android:screenOrientation="sensorPortrait" />
+        <activity
             android:name=".module.full_video.FullVideoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
