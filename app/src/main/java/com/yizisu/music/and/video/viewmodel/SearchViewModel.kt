@@ -241,7 +241,7 @@ class SearchViewModel : BaseViewModel() {
                 it.name, System.currentTimeMillis(),
                 System.currentTimeMillis(),
                 null, null, null, null,
-                null, null, null, null, null
+                null, it.url, null, null, null
             )
         }?.toMutableList()
         return searchBean

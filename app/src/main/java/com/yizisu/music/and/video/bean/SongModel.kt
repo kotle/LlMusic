@@ -32,11 +32,11 @@ import java.security.NoSuchAlgorithmException
 
 class SongModel(val song: SongInfoTable) : PlayerModel() {
     override fun callMediaUri(uriCall: (Uri?, Throwable?, Boolean) -> Unit) {
-        if (song.playFilePath != null) {
+        if (!song.playFilePath.isNullOrBlank()) {
             uriCall.invoke(Uri.parse(song.playFilePath), null, false)
             return
         }
-        if (song.playUrlPath != null) {
+        if (!song.playUrlPath.isNullOrBlank()) {
             uriCall.invoke(Uri.parse(song.playUrlPath), null, false)
             return
         }
