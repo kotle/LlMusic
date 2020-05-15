@@ -240,7 +240,7 @@ class SearchViewModel : BaseViewModel() {
                 singers.toString().trimEnd(','),
                 it.name, System.currentTimeMillis(),
                 System.currentTimeMillis(),
-                null, null, null, null,
+                null, null, null, it.album?.picUrl,
                 null, it.url, null, null, null
             )
         }?.toMutableList()
