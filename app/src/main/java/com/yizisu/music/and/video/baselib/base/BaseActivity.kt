@@ -101,13 +101,6 @@ abstract class BaseActivity : MvvmActivity(), IBaseHelper,MessageBus.MessageBusI
     }
 
     /**
-     * 是否支持右滑返回结束activty
-     */
-    override fun isCanSwipeBack(): Boolean {
-        return super.isCanSwipeBack()
-    }
-
-    /**
      * MessageBus发送的消息会在这里回调
      */
     override fun onMessageBus(event: Any?, code: Int) {

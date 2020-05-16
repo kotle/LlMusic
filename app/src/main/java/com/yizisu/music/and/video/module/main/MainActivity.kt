@@ -7,10 +7,6 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.billy.android.swipe.SmartSwipe
-import com.billy.android.swipe.SmartSwipeRefresh
-import com.billy.android.swipe.consumer.StretchConsumer
-import com.billy.android.swipe.consumer.TranslucentSlidingConsumer
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.utils.goHome
 import com.yizisu.basemvvm.utils.gone
