@@ -9,24 +9,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-
 import com.yizisu.basemvvm.utils.ViewExtFunKt;
-import com.yizisu.basemvvm.utils.permission.PermissionUtil;
+import com.yizisu.basemvvm.utils.permission.PermissionUtilKt;
 import com.yizisu.music.and.roomdblibrary.DbCons;
-import com.yizisu.music.and.roomdblibrary.DbHelper;
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable;
 import com.yizisu.music.and.video.R;
 import com.yizisu.music.and.video.bean.LocalMusicBean;
 import com.yizisu.music.and.video.bean.LocalVideoBean;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.yizisu.basemvvm.MvvmLibKt.app;
 
 public class LocalMusicUtil {
     public static List<SongInfoTable> getSongInfos(Context context) {
-        if (!PermissionUtil.INSTANCE.check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (!PermissionUtilKt.checkPermission(context,Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return new ArrayList<>();
         }
         List<LocalMusicBean> musicInfo = getMusicInfo(context);

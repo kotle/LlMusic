@@ -8,10 +8,7 @@ import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
 import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
 import com.yizisu.basemvvm.mvvm.mvvm_helper.getActivityViewModel
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
-import com.yizisu.basemvvm.utils.permission.PermissionUtil
-import com.yizisu.music.and.video.AppData
-
-
+import com.yizisu.basemvvm.utils.permission.callPermissions
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.bean.LocalMusicBean
@@ -72,7 +69,7 @@ class LocalVideoFragment : BaseFragment() {
 
     override fun initData() {
         super.initData()
-        PermissionUtil.request(
+        callPermissions(
             mutableListOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE

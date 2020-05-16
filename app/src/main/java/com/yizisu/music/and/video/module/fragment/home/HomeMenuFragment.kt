@@ -5,15 +5,13 @@ import android.Manifest
 import android.view.LayoutInflater
 import android.view.View
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
-import com.yizisu.basemvvm.utils.permission.PermissionUtil
+import com.yizisu.basemvvm.utils.permission.callPermissions
 import com.yizisu.basemvvm.utils.textFrom
-import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.video.AppData
 
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.bean.SongModel
-import com.yizisu.music.and.video.module.local_music.LocalMusicActivity
 import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
 import com.yizisu.music.and.video.service.music.MusicService
 import com.yizisu.music.and.video.utils.dbViewModel
@@ -86,7 +84,7 @@ class HomeMenuFragment : BaseFragment() {
                 PlayListDetailActivity.start(appCompatActivity, AppData.dbDownloadAlbumData.data)
             }
             localMusicFl -> {
-                PermissionUtil.request(
+                callPermissions(
                     mutableListOf(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
