@@ -30,7 +30,7 @@ import com.yizisu.music.and.video.module.search.adapter.SearchAdapter
 import com.yizisu.music.and.video.service.music.MusicService
 import kotlinx.android.synthetic.main.dialog_current_play_list.*
 
-class CurrentPlayListDialog : BaseBottomSheetDialog() {
+class CurrentPlayListDialog : BaseDialog() {
     companion object {
         fun show(
             appCompatActivity: AppCompatActivity?
@@ -95,7 +95,22 @@ class CurrentPlayListDialog : BaseBottomSheetDialog() {
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-
+        appCompatActivity?.getScreenSize()?.y?.let { screenHeight ->
+            currentPlayListRcv.layoutParams.also { lp ->
+                lp.height = screenHeight * 2/3
+            }
+        }
+        //滚动动画结束
+        fun finishListener(isReset: Boolean) {
+            if (!isReset) {
+                dismiss()
+            }
+        }
+        scrollDownView.setOnStopScrollListener { parent, target, unConsumedY ->
+            val isReset = unConsumedY <= target.height / 3
+            scrollDownView.stop(isReset, finishListener = ::finishListener)
+        }
+        currentPlayListRcv?.setHasFixedSize(true)
         currentPlayListRcv?.adapter = adapter
         adapter.isNeedMusicJumpView = true
         adapter.setOnItemClickListener { itemView, position, itemData ->

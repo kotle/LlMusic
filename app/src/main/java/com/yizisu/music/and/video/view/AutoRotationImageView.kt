@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.yizisu.basemvvm.mvvm.MvvmActivity
-import com.yizisu.basemvvm.mvvm.mvvm_helper.NoParamsLifecycleObserver
+import com.yizisu.basemvvm.mvvm.mvvm_helper.ILifecycleObserver
 import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
 import com.yizisu.basemvvm.utils.safeGet
 import com.yizisu.music.and.video.AppData
@@ -17,7 +17,7 @@ import com.yizisu.music.and.video.utils.updateCover
 import com.yizisu.playerlibrary.helper.PlayerModel
 import de.hdodenhof.circleimageview.CircleImageView
 
-class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifecycleObserver {
+class AutoRotationImageView : CircleImageView, MusicEventListener, ILifecycleObserver {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -90,7 +90,7 @@ class AutoRotationImageView : CircleImageView, MusicEventListener, NoParamsLifec
     }
 
     override fun onStop() {
-        super<NoParamsLifecycleObserver>.onStop()
+        super<ILifecycleObserver>.onStop()
         anim.pause()
     }
 

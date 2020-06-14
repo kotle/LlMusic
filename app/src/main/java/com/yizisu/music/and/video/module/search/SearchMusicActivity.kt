@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import com.yizisu.basemvvm.mvvm.mvvm_helper.getViewModel
 import com.yizisu.basemvvm.utils.*
-import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.music.and.roomdblibrary.DbCons
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseActivity
@@ -56,7 +58,16 @@ class SearchMusicActivity : BaseActivity() {
                 searchMusicTab.invisible()
             }
         }
-        searchVp.adapter = simpleFragmentPagerAdapter(searchFgList.toMutableList())
+        searchVp.adapter = object : FragmentStatePagerAdapter(
+            supportFragmentManager,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        ) {
+            override fun getItem(position: Int): Fragment {
+                return searchFgList[position]
+            }
+
+            override fun getCount(): Int = searchFgList.count()
+        }
         searchVp.invisible()
         searchMusicTab.invisible()
         searchMusicTab.setupWithViewPager(searchVp)

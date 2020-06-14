@@ -7,17 +7,19 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.utils.goHome
 import com.yizisu.basemvvm.utils.gone
 import com.yizisu.basemvvm.utils.transparentStatusBar
-import com.yizisu.basemvvm.view.simpleFragmentPagerAdapter
 import com.yizisu.basemvvm.widget.BaseImageView
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.BaseUiActivity
 import com.yizisu.music.and.video.module.search.SearchMusicActivity
 import com.yizisu.music.and.video.service.music.MusicService
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.IllegalArgumentException
 
 
 class MainActivity : BaseUiActivity() {
@@ -40,9 +42,23 @@ class MainActivity : BaseUiActivity() {
             .addView(windowCoverIv)
         MusicService.bindService(this)
         transparentStatusBar()
-        homeVp.adapter = simpleFragmentPagerAdapter(
-            mutableListOf(MainFragment.create())
-        )
+        homeVp.adapter = object : FragmentStatePagerAdapter(
+            supportFragmentManager,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        ) {
+            override fun getItem(position: Int): Fragment {
+                return when (position) {
+                    0 -> {
+                        MainFragment.create()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("")
+                    }
+                }
+            }
+
+            override fun getCount(): Int = 1
+        }
         windowCoverIv.post {
             windowCoverIv.animate().alpha(0f)
                 .setInterpolator(AccelerateInterpolator())
