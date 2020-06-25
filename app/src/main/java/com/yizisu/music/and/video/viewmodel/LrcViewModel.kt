@@ -60,12 +60,12 @@ class LrcViewModel : BaseViewModel() {
                     "http://gecimi.com/api/lyric/${name}/${singer}"
                 }
                 val response = url.sendHttp(mutableMapOf(), true).await()
-                val result = response.body()?.string()
+                val result = response.body?.string()
                 if (!result.isNullOrEmpty()) {
                     val lrcBean = gson.fromJson<LrcBean>(result, LrcBean::class.java)
                     if (!lrcBean.result.isNullOrEmpty()) {
                         val lrcString =
-                            lrcBean.result[0].lrc.sendHttp(mutableMapOf(), true).await().body()
+                            lrcBean.result[0].lrc.sendHttp(mutableMapOf(), true).await().body
                                 ?.string()
                         successGetLrc(song, lrcString)
                     }
@@ -103,7 +103,7 @@ class LrcViewModel : BaseViewModel() {
                     mutableMapOf(
                         "id" to song.id.toString()
                     )
-                ).await().body()?.string()
+                ).await().body?.string()
                 if (!result.isNullOrEmpty()) {
                     val bean = gson.fromJson<LrcNeteaseBean>(result, LrcNeteaseBean::class.java)
                     val lrcString = bean.lyric
@@ -130,7 +130,7 @@ class LrcViewModel : BaseViewModel() {
                     mutableMapOf(
                         "cid" to getMiguCId(song.id)
                     )
-                ).await().body()?.string()
+                ).await().body?.string()
                 if (!result.isNullOrEmpty()) {
                     val bean = gson.fromJson<LrcMiguBean>(result, LrcMiguBean::class.java)
                     val lrcString = bean.data

@@ -142,7 +142,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         "r" to "play/getdata",
                         "hash" to song.id
                     )
-                ).execute().body()?.string()
+                ).execute().body?.string()
                 return@switchToThread if (results.isNullOrEmpty()) {
                     SongInfoKugouBean()
                 } else {
@@ -191,7 +191,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                         "key" to encode(song.id + "kgcloudv2"),
                         "hash" to song.id
                     )
-                ).execute().body()?.string()
+                ).execute().body?.string()
                 return@switchToThread if (results.isNullOrEmpty()) {
                     DownloadKugouBean()
                 } else {
@@ -261,7 +261,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                     "id" to getMiguSongId(song.id),
                     "cid" to getMiguCId(song.id)
                 )
-            ).execute().body()?.string()
+            ).execute().body?.string()
         return if (result.isNullOrEmpty()) {
             SongInfoMiguBean()
         } else {
@@ -276,7 +276,7 @@ class SongModel(val song: SongInfoTable) : PlayerModel() {
                 mutableMapOf(
                     "id" to getMiguAlbumId(song.id)
                 )
-            ).execute().body()?.string()
+            ).execute().body?.string()
         return if (result.isNullOrEmpty()) {
             AlbumMiguBean()
         } else {

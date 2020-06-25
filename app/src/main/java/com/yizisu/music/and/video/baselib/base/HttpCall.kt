@@ -133,18 +133,18 @@ abstract class OkHttpCall<T>(private val cls: Class<T>, private val data: LiveBe
     }
 
     override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-        if (response.code() != 200) {
+        if (response.code != 200) {
             onError(
-                NoSuccessException("httpError:code:${response.code()},message:${response.message()}"),
-                response.code()
+                NoSuccessException("httpError:code:${response.code},message:${response.message}"),
+                response.code
             )
             return
         }
-        val result = response.body()
+        val result = response.body
         try {
             val bodyStr = result?.string()
             if (bodyStr.isNullOrBlank()) {
-                onError(IOException("HTTP Body Is Null:${response.message()}"), null)
+                onError(IOException("HTTP Body Is Null:${response.message}"), null)
             } else {
                 //简单判断是否是json字符串
                 if (bodyStr.startsWith('{') || bodyStr.startsWith('[')) {
