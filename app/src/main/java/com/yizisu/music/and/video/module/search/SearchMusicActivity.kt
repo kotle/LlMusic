@@ -66,6 +66,10 @@ class SearchMusicActivity : BaseActivity() {
                 return searchFgList[position]
             }
 
+            override fun getPageTitle(position: Int): CharSequence? {
+                return searchFgList[position].getTitle()
+            }
+
             override fun getCount(): Int = searchFgList.count()
         }
         searchVp.invisible()
