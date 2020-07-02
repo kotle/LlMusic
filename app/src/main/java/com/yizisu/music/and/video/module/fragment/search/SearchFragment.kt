@@ -3,10 +3,7 @@ package com.yizisu.music.and.video.module.fragment.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
-import com.yizisu.basemvvm.mvvm.mvvm_helper.getActivityViewModel
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.*
 import com.yizisu.basemvvm.utils.getResString
 import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -86,8 +83,7 @@ class SearchFragment : BaseFragment() {
         }
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
         when (sourceType) {
             //搜索网易云
             DbCons.SOURCE_NETEASE -> {
@@ -138,6 +134,7 @@ class SearchFragment : BaseFragment() {
                 }
             }
         }
+        return super.getObserverLiveBean()
     }
 
     private var keywords: String? = null

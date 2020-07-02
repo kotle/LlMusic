@@ -33,8 +33,7 @@ abstract class BaseDialog : MvvmDialog(), IBaseHelper, IBaseHelperView by BaseHe
         }
     }
 
-    override fun initViewModel() {
-    }
+
 
     override fun initUi(savedInstanceState: Bundle?) {
     }

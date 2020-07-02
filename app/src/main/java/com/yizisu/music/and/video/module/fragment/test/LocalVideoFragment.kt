@@ -4,10 +4,7 @@ package com.yizisu.music.and.video.module.fragment.test
 import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBean
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
-import com.yizisu.basemvvm.mvvm.mvvm_helper.getActivityViewModel
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.*
 import com.yizisu.basemvvm.utils.permission.callPermissions
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
@@ -30,12 +27,8 @@ class LocalVideoFragment : BaseFragment() {
         return R.layout.fragment_local_music
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        registerLiveBean(
-            getActivityViewModel<LocalMusicViewModel>().localVideoData,
-            ::onQueryLocalMusic
-        )
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(getActivityViewModel<LocalMusicViewModel>().localVideoData wrapWithCall ::onQueryLocalMusic)
     }
 
     override fun initUi(savedInstanceState: Bundle?) {

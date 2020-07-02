@@ -29,9 +29,6 @@ class LocalMusicFragment : BaseFragment() {
         return R.layout.fragment_local_music
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-    }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)

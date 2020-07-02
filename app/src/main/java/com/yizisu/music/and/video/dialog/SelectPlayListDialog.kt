@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanWrap
+import com.yizisu.basemvvm.mvvm.mvvm_helper.wrapOnSuccessWithCall
 import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.basemvvm.view.simpleRcvAdapter
 import com.yizisu.music.and.roomdblibrary.DbCons
@@ -57,9 +58,8 @@ class SelectPlayListDialog : BaseDialog() {
         }
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        registerOnSuccessLiveBean(AppData.allAlbumData){
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(AppData.allAlbumData.wrapOnSuccessWithCall {
             adapter.refreshList(it.filter {
                 if (fifltAlbumInfoTable?.dbId == it.dbId) {
                     false
@@ -75,7 +75,7 @@ class SelectPlayListDialog : BaseDialog() {
                     add(0, it)
                 }
             })
-        }
+        })
     }
 
     override fun getClickView(): List<View?>? {

@@ -24,13 +24,6 @@ abstract class BaseFragment : MvvmFragment(), IBaseHelper, IBaseHelperView by Ba
         }
     }
 
-    /**
-     * 在onCreate()中被回调
-     * 做一些与viewModel相关的事件
-     * 可以注册一些liveData监听
-     */
-    override fun initViewModel() {
-    }
 
     /**
      * 在onCreate()中被回调

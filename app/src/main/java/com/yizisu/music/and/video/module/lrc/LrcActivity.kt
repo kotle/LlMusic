@@ -11,7 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.app
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanWrap
+import com.yizisu.basemvvm.mvvm.mvvm_helper.wrapOnSuccessWithCall
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.simpleTextRcvAdater
 import com.yizisu.basemvvm.widget.BaseRecyclerView
@@ -20,7 +21,6 @@ import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
-import com.yizisu.music.and.video.baselib.BaseUiActivity
 import com.yizisu.music.and.video.baselib.base.BaseActivity
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.dialog.CurrentPlayListDialog
@@ -105,25 +105,27 @@ class LrcActivity : BaseActivity(), MusicEventListener {
         return R.layout.activity_lrc
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        registerOnSuccessLiveBean(AppData.currentPlaySong) {
-            it?.song?.apply {
-                fullImageIv.updateCover(it)
-                setIsHeart(heartIv)
-                titleTv.textFrom(name)
-                desTv.textFrom(des)
-                if (playFilePath.isNullOrEmpty()) {
-                    downloadIv.setImageGlide(R.drawable.icon_download)
-                } else {
-                    downloadIv.setImageGlide(R.drawable.icon_downloaded)
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(
+            AppData.currentPlaySong.wrapOnSuccessWithCall {
+                it?.song?.apply {
+                    fullImageIv.updateCover(it)
+                    setIsHeart(heartIv)
+                    titleTv.textFrom(name)
+                    desTv.textFrom(des)
+                    if (playFilePath.isNullOrEmpty()) {
+                        downloadIv.setImageGlide(R.drawable.icon_download)
+                    } else {
+                        downloadIv.setImageGlide(R.drawable.icon_downloaded)
+                    }
                 }
+            },
+            AppData.currentPlaySong.wrapOnSuccessWithCall{
+                setIsHeart(heartIv)
             }
-        }
-        registerOnSuccessLiveBean(AppData.dbHeartAlbumData) {
-            setIsHeart(heartIv)
-        }
+        )
     }
+
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)

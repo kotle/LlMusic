@@ -1,7 +1,6 @@
 package com.yizisu.music.and.video.module.fragment.home
 
 
-import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,26 +10,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanWrap
+import com.yizisu.basemvvm.mvvm.mvvm_helper.wrapOnSuccessWithCall
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.widget.BaseLinearLayout
 import com.yizisu.basemvvm.widget.BaseTextView
 import com.yizisu.music.and.roomdblibrary.DbCons
-import com.yizisu.music.and.roomdblibrary.DbHelper
 import com.yizisu.music.and.video.AppData
 
 import com.yizisu.music.and.video.R
 import com.yizisu.music.and.video.baselib.base.BaseFragment
 import com.yizisu.music.and.video.dialog.CreatePlayListDialog
 import com.yizisu.music.and.video.dialog.ImportPlayListDialog
-import com.yizisu.music.and.video.dialog.SelectPlayListDialog
 import com.yizisu.music.and.video.module.fragment.home.adapter.HomeItemImageAdapter
 import com.yizisu.music.and.video.module.local_music.LocalMusicActivity
 import com.yizisu.music.and.video.module.play_list_detail.PlayListDetailActivity
-import com.yizisu.music.and.video.utils.dbViewModel
 import com.yizisu.music.and.video.utils.refreshAllAlbum
 import kotlinx.android.synthetic.main.fragment_recent_play.*
 
@@ -57,23 +52,24 @@ class RecentPlayFragment : BaseFragment() {
         refreshAllAlbum()
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        registerOnSuccessLiveBean(AppData.allAlbumData) {
-            val playLists = it.filter {
-                it.id != DbCons.ALBUM_ID_LOCAL.toString()
-                        && it.id != DbCons.ALBUM_ID_RECENT.toString()
-                        && it.id != DbCons.ALBUM_ID_DOWNLOADED.toString()
-                        && it.id != DbCons.ALBUM_ID_CURRENT.toString()
-                        && it.id != DbCons.ALBUM_ID_HEART.toString()
-            }.toMutableList()
-            if (playLists.isNullOrEmpty()) {
-                noPlayListHintTv.visible()
-            } else {
-                noPlayListHintTv.gone()
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(
+            AppData.allAlbumData.wrapOnSuccessWithCall {
+                val playLists = it.filter {
+                    it.id != DbCons.ALBUM_ID_LOCAL.toString()
+                            && it.id != DbCons.ALBUM_ID_RECENT.toString()
+                            && it.id != DbCons.ALBUM_ID_DOWNLOADED.toString()
+                            && it.id != DbCons.ALBUM_ID_CURRENT.toString()
+                            && it.id != DbCons.ALBUM_ID_HEART.toString()
+                }.toMutableList()
+                if (playLists.isNullOrEmpty()) {
+                    noPlayListHintTv.visible()
+                } else {
+                    noPlayListHintTv.gone()
+                }
+                adapter.refreshList(playLists.asReversed())
             }
-            adapter.refreshList(playLists.asReversed())
-        }
+        )
     }
 
     override fun getClickView(): List<View?>? {

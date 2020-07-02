@@ -33,10 +33,6 @@ abstract class BaseUiActivity : BaseActivity() {
         super.initData()
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-    }
-
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
     }

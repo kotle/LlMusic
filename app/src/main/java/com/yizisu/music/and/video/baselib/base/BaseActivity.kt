@@ -7,16 +7,19 @@ import android.view.View
 import com.yizisu.basemvvm.mvvm.MvvmActivity
 import com.yizisu.basemvvm.mvvm.mvvm_helper.MessageBus
 
-abstract class BaseActivity : MvvmActivity(), IBaseHelper,MessageBus.MessageBusInterface, IBaseHelperView by BaseHelperImpl() {
+abstract class BaseActivity : MvvmActivity(), IBaseHelper, MessageBus.MessageBusInterface,
+    IBaseHelperView by BaseHelperImpl() {
     abstract fun getContentResOrView(inflater: LayoutInflater): Any?
 
-    final override fun getLayoutResOrView(inflater: LayoutInflater): Any? = getContentView(this,
-            inflater,
-            getContentResOrView(inflater),
-            false,
-            isNeedToolbar(),
-            isNeedBackIcon(),
-            isNeedSwitchView())
+    final override fun getLayoutResOrView(inflater: LayoutInflater): Any? = getContentView(
+        this,
+        inflater,
+        getContentResOrView(inflater),
+        false,
+        isNeedToolbar(),
+        isNeedBackIcon(),
+        isNeedSwitchView()
+    )
 
     override fun isNeedSwitchView(): Boolean {
         return super.isNeedSwitchView()
@@ -39,6 +42,7 @@ abstract class BaseActivity : MvvmActivity(), IBaseHelper,MessageBus.MessageBusI
         super.onDestroy()
         MessageBus.unRegister(this)
     }
+
     /**
      * 菜单创建的时候回调
      */
@@ -47,14 +51,6 @@ abstract class BaseActivity : MvvmActivity(), IBaseHelper,MessageBus.MessageBusI
             onBackPressed()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    /**
-     * 在onCreate()中被回调
-     * 做一些与viewModel相关的事件
-     * 可以注册一些liveData监听
-     */
-    override fun initViewModel() {
     }
 
     /**

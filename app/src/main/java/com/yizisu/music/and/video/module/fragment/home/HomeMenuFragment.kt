@@ -4,7 +4,8 @@ package com.yizisu.music.and.video.module.fragment.home
 import android.Manifest
 import android.view.LayoutInflater
 import android.view.View
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanWrap
+import com.yizisu.basemvvm.mvvm.mvvm_helper.wrapOnSuccessWithCall
 import com.yizisu.basemvvm.utils.permission.callPermissions
 import com.yizisu.basemvvm.utils.textFrom
 import com.yizisu.music.and.video.AppData
@@ -29,36 +30,38 @@ class HomeMenuFragment : BaseFragment() {
     }
 
     private var isFirstCreate = true
-    override fun initViewModel() {
-        super.initViewModel()
-        registerOnSuccessLiveBean(AppData.dbHeartAlbumData) {
-            heartTv.textFrom("${it.title}(${it.songInfoTables.count()})")
-        }
-        registerOnSuccessLiveBean(AppData.dbDownloadAlbumData) {
-            downloadedMusicTv.textFrom("${it.title}(${it.songInfoTables.count()})")
-        }
-      registerOnSuccessLiveBean(  AppData.dbLocalAlbumData) {
-            localTv.textFrom("${it.title}(${it.songInfoTables.count()})")
-        }
-       registerOnSuccessLiveBean( AppData.dbRecentAlbumData) {
-            recentTv.textFrom("${it.title}(${it.songInfoTables.count()})")
-        }
-        registerOnSuccessLiveBean(AppData.dbCurrentAlbumData) {
-            //这里会多次调用，只需要初始化调用一次
-            if (isFirstCreate) {
-                isFirstCreate = false
-                MusicService.startPlay(
-                    it.songInfoTables.map {
-                        SongModel(it)
-                    }.toMutableList(),
-                    AppData.currentPlayListByAlbumId,
-                    AppData.currentPlayIndex,
-                    true,
-                    false
-                )
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(
+            AppData.dbHeartAlbumData.wrapOnSuccessWithCall {
+                heartTv.textFrom("${it.title}(${it.songInfoTables.count()})")
+            },
+            AppData.dbDownloadAlbumData.wrapOnSuccessWithCall {
+                downloadedMusicTv.textFrom("${it.title}(${it.songInfoTables.count()})")
+            },
+            AppData.dbLocalAlbumData.wrapOnSuccessWithCall {
+                localTv.textFrom("${it.title}(${it.songInfoTables.count()})")
+            },
+            AppData.dbRecentAlbumData.wrapOnSuccessWithCall {
+                recentTv.textFrom("${it.title}(${it.songInfoTables.count()})")
+            },
+            AppData.dbCurrentAlbumData.wrapOnSuccessWithCall {
+                //这里会多次调用，只需要初始化调用一次
+                if (isFirstCreate) {
+                    isFirstCreate = false
+                    MusicService.startPlay(
+                        it.songInfoTables.map {
+                            SongModel(it)
+                        }.toMutableList(),
+                        AppData.currentPlayListByAlbumId,
+                        AppData.currentPlayIndex,
+                        true,
+                        false
+                    )
+                }
             }
-        }
+        )
     }
+
 
     override fun initData() {
         super.initData()

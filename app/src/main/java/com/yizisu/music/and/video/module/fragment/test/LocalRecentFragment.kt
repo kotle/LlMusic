@@ -36,36 +36,6 @@ class LocalRecentFragment : BaseFragment() {
         return true
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        getActivityViewModel<LocalMusicViewModel>()?.testVideoData?.let {bean->
-            registerLiveBean(bean){
-
-            }
-//            when (it.status) {
-//                LiveBeanStatus.START -> {
-//                    showLoadingView()
-//                }
-//                LiveBeanStatus.SUCCESS -> {
-//                    showContentView()
-//                    it.data?.trailers?.let {
-//                        adapter.refreshList(it.map {
-//                            LocalMusicBean().apply {
-//                                path = it.hightUrl ?: it.url
-//                                title = it.movieName
-//                                singer = "[${it.type}] [${getCountTimeByLong(
-//                                    it.videoLength.toLong() * 1000
-//                                )}] ${it.videoTitle}"
-//                            }
-//                        }.toMutableList())
-//                    }
-//                }
-//                LiveBeanStatus.FAIL -> {
-//                    showOtherView(it.errorMsg)
-//                }
-//            }
-        }
-    }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)

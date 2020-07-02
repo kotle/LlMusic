@@ -1,29 +1,16 @@
 package com.yizisu.music.and.video.dialog
 
-import android.content.Context
-import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.yizisu.basemvvm.mvvm.MvvmBottomSheetDialog
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanValue
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanWrap
+import com.yizisu.basemvvm.mvvm.mvvm_helper.wrapOnSuccessWithCall
 import com.yizisu.basemvvm.utils.*
-import com.yizisu.music.and.roomdblibrary.bean.AlbumInfoTable
 import com.yizisu.music.and.roomdblibrary.bean.SongInfoTable
 import com.yizisu.music.and.video.AppData
 import com.yizisu.music.and.video.R
-import com.yizisu.music.and.video.baselib.base.BaseBottomSheetDialog
 import com.yizisu.music.and.video.baselib.base.BaseDialog
 import com.yizisu.music.and.video.bean.SongModel
 import com.yizisu.music.and.video.module.search.adapter.SearchAdapter
@@ -52,41 +39,43 @@ class CurrentPlayListDialog : BaseDialog() {
         return R.layout.dialog_current_play_list
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        registerOnSuccessLiveBean(AppData.dbCurrentAlbumData) {
-            if (it.songInfoTables.isNullOrEmpty()) {
-                dismiss()
-            } else {
-                setAdapter(it.songInfoTables)
-            }
-        }
-        registerOnSuccessLiveBean(AppData.currentPlaySong) {
-            it?.song?.apply {
-                val title = if (name.length > 16) {
-                    name.substring(0, 14) + "..."
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(
+            AppData.dbCurrentAlbumData.wrapOnSuccessWithCall {
+                if (it.songInfoTables.isNullOrEmpty()) {
+                    dismiss()
                 } else {
-                    name
+                    setAdapter(it.songInfoTables)
                 }
-                val desText = if (des.length > 16) {
-                    des.substring(0, 14) + "..."
-                } else {
-                    des
-                }
-                currentSongTv?.textFromSpanBean(
-                    mutableListOf(
-                        SpanBean(title + "\n"),
-                        SpanBean(
-                            desText,
-                            textColor = getResColor(R.color.colorTextLight),
-                            textSize = 10
+            },
+            AppData.currentPlaySong.wrapOnSuccessWithCall {
+                it?.song?.apply {
+                    val title = if (name.length > 16) {
+                        name.substring(0, 14) + "..."
+                    } else {
+                        name
+                    }
+                    val desText = if (des.length > 16) {
+                        des.substring(0, 14) + "..."
+                    } else {
+                        des
+                    }
+                    currentSongTv?.textFromSpanBean(
+                        mutableListOf(
+                            SpanBean(title + "\n"),
+                            SpanBean(
+                                desText,
+                                textColor = getResColor(R.color.colorTextLight),
+                                textSize = 10
+                            )
                         )
                     )
-                )
-                adapter.notifyDataSetChanged()
+                    adapter.notifyDataSetChanged()
+                }
             }
-        }
+        )
     }
+
 
     private fun setAdapter(list: MutableList<SongInfoTable>?) {
         adapter.refreshList(list)
@@ -97,7 +86,7 @@ class CurrentPlayListDialog : BaseDialog() {
         super.initUi(savedInstanceState)
         appCompatActivity?.getScreenSize()?.y?.let { screenHeight ->
             currentPlayListRcv.layoutParams.also { lp ->
-                lp.height = screenHeight * 2/3
+                lp.height = screenHeight * 2 / 3
             }
         }
         //滚动动画结束

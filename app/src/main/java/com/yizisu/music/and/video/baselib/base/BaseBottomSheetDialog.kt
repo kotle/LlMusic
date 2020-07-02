@@ -34,8 +34,6 @@ abstract class BaseBottomSheetDialog : MvvmBottomSheetDialog(), IBaseHelper, IBa
         }
     }
 
-    override fun initViewModel() {
-    }
 
     override fun initUi(savedInstanceState: Bundle?) {
     }

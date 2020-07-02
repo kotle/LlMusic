@@ -2,10 +2,7 @@ package com.yizisu.music.and.video.dialog
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanStatus
-import com.yizisu.basemvvm.mvvm.mvvm_helper.fail
-import com.yizisu.basemvvm.mvvm.mvvm_helper.getViewModel
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.*
 import com.yizisu.basemvvm.utils.launchThread
 import com.yizisu.basemvvm.utils.switchToUi
 import com.yizisu.basemvvm.utils.toast
@@ -29,10 +26,8 @@ class ImportPlayListDialog : BaseDialog() {
     }
 
     private val viewModel by lazy { getViewModel<PlayListViewModel>() }
-
-    override fun initViewModel() {
-        super.initViewModel()
-        registerLiveBean(viewModel.neteasePlayListData) {
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(viewModel.neteasePlayListData.wrapWithCall {
             when (it.status) {
                 LiveBeanStatus.START -> {
                     showLoadingView()
@@ -52,9 +47,8 @@ class ImportPlayListDialog : BaseDialog() {
                     hintTv.text = it.errorMsg
                 }
             }
-        }
+        })
     }
-
 
     override fun isNeedSwitchView(): Boolean {
         return true

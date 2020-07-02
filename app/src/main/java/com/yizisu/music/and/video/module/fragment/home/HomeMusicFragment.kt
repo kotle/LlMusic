@@ -6,15 +6,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.util.Pair
-import com.google.android.exoplayer2.offline.Download
 import com.yizisu.basemvvm.mvvm.MvvmPopupWindow
-import com.yizisu.basemvvm.mvvm.mvvm_helper.registerOnSuccessLiveBean
+import com.yizisu.basemvvm.mvvm.mvvm_helper.LiveBeanWrap
+import com.yizisu.basemvvm.mvvm.mvvm_helper.wrapOnSuccessWithCall
 import com.yizisu.basemvvm.utils.*
 import com.yizisu.basemvvm.view.GestureDetectorHelper
 import com.yizisu.basemvvm.widget.BaseLinearLayout
@@ -53,9 +51,8 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
         return R.layout.fragment_home_music
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-       registerOnSuccessLiveBean( AppData.currentPlaySong) {
+    override fun getObserverLiveBean(): List<LiveBeanWrap>? {
+        return listOf(AppData.currentPlaySong.wrapOnSuccessWithCall {
             bottomBlurIv.updateCover(it)
             it?.song?.apply {
                 titleTv.textFrom(name)
@@ -65,8 +62,9 @@ class HomeMusicFragment : BaseFragment(), MusicEventListener {
                     downloadIv.setImageGlide(R.drawable.icon_downloaded)
                 }
             }
-        }
+        })
     }
+
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
