@@ -47,7 +47,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
             }
 
         fun start(appCompatActivity: AppCompatActivity?) {
-            appCompatActivity?.navigateTo(LrcActivity::class.java)
+            appCompatActivity?.navigateTo<LrcActivity>()
         }
     }
 

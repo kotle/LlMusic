@@ -37,7 +37,7 @@ class AddSongToAlbumActivity : BaseUiActivity() {
                 true,
                 AddSongToAlbumActivity::class.java
             )
-            appCompatActivity?.navigateTo(AddSongToAlbumActivity::class.java)
+            appCompatActivity?.navigateTo<AddSongToAlbumActivity>()
         }
     }
 

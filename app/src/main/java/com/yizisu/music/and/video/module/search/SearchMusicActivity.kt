@@ -20,7 +20,7 @@ class SearchMusicActivity : BaseActivity() {
 
     companion object {
         fun start(appCompatActivity: AppCompatActivity?) {
-            appCompatActivity?.navigateTo(SearchMusicActivity::class.java)
+            appCompatActivity?.navigateTo<SearchMusicActivity>()
         }
     }
 

@@ -26,7 +26,7 @@ class FullVideoPortraitActivity : FullVideoActivity() {
     companion object {
         private const val KEY_VIDEO_DATA = "KEY_VIDEO_DATA"
         fun start(appCompatActivity: AppCompatActivity?, bean: FullVideoData) {
-            appCompatActivity?.navigateTo(FullVideoPortraitActivity::class.java) {
+            appCompatActivity?.navigateTo<FullVideoPortraitActivity>{
                 it.putExtra(KEY_VIDEO_DATA, bean)
             }
         }

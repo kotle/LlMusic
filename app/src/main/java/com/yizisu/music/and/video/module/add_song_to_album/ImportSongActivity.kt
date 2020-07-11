@@ -31,7 +31,7 @@ class ImportSongActivity : BaseUiActivity() {
             appCompatActivity ?: return
             source ?: return
             target ?: return
-            appCompatActivity.navigateTo(ImportSongActivity::class.java)
+            appCompatActivity.navigateTo<ImportSongActivity>()
             MessageBus.post(
                 BusCode.ALBUM_INFO,
                 ImportSongBean(source, target),

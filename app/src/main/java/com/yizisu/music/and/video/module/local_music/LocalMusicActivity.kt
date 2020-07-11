@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_local_music.*
 class LocalMusicActivity : BaseUiActivity() {
     companion object {
         fun start(appCompatActivity: AppCompatActivity?) {
-            appCompatActivity?.navigateTo(LocalMusicActivity::class.java)
+            appCompatActivity?.navigateTo<LocalMusicActivity>()
         }
     }
 

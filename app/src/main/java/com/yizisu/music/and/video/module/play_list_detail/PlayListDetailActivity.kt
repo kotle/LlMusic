@@ -30,7 +30,7 @@ class PlayListDetailActivity : BaseUiActivity() {
     companion object {
         fun start(appCompatActivity: AppCompatActivity?, albumDbId: AlbumInfoTable?) {
             albumDbId ?: return
-            appCompatActivity?.navigateTo(PlayListDetailActivity::class.java)
+            appCompatActivity?.navigateTo<PlayListDetailActivity>()
             MessageBus.post(BusCode.ALBUM_INFO, albumDbId, true, PlayListDetailActivity::class.java)
         }
     }
