@@ -17,7 +17,7 @@ import com.yizisu.music.and.video.viewmodel.DbViewModel
  */
 fun ImageView.updateCover(
     playerModel: SongModel?,
-    transition: DrawableTransitionOptions? = DrawableTransitionOptions.withCrossFade()
+    transition: DrawableTransitionOptions? = DrawableTransitionOptions.withCrossFade(100)
 ) {
     val coverUrl = playerModel?.song?.coverFilePath
         ?: playerModel?.song?.coverUrlPath
@@ -25,7 +25,7 @@ fun ImageView.updateCover(
     setImageGlide(
         coverUrl,
         R.drawable.default_cover_icon,
-        transition = null
+        placeholder = drawable
     )
 }
 
