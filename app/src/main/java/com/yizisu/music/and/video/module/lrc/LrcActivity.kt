@@ -120,7 +120,7 @@ class LrcActivity : BaseActivity(), MusicEventListener {
                     }
                 }
             },
-            AppData.currentPlaySong.wrapOnSuccessWithCall{
+            AppData.dbHeartAlbumData.wrapOnSuccessWithCall {
                 setIsHeart(heartIv)
             }
         )
