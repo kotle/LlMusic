@@ -90,7 +90,7 @@ class SearchHolder(
         ) {
             musicJumpFl.addView(
                 MusicJumpView(itemView.context).apply {
-                    pointerColor = getResColor(R.color.colorAccent)
+                    setPointerColor(getResColor(R.color.colorAccent))
                     pointerNum = 5
                     pointerWidth = 6f
                 }, FrameLayout.LayoutParams(
